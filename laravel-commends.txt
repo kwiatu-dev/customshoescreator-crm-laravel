@@ -1,0 +1,22 @@
+php artisan make:controller IndexController
+php artisan serve 
+php artisan db:show
+php artisan make:model Listing 
+php artisan make:model Listing -m
+php artisan make:migration
+php artisan migrate
+php artisan migrate:status
+php artisan migrate:rollback
+php artisan make:factory ListingFactory
+php artisan db:seed
+php artisan migrate:refresh
+php artisan migrate:refresh --seed
+php artisan tinker
+Listing::all()
+Listing::find(:id)
+Listing::where('beds', '>', 4)->get()
+php artisan make:controller --resource ListingController
+php artisan route:list
+php artisan inertia:middleware
+php artisan make:policy ListingPolicy --model=Listing
+php artisan storage:link
