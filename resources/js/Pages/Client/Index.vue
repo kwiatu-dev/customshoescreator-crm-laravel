@@ -11,7 +11,7 @@
       </Link>
     </section>
     <section v-if="isLargeScreen" class="overflow-auto my-4">
-      <ClientTable :clients="clients.data" :sort="sort" :filters="filters" />
+      <ClientTable :clients="clients.data" :sort="sort" :filters="filters" :page="clients.current_page" />
     </section>
     <section v-if="!isLargeScreen" class="my-4 grid grid-cols-1 md:grid-cols-2 gap-4">
       <ClientCards :clients="clients.data" />

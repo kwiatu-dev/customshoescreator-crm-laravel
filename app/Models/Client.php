@@ -42,7 +42,7 @@ class Client extends Model
         'conversion_source',
     ];
 
-    protected $sortable = [
+    protected static $sortable = [
         'first_name', 
         'last_name', 
         'email',
@@ -82,14 +82,40 @@ class Client extends Model
 
     public function scopeSort(Builder $query, array $sort): Builder{
         return $query->when(
-            $sort['columns'] ?? false,
+            $sort ?? false,
             function ($query, $value) {
                 foreach ($value as $column => $direction){
-                    if(in_array($column, $this->sortable) && in_array($direction, ['asc', 'desc'])){
+                    if(in_array($column, self::$sortable) && in_array($direction, ['asc', 'desc'])){
                         $query->orderBy($column, $direction);
                     }
                 }
             }
         );
+    }
+
+    public static function getSortFields(Request $request): array{
+        $sort = [];
+
+        foreach($request->all() as $key => $value){
+            if(in_array($key, self::$sortable)){
+                $sort[$key] = $value;
+            }
+        }
+
+        return $sort;
+    }
+
+    public static function getFilterFields(Request $request): array{
+        $filters = [];
+
+        if($request->boolean('deleted')){
+            $filters = array_merge($filters, $request->only('deleted'));
+        }
+
+        if($request->string('search') != ""){
+            $filters = array_merge($filters, $request->only('search'));
+        }
+
+        return $filters;
     }
 }

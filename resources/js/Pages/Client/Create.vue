@@ -72,7 +72,7 @@
         <label for="conversion_source" class="label">Źródło konwersji</label>
         <select id="conversion_source" v-model="form.conversion_source" class="input cursor-pointer">
           <option value="google">Google</option>
-          <option value="Instagram">Instagram</option>
+          <option value="instagram">Instagram</option>
           <option value="facebook">Facebook</option>
           <option value="tiktok">TikTok</option>
           <option value="olx">OLX</option>

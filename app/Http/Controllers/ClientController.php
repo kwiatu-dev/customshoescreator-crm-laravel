@@ -7,19 +7,6 @@ use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
-    protected $sortable = [
-        'first_name', 
-        'last_name', 
-        'email',
-        'phone',
-        'street',
-        'postcode',
-        'city',
-        'country',
-        'username',
-        'conversion_source',
-    ];
-
     public function __construct()
     {
         $this->middleware('auth');
@@ -30,16 +17,13 @@ class ClientController extends Controller
      */
     public function index(Request $request)
     {
-        $filters = [
-            'deleted' => $request->boolean('deleted'),
-            ...$request->only(['search'])
-        ];
-
-        $sort = $this->getSortFields($request, $this->sortable);
+        $filters = Client::getFilterFields($request);
+        $sort = Client::getSortFields($request);
 
         $clients = Client::query()
             ->filter($filters)
-            //->sort($sort)
+            ->sort($sort)
+            ->latest()
             ->paginate(6)
             ->withQueryString();
 
@@ -127,17 +111,5 @@ class ClientController extends Controller
         $client->restore();
 
         return redirect()->back()->with('success', 'Client was restored!');
-    }
-
-    public function getSortFields(Request $request, $sortable): array{
-        $sort = [];
-
-        foreach($request->all() as $key => $value){
-            if(in_array($key, $sortable)){
-                $sort[$key] = $value;
-            }
-        }
-
-        return $sort;
     }
 }

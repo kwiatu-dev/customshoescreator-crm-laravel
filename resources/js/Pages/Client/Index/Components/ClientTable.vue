@@ -1,16 +1,19 @@
 <template>
-  <div v-if="sortOrder.length">
-    Kolejność sortowania: 
+  <div v-if="order.length">
+    Sortowanie: 
     <draggable 
-      v-model="sortOrder" 
+      v-model="order" 
       tag="div" 
       group="sort" 
       item-key="column" 
       class="flex flex-row flex-nowrap gap-2 mb-2 mt-1"
-      @end="sortTable"
+      @end="sort"
     >
-      <template #item="{ element: column }">
-        <div class="py-2 px-4 text-sm border rounded-md border-gray-300 cursor-grab bg-gray-800">{{ column }}</div>
+      <template #item="{ element, index }">
+        <div class="py-2 px-4 text-sm border rounded-md border-gray-300 cursor-grab bg-gray-800">
+          <span>{{ element }}</span>
+          <span class="ml-3 font-bold cursor-pointer p-1" @click="remove(element, index)">x</span>
+        </div>
       </template>
     </draggable>
   </div>
@@ -72,17 +75,19 @@ const props = defineProps({
   clients: Array,
   filters: Object,
   sort: Object,
+  page: Number,
 })
 
 const sortForm = reactive({
   ...props.sort ?? null,
 })
 
-const sortOrder = ref(Object.keys(sortForm))
+const order = ref(
+  Object.keys(props.sort ?? null),
+)
 
 const sortBy = (column) => {
   sortForm[column] = sortForm[column] === 'desc' ? 'asc' : 'desc'
-  sortOrder.value = Object.keys(sortForm)
 }
 
 const getSortSymbol = (column) => {
@@ -95,27 +100,42 @@ const sortSymbols = {
 }
 
 const getSortObject = () => {
-  const finalSort = {}
+  if(order.value.length <= 1)
+    return sortForm
 
-  for (const column of sortOrder.value) {
+  const final = {}
+
+  for (const column of order.value) {
     if(sortForm[column] ?? false){
-      finalSort[column] = sortForm[column]
+      final[column] = sortForm[column]
     }
   }
 
-  return finalSort
+  return final
 }
 
-const sortTable = () => {
+const remove = (column) => {
+  delete sortForm[column]
+}
+
+const sort = () => {
+  const query = {...getSortObject(), ...props.filters}
+
+  if(props.page > 1) 
+    query[page] = props.page
+
   router.get(
     route('client.index'),
-    {...getSortObject(), ...props.filters},
+    query,
     {
       preserveState: true,
       preserveScroll: true,
+      onSuccess: () => {
+        order.value = Object.keys(props.sort)
+      },
     },
   )
 }
 
-watch(sortForm, debounce(() => sortTable(), 1000))
+watch(sortForm, debounce(() => sort(), 500))
 </script>
