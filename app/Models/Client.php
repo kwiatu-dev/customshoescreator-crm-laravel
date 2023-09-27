@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Http\Request;
 
 class Client extends Model
 {
@@ -20,6 +21,7 @@ class Client extends Model
         'phone',
         'street',
         'street_nr',
+        'apartment_nr',
         'postcode',
         'city',
         'country',
@@ -33,8 +35,6 @@ class Client extends Model
         'last_name', 
         'email',
         'phone',
-        'street',
-        'street_nr',
         'postcode',
         'city',
         'country',
@@ -70,6 +70,11 @@ class Client extends Model
                     foreach ($this->search as $column) {
                         $query->orWhere($column, 'like', "%$value%");
                     }
+
+                    $query->orWhereRaw(
+                        "CONCAT(street, ' ', street_nr, '/', apartment_nr) LIKE ?",
+                        ["%$value%"]
+                    );
                 }
             )
         );

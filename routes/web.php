@@ -62,7 +62,7 @@ Route::prefix('realtor')->name('realtor.')->group(function() {
 });
 
 //ClientController
-Route::resource('client', ClientController::class)->only(['index', 'destroy']);
+Route::resource('client', ClientController::class)->only(['index', 'destroy', 'create', 'store']);
 
 Route::name('client.restore')->put('client/{client}/restore',
         [ClientController::class, 'restore']
