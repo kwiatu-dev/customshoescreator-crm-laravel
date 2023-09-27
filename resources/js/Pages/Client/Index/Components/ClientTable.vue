@@ -1,8 +1,8 @@
 <template>
-  <div v-if="order.length">
+  <div v-if="sortOrder.length">
     Sortowanie: 
     <draggable 
-      v-model="order" 
+      v-model="sortOrder" 
       tag="div" 
       group="sort" 
       item-key="column" 
@@ -82,7 +82,7 @@ const sortForm = reactive({
   ...props.sort ?? null,
 })
 
-const order = ref(
+const sortOrder = ref(
   Object.keys(props.sort ?? null),
 )
 
@@ -99,13 +99,13 @@ const sortSymbols = {
   desc: '↑',
 }
 
-const getSortObject = () => {
-  if(order.value.length <= 1)
+const getSortFieldsWithOrder = () => {
+  if(sortOrder.value.length <= 1)
     return sortForm
 
   const final = {}
 
-  for (const column of order.value) {
+  for (const column of sortOrder.value) {
     if(sortForm[column] ?? false){
       final[column] = sortForm[column]
     }
@@ -119,7 +119,7 @@ const remove = (column) => {
 }
 
 const sort = () => {
-  const query = {...getSortObject(), ...props.filters}
+  const query = {...getSortFieldsWithOrder(), ...props.filters}
 
   if(props.page > 1) 
     query[page] = props.page
@@ -131,7 +131,7 @@ const sort = () => {
       preserveState: true,
       preserveScroll: true,
       onSuccess: () => {
-        order.value = Object.keys(props.sort)
+        sortOrder.value = Object.keys(props.sort)
       },
     },
   )

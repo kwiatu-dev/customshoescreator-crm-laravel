@@ -6,7 +6,7 @@
         <input id="deleted" v-model="filterForm.deleted" type="checkbox" class="cursor-pointer rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
         <label for="deleted" class="label whitespace-nowrap cursor-pointer text-gray-800 dark:text-gray-300">Pokaż usunięte</label>
         <button type="submit" class="btn-outline dark:bg-gray-600 bg-gray-100" @click.prevent="filter">Filtruj</button>
-        <button v-if="filterForm.deleted || filterForm.search" type="reset" @click="clear">Reset</button>
+        <button v-if="props.filters.deleted || props.filters.search" type="reset" @click="clear">Reset</button>
       </div>
     </form>
   </div>
