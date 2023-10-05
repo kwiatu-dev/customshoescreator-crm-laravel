@@ -20,6 +20,6 @@ class AdminOnly
             return $next($request);
         }
 
-        return redirect()->back()->with(['failed' => 'Tylko administratorzy mają dostęp do tej czynności']);
+        return redirect()->back()->with(['failed' => 'Nie posiadasz uprawnień administratora']);
     }
 }

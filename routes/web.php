@@ -72,7 +72,7 @@ Route::name('client.restore')->put('client/{client}/restore',
 
 //Email Verification
 Route::get('/email/verify', function () {
-    return inertia('Auth/VerifyEmail');
+    return inertia('Auth/Verify');
 })->middleware('auth')->name('verification.notice');
 
 //Password Reset
