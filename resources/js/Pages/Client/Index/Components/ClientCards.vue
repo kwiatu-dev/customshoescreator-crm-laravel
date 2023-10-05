@@ -7,7 +7,7 @@
           {{ client.first_name }} {{ client.last_name }}
         </div>
         <div class="text-gray-400">
-          <a :href="client.social_link" class="text-indigo-600 hover:text-indigo-500">
+          <a :href="client.social_link" target="_blank" class="text-indigo-600 hover:text-indigo-500">
             {{ client.username ? '@' + client.username : '' }}
           </a>
         </div>
@@ -24,7 +24,7 @@
       </div>
     </div>
     <div class="flex flex-row flex-nowrap gap-2 mb-1 mt-4">
-      <Link href="#" class="btn-outline">Edytuj</Link>
+      <Link :href="route('client.edit', {client: client.id})" class="btn-outline">Edytuj</Link>
       <Link v-if="!client.deleted_at" :href="route('client.destroy', {client: client.id})" method="delete" as="button" class="btn-outline">Usuń</Link>
       <Link v-if="client.deleted_at" :href="route('client.restore', {client: client.id})" method="put" as="button" class="btn-outline">Odzyskaj</Link>
     </div>

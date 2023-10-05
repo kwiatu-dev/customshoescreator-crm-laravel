@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-4">
+  <div>
     <h1 class="title">Lista klientów</h1>
     <section class="flex items-start flex-row md:justify-between md:items-center mt-8">
       <ClientFilters :filters="filters" :sort="sort" />

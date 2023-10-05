@@ -23,7 +23,7 @@ use App\Http\Controllers\RealtorListingImageController;
 */
 
 //IndexController
-Route::get('/', [IndexController::class, 'index']);
+Route::get('/', [IndexController::class, 'index'])->name('home');
 Route::get('/hello', [IndexController::class, 'show']);
 
 //ListingController
@@ -62,7 +62,7 @@ Route::prefix('realtor')->name('realtor.')->group(function() {
 });
 
 //ClientController
-Route::resource('client', ClientController::class)->only(['index', 'destroy', 'create', 'store']);
+Route::resource('client', ClientController::class)->except(['show']);
 
 Route::name('client.restore')->put('client/{client}/restore',
         [ClientController::class, 'restore']

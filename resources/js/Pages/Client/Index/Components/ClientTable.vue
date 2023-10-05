@@ -36,7 +36,7 @@
     <tbody>
       <tr v-for="client in clients" :key="client.id" :class="{'bg-red-600 dark:bg-red-900': client.deleted_at}">
         <td>
-          <a :href="client.social_link" class="text-indigo-600 hover:text-indigo-500">
+          <a :href="client.social_link" target="_blank" class="text-indigo-600 hover:text-indigo-500">
             {{ client.username }}
           </a>
         </td>
@@ -49,12 +49,11 @@
         </td>
         <td>{{ client.postcode }}</td>
         <td>{{ client.city }}</td>
-        import LoginVue from '@/Pages/Auth/Login.vue';
         <td>{{ client.country }}</td>
         <td>{{ client.conversion_source }}</td>
         <td>
           <div class="flex flex-col items-start">
-            <Link href="#" class="underline hover:text-gray-500">Edytuj</Link>
+            <Link :href="route('client.edit', {client: client.id})" class="underline hover:text-gray-500">Edytuj</Link>
             <Link v-if="!client.deleted_at" :href="route('client.destroy', {client: client.id})" method="delete" as="button" class="underline  hover:text-gray-500">Usuń</Link>
             <Link v-if="client.deleted_at" :href="route('client.restore', {client: client.id})" method="put" as="button" class="underline  hover:text-gray-500">Odzyskaj</Link>
           </div>
@@ -122,7 +121,7 @@ const sort = () => {
   const query = {...getSortFieldsWithOrder(), ...props.filters}
 
   if(props.page > 1) 
-    query[page] = props.page
+    query['page'] = props.page
 
   router.get(
     route('client.index'),

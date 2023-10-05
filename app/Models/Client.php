@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Http\Request;
 
 class Client extends Model
 {
@@ -57,6 +58,13 @@ class Client extends Model
 
     public function user(): BelongsTo{
         return $this->belongsTo(User::class, 'created_by_user_id');
+    }
+
+    protected function conversionSource(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? ucfirst($value) : $value,
+        );
     }
 
     public function scopeFilter(Builder $query, array $filters): Builder{
