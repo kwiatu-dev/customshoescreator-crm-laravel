@@ -1,12 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ForgotPassword;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\PageSpeedController;
-use App\Http\Controllers\UserAccountController;
 use App\Http\Controllers\ListingOfferController;
 use App\Http\Controllers\RealtorListingController;
 use App\Http\Controllers\RealtorListingImageController;
@@ -38,7 +40,7 @@ Route::post('login', [AuthController::class, 'store'])->name('login.store');
 Route::delete('logout', [AuthController::class, 'destroy'])->name('logout');
 
 //UserAccountController
-Route::resource('user-account', UserAccountController::class)
+Route::resource('user', UserController::class)
     ->only(['create', 'store']);
 
 //PageSpeedController & RealtorListingImageController
@@ -67,3 +69,14 @@ Route::resource('client', ClientController::class)->except(['show']);
 Route::name('client.restore')->put('client/{client}/restore',
         [ClientController::class, 'restore']
     )->withTrashed();
+
+//Email Verification
+Route::get('/email/verify', function () {
+    return inertia('Auth/VerifyEmail');
+})->middleware('auth')->name('verification.notice');
+
+//Password Reset
+//Route::get('/forgot-password', [ResetPassword::class, 'create'])->name('password.request');
+Route::post('/forgot-password', [ForgotPassword::class, 'store'])->name('password.email');
+Route::get('/reset-password/{token}', [ResetPassword::class, 'edit'])->name('password.reset');
+Route::post('/reset-password', [ResetPassword::class, 'update'])->name('password.update');

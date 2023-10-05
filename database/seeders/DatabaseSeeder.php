@@ -12,16 +12,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        //\App\Models\User::factory(10)->create();
-
         \App\Models\User::factory()->create([
-            'name' => 'Test User',
+            'first_name' => 'Filip',
+            'last_name' => 'Kwiatkowski',
             'email' => 'test@example.com',
             'is_admin' => true,
         ]);
 
         \App\Models\User::factory()->create([
-            'name' => 'Test User 2',
+            'first_name' => 'Test User 2',
             'email' => 'test2@example.com',
         ]);
 
@@ -37,5 +36,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Client::factory(20)->conversion()->create([
             'created_by_user_id' => 1,
         ]);
+
+        \App\Models\User::factory(10)->create();
     }
 }

@@ -5,7 +5,7 @@
         <div class="w-full lg:w-auto flex justify-between items-center lg:order-2">
           <div>
             <a v-if="!user" :href="route('login')" class="text-indigo-600 dark:text-indigo-400 bg-gray-200 hover:bg-gray-50 dark:bg-gray-900 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800 inline-block">Zaloguj się</a>
-            <a v-if="user" href="#" class="text-indigo-600 dark:text-indigo-400 bg-gray-200 hover:bg-gray-50 dark:bg-gray-900 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800 inline-block">{{ user.name }}</a>
+            <a v-if="user" href="#" class="text-indigo-600 dark:text-indigo-400 bg-gray-200 hover:bg-gray-50 dark:bg-gray-900 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800 inline-block">Cześć, {{ user.first_name }} </a>
             <Link v-if="user" :href="route('logout')" class="text-red-600 dark:text-red-600 hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800 inline-block" as="button" method="delete">Wyloguj</Link>
           </div>
           

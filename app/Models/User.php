@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Notifications\Notifiable;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -21,9 +22,20 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name', 
+        'last_name', 
         'email',
         'password',
+        'phone',
+        'street',
+        'street_nr',
+        'apartment_nr',
+        'postcode',
+        'city',
+        'country',
+        'commission',
+        'costs',
+        'distribution'
     ];
 
     /**
@@ -71,4 +83,13 @@ class User extends Authenticatable
     public function clients(): HasMany{
         return $this->hasMany(Client::class, 'created_by_user_id');
     }
+
+    public function isVerified(): bool{
+        if(isset($this->email_verified_at)){
+            return true;
+        }
+        else{
+            return false;
+        }
+   }
 }

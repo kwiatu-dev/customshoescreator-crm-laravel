@@ -14,20 +14,20 @@ return new class extends Migration
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('email')->unique();
+            $table->string('first_name', 50);
+            $table->string('last_name', 50);
+            $table->string('email', 320)->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('phone')->unique();
-            $table->string('street')->nullable();
-            $table->string('street_nr')->nullable();
-            $table->string('apartment_nr')->nullable();
-            $table->string('postcode')->nullable();
-            $table->string('city')->nullable();
-            $table->string('country')->nullable();
-            $table->string('username')->nullable();
-            $table->string('social_link')->nullable();
-            $table->string('conversion_source')->nullable();
+            $table->string('phone', 20)->unique();
+            $table->string('street', 50)->nullable();
+            $table->string('street_nr', 10)->nullable();
+            $table->string('apartment_nr', 10)->nullable();
+            $table->string('postcode', 10)->nullable();
+            $table->string('city', 25)->nullable();
+            $table->string('country', 25)->nullable();
+            $table->string('username', 30)->nullable();
+            $table->string('social_link', 255)->nullable();
+            $table->string('conversion_source', 15)->nullable();
             $table->softDeletes();
 
             $table->foreignIdFor(

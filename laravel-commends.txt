@@ -21,3 +21,4 @@ php artisan inertia:middleware
 php artisan make:policy ListingPolicy --model=Listing
 php artisan storage:link
 php artisan config:cache
+php artisan make:notification UserCreate 

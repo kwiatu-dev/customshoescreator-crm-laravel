@@ -9,7 +9,7 @@ class ClientController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth', 'verified']);
     }
 
     /**
@@ -113,16 +113,16 @@ class ClientController extends Controller
             'first_name' => 'required|string|min:3|max:50', 
             'last_name' => 'required|string|min:3|max:50',
             'email' => 'required|email|unique:clients,email' . ($client ? ",$client->id" : ''),
-            'phone' => 'required|regex:/\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/',
+            'phone' => 'required|regex:/\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/|unique:clients,phone' . ($client ? ",$client->id" : ''),
             'street' => 'nullable|string|min:3|max:50',
-            'street_nr' => 'nullable|integer|min:1|max:1000',
-            'apartment_nr' => 'nullable|integer|min:1|max:1000',
-            'postcode' => 'nullable|string|min:3|max:25',
+            'street_nr' => 'nullable|string|min:1|max:10',
+            'apartment_nr' => 'nullable|string|min:1|max:10',
+            'postcode' => 'nullable|string|min:3|max:10',
             'city' => 'nullable|string|min:3|max:25',
             'country' => 'nullable|string|min:3|max:25',
-            'username' => 'nullable|string|min:3|max:35',
+            'username' => 'nullable|string|min:3|max:30',
             'conversion_source' => 'nullable|string|in:google,instagram,facebook,tiktok,olx,allegro,znajomi',
-            'social_link' => 'nullable|url:http,https'
+            'social_link' => 'nullable|url:http,https|max:255'
         ]);
     }
 }
