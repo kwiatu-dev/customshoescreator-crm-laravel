@@ -1,0 +1,92 @@
+<template>
+  <div v-if="order.length">
+    Sortowanie: 
+    <draggable 
+      v-model="order" 
+      tag="div" 
+      group="sort" 
+      item-key="column" 
+      class="flex flex-row flex-nowrap gap-2 mb-2 mt-1"
+      @end="sort"
+    >
+      <template #item="{ element, index }">
+        <div class="py-2 px-4 text-sm border rounded-md border-gray-300 cursor-grab bg-gray-800">
+          <span>{{ labels[element].label }}</span>
+          <span class="ml-3 font-bold cursor-pointer p-1" @click="remove(element, index)">x</span>
+        </div>
+      </template>
+    </draggable>
+  </div>
+</template>
+
+<script setup>
+import { router } from '@inertiajs/vue3'
+import { reactive, watch, ref } from 'vue'
+import { debounce } from 'lodash'
+import draggable from 'vuedraggable'
+
+const props = defineProps({
+  labels: Object,
+  sort: Object, 
+  filters: Object,
+  orderBy: Object,
+  page: Number,
+  get: String,
+})
+
+const emit = defineEmits(['sortTable'])
+
+const sortTable = (field) => {
+  form[field] = form[field] === 'desc' ? 'asc' : 'desc'
+}
+
+const form = reactive({
+  ...props.sort ?? null,
+})
+
+const remove = (field) => {
+  delete form[field]
+}
+
+const order = ref(
+  Object.keys(props.sort ?? null),
+)
+
+const withOrder = () => {
+  if(order.value.length <= 1)
+    return form
+
+  const final = {}
+
+  for (const field of order.value) {
+    if(form[field] ?? false){
+      final[field] = form[field]
+    }
+  }
+
+  return final
+}
+
+const sort = () => {
+  const query = {...withOrder(), ...props.filters}
+
+  if(props.page > 1) 
+    query['page'] = props.page
+
+  router.get(
+    route(props.get),
+    query,
+    {
+      preserveState: true,
+      preserveScroll: true,
+      onSuccess: () => {
+        order.value = Object.keys(props.sort)
+        emit('sortTable', form)
+      },
+    },
+  )
+}
+
+watch(form, debounce(() => sort(), 1000))
+watch(() => props.orderBy, (value) => sortTable(value.field))
+</script>

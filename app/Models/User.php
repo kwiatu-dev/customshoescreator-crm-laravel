@@ -76,6 +76,22 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'distribution'
     ];
 
+    public static $labels = [
+        'first_name' => ['label' => 'Imię',],
+        'last_name' => ['label' => 'Nazwisko',],
+        'email' => ['label' => 'Email',],
+        'phone' => ['label' => 'Telefon',],
+        'street' => ['label' => 'Ulica',],
+        'street_nr' => ['label' => 'Numer ulicy',],
+        'apartment_nr' => ['label' => 'Numer mieszkania',],
+        'postcode' => ['label' => 'Kod pocztowy',],
+        'city' => ['label' => 'Miasto',],
+        'country' => ['label' => 'Kraj',],
+        'commission' => ['label' => 'Prowizja',],
+        'costs' => ['label' => 'Koszty',],
+        'distribution' => ['label' => 'Podział',],
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *

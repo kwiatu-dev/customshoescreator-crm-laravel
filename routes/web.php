@@ -41,7 +41,7 @@ Route::delete('logout', [AuthController::class, 'destroy'])->name('logout');
 
 //UserAccountController
 Route::resource('user', UserController::class)
-    ->only(['create', 'store', 'index']);
+    ->only(['create', 'store', 'index', 'edit', 'destroy', 'restore']);
 
 //PageSpeedController & RealtorListingImageController
 Route::get('/audit', [PageSpeedController::class, 'index']);
