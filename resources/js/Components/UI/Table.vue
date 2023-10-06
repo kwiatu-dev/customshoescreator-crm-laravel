@@ -1,11 +1,11 @@
 <template>
-  <Sort :sort="sort" :filters="filters" :labels="labels" />
+  <Sort :sort="sort" :filters="filters" :labels="labels" :order-by="orderBy" />
   <table>
     <thead>
       <tr>
         <td v-for="(label, field) in labels" :key="field">
           {{ label }}
-          <button class="ml-4" @click="$emit('sortTable', field)">
+          <button class="ml-4" @click="sortTable(field)">
             V
           </button>
         </td>
@@ -22,6 +22,7 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import Sort from '@/Components/UI/Table/Sort.vue'
 
 const props = defineProps({
@@ -31,5 +32,8 @@ const props = defineProps({
   labels: Object,
 })
 
-defineEmits(['sortTable'])
+const orderBy = ref('')
+const sortTable = (field) => orderBy.value = field
+
+
 </script>

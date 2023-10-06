@@ -22,7 +22,7 @@
 
 <script setup>
 // import { router } from '@inertiajs/vue3'
-//import { reactive, watch, ref } from 'vue'
+import { reactive, watch, ref } from 'vue'
 // import { debounce } from 'lodash'
 // import draggable from 'vuedraggable'
 
@@ -34,8 +34,7 @@ const props = defineProps({
   page: Number,
 })
 
-
-
+watch(() => props.orderBy, () => console.log(props.orderBy))
 
 // const sortOrder = ref(
 //   Object.keys(props.sort ?? null),
