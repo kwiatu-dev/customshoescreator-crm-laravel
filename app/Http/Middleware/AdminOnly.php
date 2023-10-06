@@ -20,6 +20,12 @@ class AdminOnly
             return $next($request);
         }
 
-        return redirect()->back()->with(['failed' => 'Nie posiadasz uprawnień administratora']);
+        if(Auth::user()){
+            return redirect()->back()->with(['failed' => 'Nie posiadasz uprawnień administratora']);
+        }
+        else{
+            return redirect()->route('login');
+        }
+        
     }
 }

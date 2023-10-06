@@ -14,6 +14,24 @@ class UserController extends Controller
         $this->middleware('admin');
     }
 
+    public function index(Request $request){
+        $users = User::query()
+            ->filter($request)
+            ->sort($request)
+            ->latest()
+            ->paginate(6)
+            ->withQueryString();
+
+        return inertia(
+            'User/Index',
+            [
+                'users' => $users,
+                'filters' => $request->session()->pull('filters'),
+                'sort' => $request->session()->pull('sort'),
+            ]
+        );
+    }
+
     public function create() {
         return inertia('User/Create');
     }
@@ -29,7 +47,7 @@ class UserController extends Controller
         );
 
         return redirect()->route('home')
-            ->with('success', 'Account created!');
+            ->with('success', 'Konto użytkownika zostało utworzone!');
     }
 
     private function validation(Request $request, User $user = null): array{

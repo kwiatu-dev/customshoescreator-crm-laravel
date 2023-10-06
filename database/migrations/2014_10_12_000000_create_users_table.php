@@ -28,6 +28,7 @@ return new class extends Migration
             $table->smallInteger('commission');
             $table->smallInteger('costs');
             $table->json('distribution');
+            $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
         });

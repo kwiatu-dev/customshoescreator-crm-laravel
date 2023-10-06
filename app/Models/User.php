@@ -2,19 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\CanResetPassword;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\HasFilters;
+use App\Traits\HasSorting;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasFilters, HasSorting, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -30,6 +33,41 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'street',
         'street_nr',
         'apartment_nr',
+        'postcode',
+        'city',
+        'country',
+        'commission',
+        'costs',
+        'distribution'
+    ];
+
+    protected $searchable = [
+        'first_name', 
+        'last_name', 
+        'email',
+        'phone',
+        'postcode',
+        'city',
+        'street',
+        'street_nr',
+        'apartment_nr',
+        'country',
+        'commission',
+        'costs',
+        'distribution',
+    ];
+
+    protected $filterable = [
+        'deleted' => 'boolean',
+        'search' => 'string',
+    ];
+
+    protected $sortable = [
+        'first_name', 
+        'last_name', 
+        'email',
+        'phone',
+        'street',
         'postcode',
         'city',
         'country',
