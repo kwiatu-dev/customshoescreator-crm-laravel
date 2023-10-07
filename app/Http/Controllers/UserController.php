@@ -28,7 +28,6 @@ class UserController extends Controller
                 'users' => $users,
                 'filters' => $request->session()->pull('filters'),
                 'sort' => $request->session()->pull('sort'),
-                'labels' => User::$labels,
             ]
         );
     }

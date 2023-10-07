@@ -11,7 +11,7 @@
     >
       <template #item="{ element, index }">
         <div class="py-2 px-4 text-sm border rounded-md border-gray-300 cursor-grab bg-gray-800">
-          <span>{{ labels[element].label }}</span>
+          <span>{{ columns[element].label }}</span>
           <span class="ml-3 font-bold cursor-pointer p-1" @click="remove(element, index)">x</span>
         </div>
       </template>
@@ -26,7 +26,7 @@ import { debounce } from 'lodash'
 import draggable from 'vuedraggable'
 
 const props = defineProps({
-  labels: Object,
+  columns: Object,
   sort: Object, 
   filters: Object,
   orderBy: Object,

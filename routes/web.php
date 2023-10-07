@@ -12,6 +12,7 @@ use App\Http\Controllers\PageSpeedController;
 use App\Http\Controllers\ListingOfferController;
 use App\Http\Controllers\RealtorListingController;
 use App\Http\Controllers\RealtorListingImageController;
+use App\Notifications\UserCreate;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +42,10 @@ Route::delete('logout', [AuthController::class, 'destroy'])->name('logout');
 
 //UserAccountController
 Route::resource('user', UserController::class)
-    ->only(['create', 'store', 'index', 'edit', 'destroy', 'restore']);
+    ->only(['create', 'store', 'index', 'edit', 'destroy']);
+Route::put('user/{user}/restore', [UserController::class, 'restore'])
+    ->name('user.restore')
+    ->withTrashed();
 
 //PageSpeedController & RealtorListingImageController
 Route::get('/audit', [PageSpeedController::class, 'index']);

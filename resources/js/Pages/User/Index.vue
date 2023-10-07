@@ -3,7 +3,8 @@
     :objects="users" 
     :filters="filters" 
     :sort="sort" 
-    :labels="labels" 
+    :columns="columns" 
+    :cards="cards"
     :get="'user.index'"
     :actions="actions"
   >
@@ -30,6 +31,30 @@ defineProps({
   users: Object,
   filters: Object,
   sort: Object,
-  labels: Object,
 })
+
+const columns = {
+  first_name: { label: 'Imię' },
+  last_name: { label: 'Nazwisko' },
+  email: { label: 'Email', link: 'email', prefix: 'mailto:'},
+  phone: { label: 'Telefon', link: 'phone', prefix: 'tel:'},
+  street: { label: 'Ulica' },
+  street_nr: { label: 'Numer ulicy' },
+  apartment_nr: { label: 'Numer mieszkania' },
+  postcode: { label: 'Kod pocztowy' },
+  city: { label: 'Miasto' },
+  country: { label: 'Kraj' },
+  commission: { label: 'Prowizja' },
+  costs: { label: 'Koszty' },
+  distribution: { label: 'Podział' },
+}
+
+const cards = {
+  first_name: {concat: ['last_name']},
+  street: {concat: ['street_nr', 'apartment_nr']},
+  email: {link: 'email', prefix: 'mailto:'},
+  postcode: {concat: ['city'], separator: ', '},
+  phone: {link: 'phone', prefix: 'tel:'},
+  country: {},
+}
 </script>

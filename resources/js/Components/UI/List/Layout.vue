@@ -9,7 +9,7 @@
     </section>
     <section v-if="isLargeScreen" class="overflow-auto my-4">
       <Table 
-        :labels="labels" 
+        :columns="columns" 
         :objects="objects.data" 
         :filters="filters" 
         :sort="sort" 
@@ -19,7 +19,11 @@
       />
     </section>
     <section v-if="!isLargeScreen" class="my-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-      <!-- <ClientCards :clients="clients.data" /> -->
+      <Cards 
+        :cards="cards"
+        :objects="objects.data" 
+        :actions="actions"
+      />
     </section>
     <section class="flex flex-col-reverse md:flex-row justify-between items-center">
       <div>Wyświetlanie rekordów od {{ objects.from }} do {{ objects.to }} z {{ objects.total }} </div>
@@ -34,6 +38,7 @@
 import { useMediaQuery } from '@vueuse/core'
 import Filters from '@/Components/UI/List/Filters.vue'
 import Table from '@/Components/UI/List/Table.vue'
+import Cards from '@/Components/UI/List/Cards.vue'
 import Pagination from '@/Components/UI/Pagination.vue'
 
 const isLargeScreen = useMediaQuery('(min-width: 768px)')
@@ -42,7 +47,8 @@ defineProps({
   objects: Object,
   sort: Object,
   filters: Object,
-  labels: Object,
+  cards: Object,
+  columns: Object,
   get: String,
   title: String,
   actions: Object,

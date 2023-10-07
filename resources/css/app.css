@@ -46,4 +46,8 @@
     td{
         @apply text-left align-middle p-6 whitespace-nowrap border border-gray-300;
     }
+
+    .btn-action{
+        @apply btn-outline md:underline md:hover:text-gray-500 md:border-0 md:bg-transparent md:p-0 md:hover:bg-transparent;
+    }
 }
