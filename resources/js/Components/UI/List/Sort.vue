@@ -22,7 +22,7 @@
 <script setup>
 import { router } from '@inertiajs/vue3'
 import { reactive, watch, ref } from 'vue'
-import { debounce } from 'lodash'
+import { _, debounce } from 'lodash'
 import draggable from 'vuedraggable'
 
 const props = defineProps({
@@ -64,7 +64,11 @@ const withOrder = () => {
     }
   }
 
-  return final
+  return _.mergeWith({}, final, form, (value, src) => {
+    if (_.isObject(value)) {
+      return _.merge({}, value, src)
+    }
+  })
 }
 
 const sort = () => {
@@ -87,6 +91,6 @@ const sort = () => {
   )
 }
 
-watch(form, debounce(() => sort(), 1000))
+watch(form, debounce(() => sort(), 600))
 watch(() => props.orderBy, (value) => sortTable(value.field))
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <Header :user="user" />
+  <Header :current-user="currentUser" />
   <main class="container mx-auto p-4 sm:px-0 sm:py-4 w-full">
     <div v-if="flashSuccess" class="mb-4 border rounded-md shadow-sm border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900 p-2">
       {{ flashSuccess }}
@@ -27,7 +27,7 @@ const flashFailed = computed(
   () => page.props.flash.failed,
 )
 
-const user = computed(
-  () => page.props.user,
+const currentUser = computed(
+  () => page.props.currentUser,
 )
 </script>

@@ -7,6 +7,7 @@ use App\Http\Controllers\ForgotPassword;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\PageSpeedController;
 use App\Http\Controllers\ListingOfferController;
@@ -42,7 +43,7 @@ Route::delete('logout', [AuthController::class, 'destroy'])->name('logout');
 
 //UserAccountController
 Route::resource('user', UserController::class)
-    ->only(['create', 'store', 'index', 'edit', 'destroy']);
+    ->only(['create', 'store', 'index', 'edit', 'destroy', 'update']);
 Route::put('user/{user}/restore', [UserController::class, 'restore'])
     ->name('user.restore')
     ->withTrashed();
@@ -84,3 +85,6 @@ Route::get('/email/verify', function () {
 Route::post('/forgot-password', [ForgotPassword::class, 'store'])->name('password.email');
 Route::get('/reset-password/{token}', [ResetPassword::class, 'edit'])->name('password.reset');
 Route::post('/reset-password', [ResetPassword::class, 'update'])->name('password.update');
+
+//ExpansesController
+Route::resource('expenses', ExpensesController::class)->only(['index']);

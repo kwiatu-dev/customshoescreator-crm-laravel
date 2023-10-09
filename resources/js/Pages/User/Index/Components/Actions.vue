@@ -2,6 +2,9 @@
   <Link :href="route('user.edit', {user: object.id})" class="btn-action">Edytuj</Link>
   <Link v-if="!object.deleted_at" :href="route('user.destroy', {user: object.id})" method="delete" as="button" class="btn-action">Usuń</Link>
   <Link v-if="object.deleted_at" :href="route('user.restore', {user: object.id})" method="put" as="button" class="btn-action">Odzyskaj</Link>
+  <Link :href="route('password.email', {email: object.email})" as="button" method="post" class="btn-action">
+    Resetuj hasło
+  </Link>
 </template>
 
 <script setup>

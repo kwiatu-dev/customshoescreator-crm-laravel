@@ -66,30 +66,13 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'first_name', 
         'last_name', 
         'email',
-        'phone',
         'street',
-        'postcode',
+        'street_nr',
+        'apartment_nr',
         'city',
         'country',
         'commission',
         'costs',
-        'distribution'
-    ];
-
-    public static $labels = [
-        'first_name' => ['label' => 'Imię',],
-        'last_name' => ['label' => 'Nazwisko',],
-        'email' => ['label' => 'Email',],
-        'phone' => ['label' => 'Telefon',],
-        'street' => ['label' => 'Ulica',],
-        'street_nr' => ['label' => 'Numer ulicy',],
-        'apartment_nr' => ['label' => 'Numer mieszkania',],
-        'postcode' => ['label' => 'Kod pocztowy',],
-        'city' => ['label' => 'Miasto',],
-        'country' => ['label' => 'Kraj',],
-        'commission' => ['label' => 'Prowizja',],
-        'costs' => ['label' => 'Koszty',],
-        'distribution' => ['label' => 'Podział',],
     ];
 
     /**

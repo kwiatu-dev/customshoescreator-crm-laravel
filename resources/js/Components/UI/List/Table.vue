@@ -5,7 +5,7 @@
       <tr>
         <td v-for="(element, field) in columns" :key="field">
           {{ element.label }}
-          <button class="ml-4" @click="sortTable({field})">
+          <button v-if="element.sortable" class="ml-4" @click="sortTable({field})">
             {{ symbols[sorting[field]] ?? '↓' }}
           </button>
         </td>

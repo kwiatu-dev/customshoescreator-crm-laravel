@@ -9,6 +9,9 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     public function create(){
+        if(Auth::user())
+            return redirect()->route('home');
+
         return inertia(
             'Auth/Login'
         );
@@ -18,7 +21,7 @@ class AuthController extends Controller
         if(!Auth::attempt($request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string'
-        ]), true)){
+        ]), $request->boolean('remember'))){
             throw ValidationException::withMessages([
                 'email' => 'Wprowadzono niepoprawny email lub hasło'
             ]);

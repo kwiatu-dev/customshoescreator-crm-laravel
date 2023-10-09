@@ -24,7 +24,6 @@ class ForgotPassword extends Controller
             return redirect()->back()->with(['failed' => $error]);
         }
 
- 
         $status = Password::sendResetLink(
             $request->only('email')
         );

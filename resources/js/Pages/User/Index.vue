@@ -34,18 +34,18 @@ defineProps({
 })
 
 const columns = {
-  first_name: { label: 'Imię' },
-  last_name: { label: 'Nazwisko' },
-  email: { label: 'Email', link: 'email', prefix: 'mailto:'},
+  first_name: { label: 'Imię', 'sortable': true},
+  last_name: { label: 'Nazwisko', 'sortable': true },
+  email: { label: 'Email', link: 'email', prefix: 'mailto:', 'sortable': true},
   phone: { label: 'Telefon', link: 'phone', prefix: 'tel:'},
-  street: { label: 'Ulica' },
-  street_nr: { label: 'Numer ulicy' },
-  apartment_nr: { label: 'Numer mieszkania' },
+  street: { label: 'Ulica', 'sortable': true },
+  street_nr: { label: 'Numer ulicy', 'sortable': true },
+  apartment_nr: { label: 'Numer mieszkania', 'sortable': true },
   postcode: { label: 'Kod pocztowy' },
-  city: { label: 'Miasto' },
-  country: { label: 'Kraj' },
-  commission: { label: 'Prowizja' },
-  costs: { label: 'Koszty' },
+  city: { label: 'Miasto', 'sortable': true },
+  country: { label: 'Kraj', 'sortable': true },
+  commission: { label: 'Prowizja', 'sortable': true },
+  costs: { label: 'Koszty', 'sortable': true },
   distribution: { label: 'Podział' },
 }
 
