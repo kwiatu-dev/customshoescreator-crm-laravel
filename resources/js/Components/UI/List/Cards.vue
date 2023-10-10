@@ -2,12 +2,12 @@
   <Box v-for="object in objects" :key="object.id" class="flex flex-col gap-2 px-6">
     <Badge :object="object" />
     <div class="flex flex-row flex-wrap">
-      <div v-for="(element, field) in cards" :key="field" class="w-1/2">
-        <a v-if="element.link" :href="(element.prefix ?? '') + object[element.link] + (element.suffix ?? '')" target="_blank" class="text-indigo-600 hover:text-indigo-500">
-          <span>{{ object[field] }}</span>
+      <div v-for="(element, field) in cards" :key="field" class="w-1/2" :class="{'w-full text-lg font-bold mb-4 shadow-sm': element.title}">
+        <a v-if="element.link" :href="(element.link.prefix ?? '') + object[element.link.field] + (element.link.suffix ?? '')" target="_blank" class="text-indigo-600 hover:text-indigo-500">
+          <span>{{ object[field] }} {{ element.suffix }}</span>
         </a>
         <span v-else>
-          {{ object[field] }}
+          {{ object[field] }} {{ element.suffix }}
         </span>
         <span v-for="concat in element.concat" :key="concat">
           {{ (element.separator ?? ' ') + object[concat] }}

@@ -4,7 +4,6 @@ namespace App\Traits;
 
 use Illuminate\Http\Request;
 use App\Helpers\RequestProcessor;
-use App\Http\Controllers\Controller;
 
 trait HasFilters
 {

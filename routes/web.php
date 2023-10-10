@@ -87,4 +87,9 @@ Route::get('/reset-password/{token}', [ResetPassword::class, 'edit'])->name('pas
 Route::post('/reset-password', [ResetPassword::class, 'update'])->name('password.update');
 
 //ExpansesController
-Route::resource('expenses', ExpensesController::class)->only(['index']);
+Route::resource('expenses', ExpensesController::class)
+    ->only(['index', 'create', 'edit', 'destroy']);
+
+Route::put('expenses/{expense}/restore', [ExpensesController::class, 'restore'])
+    ->name('expenses.restore')
+    ->withTrashed();

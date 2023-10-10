@@ -2,16 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Expenses;
 use Illuminate\Http\Request;
 
 class ExpensesController extends Controller
 {
+    private $fields;
+
+    public function __construct()
+    {
+        $this->middleware('admin');
+
+        $this->fields = [
+            'title',
+            'date',
+            'price',
+            'shop_name',
+            'file_name'
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return inertia('Expenses/Index');
+        $expenses = Expenses::query()
+            ->filter($request)
+            ->sort($request)
+            ->latest()
+            ->paginate(6)
+            ->withQueryString();
+
+        $footer = Expenses::query()
+            ->filter($request)
+            ->footer();
+
+        return inertia(
+            'Expenses/Index',
+            [
+                'expenses' => $expenses,
+                'filters' => $request->session()->pull('filters'),
+                'sort' => $request->session()->pull('sort'),
+                'footer' => $footer,
+            ]
+        );
     }
 
     /**
@@ -19,7 +54,7 @@ class ExpensesController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Expenses/Create');
     }
 
     /**
@@ -41,9 +76,9 @@ class ExpensesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Expenses $expense)
     {
-        //
+        return inertia('Expenses/Edit');
     }
 
     /**
@@ -57,8 +92,16 @@ class ExpensesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Expenses $expense)
     {
-        //
+        $expense->deleteOrFail();
+
+        return redirect()->back()->with('success', 'Wydatek został usunięty!');
+    }
+
+    public function restore(Expenses $expense){
+        $expense->restore();
+
+        return redirect()->back()->with('success', 'Wydatek został przywrócony!');
     }
 }

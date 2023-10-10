@@ -50,4 +50,32 @@
     .btn-action{
         @apply btn-outline md:underline md:hover:text-gray-500 md:border-0 md:bg-transparent md:p-0 md:hover:bg-transparent;
     }
+
+    .today-btn{
+        @apply mr-4 bg-indigo-600 hover:bg-indigo-500;
+    }
+
+    .clear-btn{
+        @apply hover:!bg-gray-500;
+    }
+
+    .view-switch{
+        @apply hover:!bg-gray-500 px-4 py-2;
+    }
+
+    .prev-btn, .next-btn{
+        @apply hover:!bg-gray-500;
+    }
+
+    .datepicker-cell{
+        @apply hover:!bg-gray-500;
+    }
+
+    .datepicker-dropdown{
+        @apply mt-2;
+    }
+
+    .today{
+        @apply !bg-indigo-600;
+    }
 }

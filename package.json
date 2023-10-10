@@ -21,6 +21,7 @@
     "dependencies": {
         "@inertiajs/vue3": "^1.0.11",
         "@vueuse/core": "^10.4.1",
+        "flowbite-datepicker": "^1.2.2",
         "vuedraggable": "^4.1.0"
     }
 }

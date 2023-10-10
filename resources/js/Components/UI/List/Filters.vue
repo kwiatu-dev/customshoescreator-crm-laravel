@@ -1,21 +1,41 @@
 <template>
-  <div class="w-2/3 max-w-lg">
-    <form class="flex flex-col items-start md:flex-row md:flex-nowrap md:items-center gap-2">
-      <input v-model="form.search" type="text" class="input h-11 rounded-r-none md:rounded-md" placeholder="Szukaj" />
-      <div class="flex flex-row flex-norwap gap-2 items-center">
-        <input id="deleted" v-model="form.deleted" type="checkbox" class="cursor-pointer rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-        <label for="deleted" class="label whitespace-nowrap cursor-pointer text-gray-800 dark:text-gray-300">Pokaż usunięte</label>
-        <button type="submit" class="btn-outline dark:bg-gray-600 bg-gray-100" @click.prevent="filter">Filtruj</button>
-        <button v-if="props.filters.deleted || props.filters.search" type="reset" @click="clear">Reset</button>
+  <div class="relative">
+    <button class="px-4 py-2 bg-gray-800 rounded-lg" @click="open">{{ toggle ? 'Schowaj ↑' : 'Filtry ↓' }}</button>
+    <div v-if="toggle" id="dropdown" class="w-80 bg-gray-800 p-4 rounded-lg absolute mt-2">
+      <div class="flex flex-row flex-nowrap justify-between">
+        <h6 class="text-gray-200 font-medium">Filtry</h6>
+        <div class="flex flex-row flex-nowrap gap-4">
+          <span class="text-indigo-500 cursor-pointer hover:text-indigo-400" @click="clear">
+            Resetuj
+          </span>
+        </div>
       </div>
-    </form>
+      <div class="mt-2">
+        <div class="w-full relative">
+          <input id="search" v-model="form.search" type="text" class="w-full bg-gray-600 border-gray-500 rounded-lg placeholder:text-gray-400 placeholder:text-sm dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Szukaj po słowach kluczowych..." />
+        </div>
+      </div>
+      <div id="accordion-flush" class="mt-4">
+        <Heading :title="'Kwota'" @click="expand('price')" />
+        <Price v-if="sections['price']" :form="form" @filters-update="update" />
+        <Heading :title="'Data'" @click="expand('date')" />
+        <Date v-if="sections['date']" :form="form" @filters-update="update" />
+        <Heading :title="'Inne'" @click="expand('others')" />
+        <Others v-if="sections['others']" :form="form" @filters-update="update" />
+      </div>
+    </div>
   </div>
 </template>
-  
+
 <script setup>
+import Heading from '@/Components/UI/List/Filters/Heading.vue'
+import Others from '@/Components/UI/List/Filters/Others.vue'
+import Price from '@/Components/UI/List/Filters/Price.vue'
+import Date from '@/Components/UI/List/Filters/Date.vue'
+import { ref, reactive, watch } from 'vue'
 import { router } from '@inertiajs/vue3'
-import { reactive } from 'vue'
-  
+import { debounce } from 'lodash'
+
 const props = defineProps({
   filters: Object,
   sort: Object,
@@ -25,14 +45,59 @@ const props = defineProps({
 const form = reactive({
   ...props.filters,
 })
-  
-const clear = () => {
-  form.deleted = null
-  form.search = null
-  filter()
+
+const sections = reactive({
+  price: false,
+  date: false,
+  others: false,
+})
+
+const toggle = ref(false)
+
+const open = () => {
+  toggle.value = !toggle.value
 }
 
-const cleanFilter = () => {
+const expand = (id) => {
+  sections[id] = !sections[id]
+}
+  
+const clear = () => {
+  for(const section in sections){
+    sections[section] = !sections[section]
+  }
+
+  setTimeout(() => {
+    for(const section in sections){
+      sections[section] = !sections[section]
+    }
+  }, 0)
+
+  if(form.deleted)
+    form.deleted = null
+  if(form.search)
+    form.search = null
+  if(form.date_start)
+    form.date_start = null
+  if(form.date_end)
+    form.date_end = null
+  if(form.price_start)
+    form.price_start = null
+  if(form.price_end)
+    form.price_end = null
+  if(form.date_start)
+    form.date_start = null
+  if(form.date_end)
+    form.date_end = null
+}
+
+const update = (data) => {
+  for(const key in data){
+    form[key] = data[key]
+  }
+}
+
+const clean = () => {
   return Object.keys(form).reduce((acc, key) => {
     if (form[key]) {
       acc[key] = form[key]
@@ -42,13 +107,16 @@ const cleanFilter = () => {
 }
   
 const filter = () => {
-  router.get(
-    route(props.get),
-    {...cleanFilter(), ...props.sort},
-    {
-      preserveState: true,
-      preserveScroll: true,
-    },
-  )
+  console.log(form)
+//   router.get(
+//     route(props.get),
+//     {...clean(), ...props.sort},
+//     {
+//       preserveState: true,
+//       preserveScroll: true,
+//     },
+//   )
 }
+
+watch(form, debounce(filter, 1000))
 </script>

@@ -36,8 +36,8 @@ defineProps({
 const columns = {
   first_name: { label: 'Imię', 'sortable': true},
   last_name: { label: 'Nazwisko', 'sortable': true },
-  email: { label: 'Email', link: 'email', prefix: 'mailto:', 'sortable': true},
-  phone: { label: 'Telefon', link: 'phone', prefix: 'tel:'},
+  email: { label: 'Email', link: {field: 'email', prefix: 'mailto:'}, 'sortable': true},
+  phone: { label: 'Telefon', link: {field: 'phone', prefix: 'tel:'}},
   street: { label: 'Ulica', 'sortable': true },
   street_nr: { label: 'Numer ulicy', 'sortable': true },
   apartment_nr: { label: 'Numer mieszkania', 'sortable': true },
@@ -52,9 +52,9 @@ const columns = {
 const cards = {
   first_name: {concat: ['last_name']},
   street: {concat: ['street_nr', 'apartment_nr']},
-  email: {link: 'email', prefix: 'mailto:'},
+  email: {link: {field: 'email', prefix: 'mailto:'}},
   postcode: {concat: ['city'], separator: ', '},
-  phone: {link: 'phone', prefix: 'tel:'},
+  phone: {link: {field: 'phone', prefix: 'tel:'}},
   country: {},
 }
 </script>

@@ -10,6 +10,7 @@
     <section v-if="isLargeScreen" class="overflow-auto my-4">
       <Table 
         :columns="columns" 
+        :footer="footer"
         :objects="objects.data" 
         :filters="filters" 
         :sort="sort" 
@@ -49,6 +50,7 @@ defineProps({
   filters: Object,
   cards: Object,
   columns: Object,
+  footer: Object,
   get: String,
   title: String,
   actions: Object,
