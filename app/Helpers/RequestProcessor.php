@@ -38,14 +38,31 @@ class RequestProcessor{
         $filters = [];
 
         foreach($filterable as $filter => $type){
-            if($type === 'boolean'){
+            if(is_array($type)){
+                $filters = array_merge($filters, RequestProcessor::getFilterFields($request, $type));
+            }
+            else if($type === 'boolean'){
                 if($request->boolean($filter)){
-                    $filters = array_merge($filters, $request->only($filter));
+                    $filters[$filter] = $request->boolean($filter);
                 }
             }
             else if($type === 'string'){
                 if($request->string($filter) != ""){
-                    $filters = array_merge($filters, $request->only($filter));
+                    $filters[$filter] = $request->string($filter);
+                }
+            }
+            else if($type === 'numeric'){
+                if($request->string($filter) != ""){
+                    $number = $request->string($filter);
+
+                    if(is_numeric($number->toString())){
+                        $filters[$filter] = $number->toFloat();
+                    }
+                }
+            }
+            else if($type === 'date'){
+                if($request->date($filter)){
+                    $filters[$filter] = $request->date($filter)->format('Y-m-d');
                 }
             }
         }

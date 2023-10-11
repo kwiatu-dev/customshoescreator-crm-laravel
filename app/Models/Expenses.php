@@ -25,9 +25,18 @@ class Expenses extends Model
     protected $filterable = [
         'deleted' => 'boolean',
         'search' => 'string',
+        'date' => ['date_start' => 'date', 'date_end' => 'date'],
+        'number' => ['price_start' => 'numeric', 'price_end' => 'numeric']
     ];
 
     protected $sortable = [
+        'title',
+        'date',
+        'price',
+        'shop_name',
+    ];
+
+    protected $searchable = [
         'title',
         'date',
         'price',

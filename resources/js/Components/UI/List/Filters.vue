@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
-    <button class="px-4 py-2 bg-gray-800 rounded-lg" @click="open">{{ toggle ? 'Schowaj ↑' : 'Filtry ↓' }}</button>
-    <div v-if="toggle" id="dropdown" class="w-80 bg-gray-800 p-4 rounded-lg absolute mt-2">
+    <button class="px-4 py-2 bg-gray-800 rounded-lg" @click="open">{{ toggle ? 'Filtrowanie ↓' : 'Schowaj ↑' }}</button>
+    <div id="dropdown" class="w-80 bg-gray-800 p-4 rounded-lg absolute mt-2" :class="{'hidden': toggle}">
       <div class="flex flex-row flex-nowrap justify-between">
         <h6 class="text-gray-200 font-medium">Filtry</h6>
         <div class="flex flex-row flex-nowrap gap-4">
@@ -16,12 +16,18 @@
         </div>
       </div>
       <div id="accordion-flush" class="mt-4">
-        <Heading :title="'Kwota'" @click="expand('price')" />
-        <Price v-if="sections['price']" :form="form" @filters-update="update" />
-        <Heading :title="'Data'" @click="expand('date')" />
-        <Date v-if="sections['date']" :form="form" @filters-update="update" />
-        <Heading :title="'Inne'" @click="expand('others')" />
-        <Others v-if="sections['others']" :form="form" @filters-update="update" />
+        <div v-if="filterable.price">
+          <Heading :title="'Kwota'" @click="expand('price')" />
+          <Price :form="form" :class="{'hidden': sections['price']}" @filters-update="update" />
+        </div>
+        <div v-if="filterable.date">
+          <Heading :title="'Data'" @click="expand('date')" />
+          <Date :form="form" :class="{'hidden': sections['date']}" @filters-update="update" />
+        </div>
+        <div v-if="filterable.others">
+          <Heading :title="'Inne'" @click="expand('others')" />
+          <Others :form="form" :class="{'hidden': sections['others']}" :filterable="filterable.others" @filters-update="update" />
+        </div>
       </div>
     </div>
   </div>
@@ -38,6 +44,7 @@ import { debounce } from 'lodash'
 
 const props = defineProps({
   filters: Object,
+  filterable: Object,
   sort: Object,
   get: String,
 })
@@ -47,12 +54,12 @@ const form = reactive({
 })
 
 const sections = reactive({
-  price: false,
-  date: false,
-  others: false,
+  price: true,
+  date: true,
+  others: true,
 })
 
-const toggle = ref(false)
+const toggle = ref(true)
 
 const open = () => {
   toggle.value = !toggle.value
@@ -63,16 +70,6 @@ const expand = (id) => {
 }
   
 const clear = () => {
-  for(const section in sections){
-    sections[section] = !sections[section]
-  }
-
-  setTimeout(() => {
-    for(const section in sections){
-      sections[section] = !sections[section]
-    }
-  }, 0)
-
   if(form.deleted)
     form.deleted = null
   if(form.search)
@@ -107,15 +104,14 @@ const clean = () => {
 }
   
 const filter = () => {
-  console.log(form)
-//   router.get(
-//     route(props.get),
-//     {...clean(), ...props.sort},
-//     {
-//       preserveState: true,
-//       preserveScroll: true,
-//     },
-//   )
+  router.get(
+    route(props.get),
+    {...clean(), ...props.sort},
+    {
+      preserveState: true,
+      preserveScroll: true,
+    },
+  )
 }
 
 watch(form, debounce(filter, 1000))

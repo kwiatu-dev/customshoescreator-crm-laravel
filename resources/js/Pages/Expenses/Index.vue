@@ -1,7 +1,8 @@
 <template>
   <ListLayout 
     :objects="expenses" 
-    :filters="filters" 
+    :filters="filters"
+    :filterable="filterable" 
     :sort="sort" 
     :columns="columns" 
     :footer="footer"
@@ -47,5 +48,14 @@ const cards = {
   date: { },
   shop_name: { },
   price: { suffix: 'zł' },
+}
+
+const filterable = {
+  search: {},
+  price: {},
+  date: {},
+  others: { 
+    deleted: {},
+  },
 }
 </script>

@@ -2,7 +2,7 @@
   <div id="others" class="py-4">
     <div class="">
       <ul class="">
-        <li class="flex flex-row flex-nowrap gap-2 items-center justify-start">
+        <li v-if="filterable.deleted" class="flex flex-row flex-nowrap gap-2 items-center justify-start">
           <label class="font-bold text-sm text-gray-200" for="deleted">
             Pokaż usunięte
           </label>
@@ -14,15 +14,20 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue'
 
 const props = defineProps({
   form: Object,
+  filterable: Object,
 })
 
 const form = reactive({
-  ...props.form,
+  deleted: props.form.deleted ?? null,
 })
 
 defineEmits(['filters-update'])
+
+watch(props.form, () => {
+  form.deleted = props.form.deleted ?? null
+})
 </script>

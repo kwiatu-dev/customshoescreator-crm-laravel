@@ -52,7 +52,7 @@
     }
 
     .today-btn{
-        @apply mr-4 bg-indigo-600 hover:bg-indigo-500;
+        @apply mr-4 !bg-indigo-600 hover:bg-indigo-500;
     }
 
     .clear-btn{
@@ -75,7 +75,13 @@
         @apply mt-2;
     }
 
+    .focused{
+        @apply !bg-gray-600;
+    }
+
     .today{
         @apply !bg-indigo-600;
     }
+
+
 }
