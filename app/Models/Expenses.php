@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasFilters;
 use App\Traits\HasSorting;
 use App\Traits\HasFooter;
+use App\Traits\HasPagination;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Expenses extends Model
 {
-    use HasFactory, HasFilters, HasSorting, HasFooter, SoftDeletes;
+    use HasFactory, HasFilters, HasSorting, HasFooter, HasPagination, SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -26,7 +27,8 @@ class Expenses extends Model
         'deleted' => 'boolean',
         'search' => 'string',
         'date' => ['date_start' => 'date', 'date_end' => 'date'],
-        'number' => ['price_start' => 'numeric', 'price_end' => 'numeric']
+        'number' => ['price_start' => 'numeric', 'price_end' => 'numeric'],
+        'pagination' => 'string',
     ];
 
     protected $sortable = [

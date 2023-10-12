@@ -1,31 +1,47 @@
 <template>
-  <div class="relative">
-    <button class="px-4 py-2 bg-gray-800 rounded-lg" @click="open">{{ toggle ? 'Filtrowanie ↓' : 'Schowaj ↑' }}</button>
-    <div id="dropdown" class="w-80 bg-gray-800 p-4 rounded-lg absolute mt-2" :class="{'hidden': toggle}">
+  <div v-if="filterable" class="relative">
+    <button 
+      class="btn-outline text-black bg-gray-300 border-0 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 px-4 py-2" 
+      :class="{'!bg-gray-200 hover:!bg-gray-300 dark:!bg-gray-700 dark:hover:!bg-gray-800': !toggle}" 
+      @click="open"
+    >
+      {{ toggle ? 'Filtry' : 'Ukryj' }}
+    </button>
+    <div id="dropdown" class="w-80 bg-gray-300 dark:bg-gray-800 p-4 rounded-lg absolute mt-2" :class="{'hidden': toggle}">
       <div class="flex flex-row flex-nowrap justify-between">
-        <h6 class="text-gray-200 font-medium">Filtry</h6>
+        <h6 class="dark:text-gray-200 font-medium">Filtry</h6>
         <div class="flex flex-row flex-nowrap gap-4">
-          <span class="text-indigo-500 cursor-pointer hover:text-indigo-400" @click="clear">
+          <span class="text-indigo-600 hover:underline dark:text-indigo-500 cursor-pointer" @click="clear">
             Resetuj
           </span>
         </div>
       </div>
-      <div class="mt-2">
+      <div v-if="filterable?.search" class="mt-2">
         <div class="w-full relative">
-          <input id="search" v-model="form.search" type="text" class="w-full bg-gray-600 border-gray-500 rounded-lg placeholder:text-gray-400 placeholder:text-sm dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Szukaj po słowach kluczowych..." />
+          <input 
+            id="search" 
+            v-model="form.search" 
+            type="text" 
+            class="filter-input" 
+            placeholder="Szukaj po słowach kluczowych..."
+          />
         </div>
       </div>
       <div id="accordion-flush" class="mt-4">
-        <div v-if="filterable.price">
-          <Heading :title="'Kwota'" @click="expand('price')" />
+        <div v-if="filterable?.price">
+          <Heading :title="'Kwota'" :class="{'active': !sections['price']}" @click="expand('price')" />
           <Price :form="form" :class="{'hidden': sections['price']}" @filters-update="update" />
         </div>
-        <div v-if="filterable.date">
-          <Heading :title="'Data'" @click="expand('date')" />
+        <div v-if="filterable?.date">
+          <Heading :title="'Data'" :class="{'active': !sections['date']}" @click="expand('date')" />
           <Date :form="form" :class="{'hidden': sections['date']}" @filters-update="update" />
         </div>
-        <div v-if="filterable.others">
-          <Heading :title="'Inne'" @click="expand('others')" />
+        <div v-if="filterable?.pagination">
+          <Heading :title="'Stronicowanie'" :class="{'active': !sections['pagination']}" @click="expand('pagination')" />
+          <Pagination :form="form" :class="{'hidden': sections['pagination']}" @filters-update="update" />
+        </div>
+        <div v-if="filterable?.others">
+          <Heading :title="'Inne'" :class="{'active': !sections['others']}" @click="expand('others')" />
           <Others :form="form" :class="{'hidden': sections['others']}" :filterable="filterable.others" @filters-update="update" />
         </div>
       </div>
@@ -38,6 +54,7 @@ import Heading from '@/Components/UI/List/Filters/Heading.vue'
 import Others from '@/Components/UI/List/Filters/Others.vue'
 import Price from '@/Components/UI/List/Filters/Price.vue'
 import Date from '@/Components/UI/List/Filters/Date.vue'
+import Pagination from '@/Components/UI/List/Filters/Pagination.vue'
 import { ref, reactive, watch } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { debounce } from 'lodash'
@@ -56,6 +73,7 @@ const form = reactive({
 const sections = reactive({
   price: true,
   date: true,
+  pagination: true,
   others: true,
 })
 
@@ -96,7 +114,7 @@ const update = (data) => {
 
 const clean = () => {
   return Object.keys(form).reduce((acc, key) => {
-    if (form[key]) {
+    if (form[key] && form[key] !== 'null') {
       acc[key] = form[key]
     }
     return acc

@@ -10,7 +10,7 @@ trait HasSorting
     public function scopeSort($query, Request $request)
     {
         $sort = RequestProcessor::getSortFields($request, $this->sortable);
-        $request->session()->put('sort', $sort);
+        session()->put('sort', $sort);
 
         $query->when(
             $sort ?? false,

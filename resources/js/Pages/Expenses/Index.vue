@@ -16,9 +16,9 @@
     <template #create>
       <Link
         :href="route('expenses.create')" 
-        class="btn-primary w-1/3 rounded-l-none h-11 text-center md:rounded-l-md md:w-auto md:text-left"
+        class="btn-primary"
       >
-        + Dodaj <span class="hidden md:inline">wydatek</span>
+        + Dodaj wydatek
       </Link>
     </template>
   </ListLayout>
@@ -54,6 +54,7 @@ const filterable = {
   search: {},
   price: {},
   date: {},
+  pagination: {},
   others: { 
     deleted: {},
   },

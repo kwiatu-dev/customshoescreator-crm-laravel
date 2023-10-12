@@ -1,7 +1,7 @@
 <template>
   <header>
-    <nav class="bg-gray-100 border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
-      <div class="flex flex-wrap justify-between items-center mx-auto container">
+    <nav class="bg-gray-100 border-gray-200 dark:bg-gray-800 ">
+      <div class="flex flex-wrap justify-between items-center mx-auto container px-4 lg:px-6 py-2.5">
         <div class="w-full lg:w-auto flex justify-between items-center lg:order-2">
           <div>
             <a v-if="!currentUser" :href="route('login')" class="text-indigo-600 dark:text-indigo-400 bg-gray-200 hover:bg-gray-50 dark:bg-gray-900 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800 inline-block">Zaloguj się</a>

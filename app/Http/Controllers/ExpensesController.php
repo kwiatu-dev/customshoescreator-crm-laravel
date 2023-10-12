@@ -31,8 +31,7 @@ class ExpensesController extends Controller
             ->filter($request)
             ->sort($request)
             ->latest()
-            ->paginate(6)
-            ->withQueryString();
+            ->pagination();
 
         $footer = Expenses::query()
             ->filter($request)

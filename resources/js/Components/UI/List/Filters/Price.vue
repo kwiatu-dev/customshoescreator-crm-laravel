@@ -4,15 +4,15 @@
       v-model.number="form.price_start"
       type="number"
       placeholder="Od"
-      class="input-filter-l w-1/2 bg-gray-600 border-gray-500 placeholder:text-gray-400 font-normal text-sm"
-      @change="$emit('filters-update', form)"
+      class="filter-input rounded-r-none"
+      @input="$emit('filters-update', form)"
     />
     <input
       v-model.number="form.price_end"
       type="number"
       placeholder="Do" 
-      class="input-filter-r w-1/2 bg-gray-600 border-gray-500 placeholder:text-gray-400 font-normal text-sm"
-      @change="$emit('filters-update', form)"
+      class="filter-input rounded-l-none"
+      @input="$emit('filters-update', form)"
     />
   </div>
 </template>

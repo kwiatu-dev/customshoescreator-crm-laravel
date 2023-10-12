@@ -7,7 +7,7 @@
           ref="start"
           type="text"
           placeholder="Od"
-          class="input-filter-l w-full bg-gray-600 border-gray-500 placeholder:text-gray-400 font-normal text-sm text-gray-300"
+          class="filter-input rounded-r-none"
         />
       </div>
       <div class="relative w-1/2">
@@ -15,7 +15,7 @@
           ref="end"
           type="text" 
           placeholder="Do"
-          class="input-filter-r w-full bg-gray-600 border-gray-500 placeholder:text-gray-400 font-normal text-sm text-gray-300"
+          class="filter-input rounded-l-none"
         />
       </div>
     </div>

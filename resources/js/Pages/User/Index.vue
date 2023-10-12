@@ -5,6 +5,7 @@
     :sort="sort" 
     :columns="columns" 
     :cards="cards"
+    :filterable="filterable"
     :get="'user.index'"
     :actions="actions"
   >
@@ -56,5 +57,10 @@ const cards = {
   postcode: {concat: ['city'], separator: ', '},
   phone: {link: {field: 'phone', prefix: 'tel:'}},
   country: {},
+}
+
+const filterable = {
+  search: {},
+  others: { deleted: {} },
 }
 </script>
