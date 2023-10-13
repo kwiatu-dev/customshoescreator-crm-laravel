@@ -88,8 +88,11 @@ Route::post('/reset-password', [ResetPassword::class, 'update'])->name('password
 
 //ExpansesController
 Route::resource('expenses', ExpensesController::class)
-    ->only(['index', 'create', 'edit', 'destroy']);
+    ->only(['index', 'create', 'edit', 'destroy', 'store']);
 
 Route::put('expenses/{expense}/restore', [ExpensesController::class, 'restore'])
     ->name('expenses.restore')
     ->withTrashed();
+
+Route::delete('expenses/{expense}/file', [ExpensesController::class, 'remove'])
+    ->name('expenses.remove');

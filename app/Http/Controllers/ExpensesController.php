@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Expenses;
 use Illuminate\Http\Request;
+use App\Helpers\RequestProcessor;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ExpensesController extends Controller
 {
@@ -18,7 +21,7 @@ class ExpensesController extends Controller
             'date',
             'price',
             'shop_name',
-            'file_name'
+            'file'
         ];
     }
 
@@ -61,7 +64,15 @@ class ExpensesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $fields = RequestProcessor::validation($request, $this->fields);
+        $file = $request->file('file');
+        $path = $file->store('images/expenses', 'public');
+        $fields['file'] = $path;
+
+        Auth::user()->expenses()->save(new Expenses($fields));
+
+        return redirect()->route('expenses.index')
+            ->with('success', 'Wydatek został dodany!');
     }
 
     /**
@@ -69,7 +80,7 @@ class ExpensesController extends Controller
      */
     public function show(string $id)
     {
-        //
+
     }
 
     /**
@@ -77,7 +88,12 @@ class ExpensesController extends Controller
      */
     public function edit(Expenses $expense)
     {
-        return inertia('Expenses/Edit');
+        return inertia(
+            'Expenses/Edit',
+            [
+                'expense' => $expense,
+            ]
+        );
     }
 
     /**
@@ -102,5 +118,22 @@ class ExpensesController extends Controller
         $expense->restore();
 
         return redirect()->back()->with('success', 'Wydatek został przywrócony!');
+    }
+
+    public function remove(Expenses $expense){
+        $full_path = parse_url($expense->file)['path'];
+        $path = str_replace('/storage/', '', $full_path);
+        $disk = Storage::disk('public');
+
+        if($disk->exists($path)){
+            $disk->delete($path);
+            $expense->file = null;
+            $expense->save();
+
+            return redirect()->back()->with('success', 'Faktura została usunięta!');
+        }
+        else{
+            return redirect()->back()->with('failed', 'Wystapił błąd podczas usuwania faktury!');
+        }
     }
 }

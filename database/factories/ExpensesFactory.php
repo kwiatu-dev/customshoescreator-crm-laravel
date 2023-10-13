@@ -21,7 +21,7 @@ class ExpensesFactory extends Factory
             'date' => fake()->date,
             'price' => fake()->randomFloat(2, 10, 1000),
             'shop_name' => fake()->company,
-            'file_name' => fake()->word . '.pdf'
+            'file' => fake()->word . '.pdf'
         ];
     }
 }

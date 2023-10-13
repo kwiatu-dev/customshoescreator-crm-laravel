@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\HasFooter;
 use App\Traits\HasFilters;
 use App\Traits\HasSorting;
-use App\Traits\HasFooter;
 use App\Traits\HasPagination;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -20,7 +21,7 @@ class Expenses extends Model
         'date',
         'price',
         'shop_name',
-        'file_name'
+        'file'
     ];
 
     protected $filterable = [
@@ -51,5 +52,12 @@ class Expenses extends Model
 
     public function user(): BelongsTo{
         return $this->belongsTo(User::class, 'created_by_user_id');
+    }
+
+    protected function file(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? asset("storage/$value") : '',
+        );
     }
 }

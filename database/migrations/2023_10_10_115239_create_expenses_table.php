@@ -16,9 +16,9 @@ return new class extends Migration
             $table->timestamps();
             $table->string('title', 50);
             $table->string('shop_name', 50);
-            $table->decimal('price');
+            $table->unsignedDecimal('price', 8, 2);
             $table->date('date');
-            $table->string('file_name');
+            $table->string('file')->nullable();
             $table->softDeletes();
 
             $table->foreignIdFor(
