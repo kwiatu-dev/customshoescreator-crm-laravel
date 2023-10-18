@@ -25,8 +25,8 @@ return new class extends Migration
             $table->string('postcode', 10)->nullable();
             $table->string('city', 25)->nullable();
             $table->string('country', 25)->nullable();
-            $table->smallInteger('commission');
-            $table->smallInteger('costs');
+            $table->unsignedTinyInteger('commission');
+            $table->unsignedTinyInteger('costs');
             $table->json('distribution');
             $table->softDeletes();
             $table->rememberToken();
