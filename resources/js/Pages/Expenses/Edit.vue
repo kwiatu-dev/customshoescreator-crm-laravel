@@ -10,13 +10,13 @@
 
       <div class="col-span-3">
         <label for="date" class="label">Data</label>
-        <input id="date" ref="date" v-model="form.date" type="text" class="input" />
+        <input id="date" ref="date" v-model="form.date" type="text" class="input" autocomplete="off" />
         <FormError :error="form.errors.date" />
       </div>
 
       <div class="col-span-3">
         <label for="price" class="label">Kwota</label>
-        <input id="price" v-model="form.price" type="number" class="input" />
+        <input id="price" v-model="form.price" type="number" class="input" step="any" min="0" />
         <FormError :error="form.errors.price" />
       </div>
 
@@ -51,7 +51,7 @@
       <div v-if="expense.file" class="col-span-6">
         <label for="file" class="label">Załącznik (faktura)</label>
         <div class="flex flex-row gap-2">
-          <a class="btn-outline" :href="expense.file" target="_blank">Pobierz fakturę</a>
+          <a class="btn-outline" :href="route('private.files', {...expense.file})" target="_blank">Pokaż fakturę</a>
           <Link class="btn-outline" :href="route('expenses.remove', {expense: expense.id})" as="button" method="delete" @click="remove">Usuń fakturę</Link>
         </div>
       </div>
@@ -77,7 +77,7 @@ const form = useForm({
   date: props.expense.date ?? null,
   price: props.expense.price ?? null,
   shop_name: props.expense.shop_name ?? null,
-  file: props.expense.file ?? null,
+  file: null,
 })
 
 const date = ref(null)
@@ -109,5 +109,5 @@ const remove = () => {
   form.file = null
 }
 
-const update = () => form.put(route('expenses.update'))
+const update = () => form.post(route('expenses.update', {expense: props.expense.id}))
 </script>

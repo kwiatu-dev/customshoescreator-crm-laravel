@@ -10,13 +10,13 @@
 
       <div class="col-span-3">
         <label for="date" class="label">Data</label>
-        <input id="date" ref="date" v-model="form.date" type="text" class="input" />
+        <input id="date" ref="date" v-model="form.date" type="text" class="input" autocomplete="off" />
         <FormError :error="form.errors.date" />
       </div>
 
       <div class="col-span-3">
         <label for="price" class="label">Kwota</label>
-        <input id="price" v-model="form.price" type="number" class="input" />
+        <input id="price" v-model="form.price" type="number" class="input" step="any" min="0" />
         <FormError :error="form.errors.price" />
       </div>
 

@@ -57,7 +57,7 @@ class Expenses extends Model
     protected function file(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value ? asset("storage/$value") : '',
+            get: fn ($value) => $value ? array_combine(['catalog', 'file'], array_map('basename', [dirname($value), $value])) : null,
         );
     }
 }

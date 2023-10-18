@@ -11,6 +11,7 @@ use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\PageSpeedController;
 use App\Http\Controllers\ListingOfferController;
+use App\Http\Controllers\PrivateFilesController;
 use App\Http\Controllers\RealtorListingController;
 use App\Http\Controllers\RealtorListingImageController;
 use App\Notifications\UserCreate;
@@ -96,3 +97,10 @@ Route::put('expenses/{expense}/restore', [ExpensesController::class, 'restore'])
 
 Route::delete('expenses/{expense}/file', [ExpensesController::class, 'remove'])
     ->name('expenses.remove');
+
+Route::post('expenses/{expense}', [ExpensesController::class, 'update'])
+    ->name('expenses.update');
+
+
+//PrivateFilesController
+Route::get('private/files/{catalog}/{file}', PrivateFilesController::class)->name('private.files');

@@ -63,11 +63,17 @@ class ExpensesController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    {   
         $fields = RequestProcessor::validation($request, $this->fields);
-        $file = $request->file('file');
-        $path = $file->store('images/expenses', 'public');
-        $fields['file'] = $path;
+        $file = $request->hasFile('file') ? $request->file('file') : null;
+
+        if($file && $file->isValid()){
+            $path = $file->store('expenses', 'private');
+            $fields['file'] = $path;
+        }
+        else{
+            unset($fields['file']);
+        }
 
         Auth::user()->expenses()->save(new Expenses($fields));
 
@@ -88,6 +94,8 @@ class ExpensesController extends Controller
      */
     public function edit(Expenses $expense)
     {
+        RequestProcessor::rememberPreviousUrl();
+
         return inertia(
             'Expenses/Edit',
             [
@@ -99,9 +107,25 @@ class ExpensesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Expenses $expense)
     {
-        //
+        $fields = RequestProcessor::validation($request, $this->fields);   
+        $file = $request->hasFile('file') ? $request->file('file') : null;
+
+        if($file && $file->isValid()){
+            $path = $file->store('expenses', 'private');
+            $fields['file'] = $path;
+        }
+        else{
+            unset($fields['file']);
+        }
+
+        $expense->update($fields);
+
+        return RequestProcessor::backToPreviousUrlOrRoute(
+            'expenses.index', 
+            'Wydatek został edytowany!'
+        );
     }
 
     /**
@@ -121,12 +145,12 @@ class ExpensesController extends Controller
     }
 
     public function remove(Expenses $expense){
-        $full_path = parse_url($expense->file)['path'];
-        $path = str_replace('/storage/', '', $full_path);
-        $disk = Storage::disk('public');
+        $catalog = $expense->file['catalog'];
+        $file = $expense->file['file'];
+        $disk = Storage::disk('private');
 
-        if($disk->exists($path)){
-            $disk->delete($path);
+        if($disk->exists("$catalog/$file")){
+            $disk->delete("$catalog/$file");
             $expense->file = null;
             $expense->save();
 
