@@ -4,7 +4,7 @@
       <slot name="title" />
     </h1>
     <section class="flex flex-row justify-between md:items-center mt-8">
-      <Filters :filters="filters" :filterable="filterable" :sort="sort" :get="get" />
+      <Filters :filters="filters" :filterable="filterable" :sort="sort" :get="get" :columns="columns" />
       <slot name="create" />
     </section>
     <div v-if="objects.data.length">

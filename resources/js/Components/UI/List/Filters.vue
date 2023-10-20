@@ -32,12 +32,24 @@
           <Heading :title="'Kwota'" :class="{'active': !sections['price']}" @click="expand('price')" />
           <Price :form="form" :class="{'hidden': sections['price']}" @filters-update="update" />
         </div>
-        <div v-if="filterable?.date">
-          <Heading :title="'Data'" :class="{'active': !sections['date']}" @click="expand('date')" />
-          <Date :form="form" :class="{'hidden': sections['date']}" @filters-update="update" />
+        <div v-if="filterable?.visualization">
+          <Heading :title="'Koszt wizualizacji'" :class="{'active': !sections['visualization']}" @click="expand('visualization')" />
+          <VisualizationCost :form="form" :class="{'hidden': sections['visualization']}" @filters-update="update" />
+        </div>
+        <div v-for="(column) in filterable.date.columns" :key="column">
+          <Heading :title="columns[column].label" :class="{'active': !sections[column]}" @click="expand(column)" />
+          <Date :form="form" :class="{'hidden': sections[column]}" :column="column" @filters-update="update" /> 
+        </div>
+        <div v-if="filterable?.status">
+          <Heading :title="'Status'" :class="{'active': !sections['status']}" @click="expand('status')" />
+          <Status :form="form" :class="{'hidden': sections['status']}" @filters-update="update" />
+        </div>
+        <div v-if="filterable?.type">
+          <Heading :title="'Typ'" :class="{'active': !sections['type']}" @click="expand('type')" />
+          <Type :form="form" :class="{'hidden': sections['type']}" @filters-update="update" />
         </div>
         <div v-if="filterable?.pagination">
-          <Heading :title="'Stronicowanie'" :class="{'active': !sections['pagination']}" @click="expand('pagination')" />
+          <Heading :title="'Ilość'" :class="{'active': !sections['pagination']}" @click="expand('pagination')" />
           <Pagination :form="form" :class="{'hidden': sections['pagination']}" @filters-update="update" />
         </div>
         <div v-if="filterable?.others">
@@ -53,8 +65,11 @@
 import Heading from '@/Components/UI/List/Filters/Heading.vue'
 import Others from '@/Components/UI/List/Filters/Others.vue'
 import Price from '@/Components/UI/List/Filters/Price.vue'
+import VisualizationCost from '@/Components/UI/List/Filters/VisualizationCost.vue'
 import Date from '@/Components/UI/List/Filters/Date.vue'
 import Pagination from '@/Components/UI/List/Filters/Pagination.vue'
+import Status from '@/Components/UI/List/Filters/Status.vue'
+import Type from '@/Components/UI/List/Filters/Type.vue'
 import { ref, reactive, watch } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { debounce } from 'lodash'
@@ -64,6 +79,7 @@ const props = defineProps({
   filterable: Object,
   sort: Object,
   get: String,
+  columns: Object,
 })
   
 const form = reactive({
@@ -72,9 +88,16 @@ const form = reactive({
 
 const sections = reactive({
   price: true,
-  date: true,
   pagination: true,
   others: true,
+  status: true,
+  type: true,
+  visualization: true,
+
+  ...props.filterable.date.columns.reduce((acc, key) => {
+    acc[key] = true
+    return acc
+  }, {}),
 })
 
 const toggle = ref(true)
@@ -88,22 +111,9 @@ const expand = (id) => {
 }
   
 const clear = () => {
-  if(form.deleted)
-    form.deleted = null
-  if(form.search)
-    form.search = null
-  if(form.date_start)
-    form.date_start = null
-  if(form.date_end)
-    form.date_end = null
-  if(form.price_start)
-    form.price_start = null
-  if(form.price_end)
-    form.price_end = null
-  if(form.date_start)
-    form.date_start = null
-  if(form.date_end)
-    form.date_end = null
+  for (let key of Object.keys(form)) {
+    form[key] = null
+  }
 }
 
 const update = (data) => {

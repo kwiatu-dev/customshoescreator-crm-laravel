@@ -34,18 +34,12 @@ let pickerEnd = null
 
 const props = defineProps({
   form: Object,
-  column: String,
 })
-
-const date_start = `${props.column}_start`
-const date_end = `${props.column}_end`
 
 const form = reactive({
-  [date_start]: props.form[date_start] ?? null,
-  [date_end]: props.form[date_end] ?? null,
+  date_start: props.form.date_start ?? null,
+  date_end: props.form.date_end ?? null,
 })
-
-console.log(form)
 
 onMounted(() => {
   Datepicker.locales.pl = language.pl
@@ -56,14 +50,14 @@ onMounted(() => {
     todayHighlight: true,
     language: 'pl',
     format: 'yyyy-mm-dd',
-    defaultViewDate: new Date(form[date_start] ?? 'today'),
+    defaultViewDate: new Date(form.date_start ?? 'today'),
   })
 
-  start.value.value = form[date_start] ?? null
+  start.value.value = form.date_start ?? null
   pickerStart.update()
   
   start.value.addEventListener('changeDate', (event) => {
-    form[date_start] = event.target.value 
+    form.date_start = event.target.value 
     emit('filters-update', form)
   })
 
@@ -73,14 +67,14 @@ onMounted(() => {
     todayHighlight: true,
     language: 'pl',
     format: 'yyyy-mm-dd',
-    defaultViewDate: new Date(form[date_end] ?? 'today'),
+    defaultViewDate: new Date(form.date_end ?? 'today'),
   })
 
-  end.value.value = form[date_end] ?? null
+  end.value.value = form.date_end ?? null
   pickerEnd.update()
 
   end.value.addEventListener('changeDate', (event) => {
-    form[date_end] = event.target.value 
+    form.date_end = event.target.value 
     emit('filters-update', form)
   })
 })
@@ -88,11 +82,25 @@ onMounted(() => {
 const emit = defineEmits(['filters-update'])
 
 watch(props.form, () => {
-  form[date_start] = props.form[date_start] ?? null
-  form[date_end] = props.form[date_end] ?? null
-  start.value.value = props.form[date_start] ?? null
-  end.value.value = props.form[date_end] ?? null
+  form.date_start = props.form.date_start ?? null
+  form.date_end = props.form.date_end ?? null
+  start.value.value = props.form.date_start ?? null
+  end.value.value = props.form.date_end ?? null
   pickerStart.update()
   pickerEnd.update()
 })
 </script>
+
+<style scoped>
+.grid-cols-7{
+  grid-template-columns: repeat(7,minmax(0,1fr));
+}
+    
+.w-64{
+  width: 16rem;
+}
+
+.leading-9{
+  line-height: 2.25rem;
+}
+</style>

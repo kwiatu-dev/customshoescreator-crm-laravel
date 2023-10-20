@@ -29,6 +29,7 @@ class ProjectFactory extends Factory
             'commission' => 65,
             'costs' => 30,
             'distribution' => json_encode(['1' => 50, '2' => 50]),
+            'visualization' => fake()->randomFloat(2, 0, 100),
             'created_by_user_id' => $this->user(),
             'client_id' => $this->client(),
             'status_id' => $this->status(),
@@ -38,7 +39,7 @@ class ProjectFactory extends Factory
 
     public function user()
     {
-        return User::where('is_admin', 1)->inRandomOrder()->first();
+        return User::all()->random();
     }
 
     public function client()

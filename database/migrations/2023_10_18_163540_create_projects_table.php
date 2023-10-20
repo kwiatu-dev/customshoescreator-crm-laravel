@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('commission');
             $table->unsignedTinyInteger('costs');
             $table->json('distribution');
+            $table->decimal('visualization', 8, 2, true);
             $table->softDeletes();
             $table->timestamps();
 

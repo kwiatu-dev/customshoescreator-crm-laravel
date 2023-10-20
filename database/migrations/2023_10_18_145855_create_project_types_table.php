@@ -17,12 +17,12 @@ return new class extends Migration
         });
 
         DB::table('project_types')->insert([
-            ['name' => 'renowacja butów'],
-            ['name' => 'personalizacja butów'],
-            ['name' => 'personalizacja ubrań'],
-            ['name' => 'haft ręczny'],
-            ['name' => 'haft komputerowy'],
-            ['name' => 'inne']
+            ['name' => 'Renowacja butów'],
+            ['name' => 'Personalizacja butów'],
+            ['name' => 'Personalizacja ubrań'],
+            ['name' => 'Haft ręczny'],
+            ['name' => 'Haft komputerowy'],
+            ['name' => 'Inne']
         ]);
     }
 

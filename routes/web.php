@@ -12,6 +12,7 @@ use App\Http\Controllers\ListingController;
 use App\Http\Controllers\PageSpeedController;
 use App\Http\Controllers\ListingOfferController;
 use App\Http\Controllers\PrivateFilesController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\RealtorListingController;
 use App\Http\Controllers\RealtorListingImageController;
 use App\Notifications\UserCreate;
@@ -104,3 +105,6 @@ Route::post('expenses/{expense}', [ExpensesController::class, 'update'])
 
 //PrivateFilesController
 Route::get('private/files/{catalog}/{file}', PrivateFilesController::class)->name('private.files');
+
+//ProjectController
+Route::resource('projects', ProjectController::class);

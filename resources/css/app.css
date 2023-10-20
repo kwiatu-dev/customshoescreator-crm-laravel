@@ -44,7 +44,7 @@
     }
 
     td{
-        @apply text-left align-middle p-6 whitespace-nowrap border border-gray-300;
+        @apply text-left align-middle p-6 whitespace-nowrap border border-gray-300 max-w-xs overflow-hidden truncate;
     }
 
     .btn-action{
