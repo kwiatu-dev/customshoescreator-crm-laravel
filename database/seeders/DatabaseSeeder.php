@@ -42,5 +42,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Expenses::factory(10)->create([
             'created_by_user_id' => 1,
         ]);
+
+        \App\Models\Project::factory(20)->create();
     }
 }

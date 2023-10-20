@@ -15,6 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('name', 25);
         });
+
+        DB::table('project_types')->insert([
+            ['name' => 'renowacja butów'],
+            ['name' => 'personalizacja butów'],
+            ['name' => 'personalizacja ubrań'],
+            ['name' => 'haft ręczny'],
+            ['name' => 'haft komputerowy'],
+            ['name' => 'inne']
+        ]);
     }
 
     /**

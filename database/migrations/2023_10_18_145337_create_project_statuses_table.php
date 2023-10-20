@@ -15,6 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name', 25);
         });
+
+        DB::table('project_statuses')->insert([
+            ['name' => 'Oczekujące'],
+            ['name' => 'W trakcie realizacji'],
+            ['name' => 'Zakończone'],
+        ]);
     }
 
     /**
