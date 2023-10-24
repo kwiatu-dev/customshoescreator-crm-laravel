@@ -25,6 +25,10 @@ const data = computed(() => {
   let value = ''
   const separator = (props.element?.separator || ' ')
 
+  if(props.element?.blank === true){
+    return value
+  }
+
   if(props.element?.columns){
     value = props.element.columns.map(key => props.object[props.field][key]).join(' ')
   }

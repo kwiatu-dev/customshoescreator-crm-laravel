@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\ConversionSource;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -29,7 +30,7 @@ class ClientFactory extends Factory
             'city' => fake('pl_PL')->city(),
             'country' => 'Polska',
             'username' => fake('pl_PL')->userName(),
-            'conversion_source' => null,
+            'conversion_source_id' => $this->random_conversion_source(),
             'social_link' => fake('pl_PL')->url(),
         ];
     }
@@ -45,14 +46,8 @@ class ClientFactory extends Factory
         ]);
     }
 
-    public function conversion()
+    public function random_conversion_source()
     {
-        $socialMediaNames = ['Facebook', 'Twitter', 'Instagram', 'LinkedIn', 'Pinterest'];
-    
-        return $this->state(
-            fn (array $attributes) => [
-                'conversion_source' => $socialMediaNames[array_rand($socialMediaNames)]
-            ]
-        );
+        return ConversionSource::all()->random();
     }
 }

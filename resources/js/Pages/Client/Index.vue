@@ -1,43 +1,80 @@
 <template>
-  <div>
-    <h1 class="title">Lista klientów</h1>
-    <section class="flex items-start flex-row md:justify-between md:items-center mt-8">
-      <ClientFilters :filters="filters" :sort="sort" />
+  <ListLayout 
+    :objects="clients" 
+    :filters="filters"
+    :filterable="filterable" 
+    :sort="sort" 
+    :sortable="sortable"
+    :columns="columns" 
+    :cards="cards"
+    :get="'client.index'"
+    :actions="actions"
+  >
+    <template #title>
+      Lista klientów
+    </template>
+    <template #create>
       <Link
         :href="route('client.create')" 
-        class="btn-primary w-1/3 rounded-l-none h-11 text-center md:rounded-l-md md:w-auto md:text-left"
+        class="btn-primary"
       >
-        + Dodaj {{ !isLargeScreen ? '' : 'klienta' }}
+        + Dodaj klienta
       </Link>
-    </section>
-    <section v-if="isLargeScreen" class="overflow-auto my-4">
-      <ClientTable :clients="clients.data" :sort="sort" :filters="filters" :page="clients.current_page" />
-    </section>
-    <section v-if="!isLargeScreen" class="my-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-      <ClientCards :clients="clients.data" />
-    </section>
-    <section class="flex flex-col-reverse md:flex-row justify-between items-center">
-      <div>Wyświetlanie rekordów od {{ clients.from }} do {{ clients.to }} z {{ clients.total }} </div>
-      <div>
-        <Pagination :links="clients.links" />
-      </div>
-    </section>
-  </div>
+    </template>
+  </ListLayout>
 </template>
-
+  
 <script setup>
 import { Link } from '@inertiajs/vue3'
-import { useMediaQuery } from '@vueuse/core'
-import Pagination from '@/Components/UI/Pagination.vue'
-import ClientTable from '@/Pages/Client/Index/Components/ClientTable.vue'
-import ClientFilters from '@/Pages/Client/Index/Components/ClientFilters.vue'
-import ClientCards from '@/Pages/Client/Index/Components/ClientCards.vue'
-
-const isLargeScreen = useMediaQuery('(min-width: 768px)')
-
+import ListLayout from '@/Components/UI/List/Layout.vue'
+import actions from '@/Pages/Client/Index/Components/Actions.vue'
+  
 defineProps({
-  filters: Object,
   clients: Object,
+  filters: Object,
   sort: Object,
 })
+  
+const columns = {
+  username: { label: 'Nick', link: { field: 'social_link' }},
+  first_name: { label: 'Imię' },
+  last_name: { label: 'Naziwsko' },
+  email: { label: 'Email' },
+  phone: { label: 'Numer telefonu' },
+  street: { label: 'Ulica' },
+  street_nr: { label: 'Numer ulicy' },
+  apartment_nr: { label: 'Numer mieszkania' },
+  postcode: { label: 'Kod pocztowy' },
+  city: { label: 'Miasto' },
+  country: { label: 'Kraj' },
+  conversion_source: { columns: ['name'], label: 'Źródło konwersji' },
+}
+  
+const cards = {
+  first_name: { title: true, concat: ['last_name'] },
+  email: { link: { field: 'email', prefix: 'mailto:' }},
+  street: { concat: ['street_nr', 'apartment_nr'] },
+  phone: { link: { field: 'phone', prefix: 'tel:' }},
+  postcode: { concat: ['city'], separator: ', ' },
+}
+  
+const filterable = {
+  search: {},
+  dictionary: [ 
+    { table: 'ConversionSource', column: 'conversion_source_id', label: 'Źródło konwersji' },
+  ], 
+  pagination: {},
+  others: [ { name: 'deleted', label: 'Pokaż usunięte' }, { name: 'created_by_user', label: 'Pokaż moje' } ],
+}
+
+const sortable = { 
+  username: true,
+  first_name: true,
+  last_name: true,
+  street: true,
+  street_nr: true,
+  apartment_nr: true,
+  city: true,
+  country: true,
+}
 </script>

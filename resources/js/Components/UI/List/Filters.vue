@@ -28,15 +28,15 @@
         </div>
       </div>
       <div id="accordion-flush" class="mt-4">
-        <div v-for="(column) in filterable.numeric.columns" :key="column">
+        <div v-for="(column) in filterable?.numeric?.columns" :key="column">
           <Heading :title="columns[column].label" :class="{'active': !sections[column]}" @click="expand(column)" />
           <Price :form="form" :class="{'hidden': sections[column]}" :column="column" @filters-update="update" /> 
         </div>
-        <div v-for="(column) in filterable.date.columns" :key="column">
+        <div v-for="(column) in filterable?.date?.columns" :key="column">
           <Heading :title="columns[column].label" :class="{'active': !sections[column]}" @click="expand(column)" />
           <Date :form="form" :class="{'hidden': sections[column]}" :column="column" @filters-update="update" /> 
         </div>
-        <div v-for="(object, index) in filterable.dictionary" :key="index">
+        <div v-for="(object, index) in filterable?.dictionary" :key="index">
           <Heading :title="object.label" :class="{'active': !sections[object.column]}" @click="expand(object.column)" />
           <Dictionary :form="form" :class="{'hidden': sections[object.column]}" :column="object.column" :table="object.table" @filters-update="update" /> 
         </div>
@@ -82,17 +82,17 @@ const sections = reactive({
   pagination: true,
   others: true,
 
-  ...props.filterable.dictionary.map(item => item.column).reduce((acc, key) => {
+  ...props.filterable.dictionary?.map(item => item.column).reduce((acc, key) => {
     acc[key] = true
     return acc
   }, {}),
 
-  ...props.filterable.numeric.columns.reduce((acc, key) => {
+  ...props.filterable?.numeric?.columns.reduce((acc, key) => {
     acc[key] = true
     return acc
   }, {}),
 
-  ...props.filterable.date.columns.reduce((acc, key) => {
+  ...props.filterable?.date?.columns.reduce((acc, key) => {
     acc[key] = true
     return acc
   }, {}),

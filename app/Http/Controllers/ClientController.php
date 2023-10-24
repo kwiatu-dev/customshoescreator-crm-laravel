@@ -17,22 +17,18 @@ class ClientController extends Controller
      */
     public function index(Request $request)
     {
-        $filters = Client::getFilterFields($request);
-        $sort = Client::getSortFields($request);
-
-        $clients = Client::query()
-            ->filter($filters)
-            ->sort($sort)
+        $clients = Client::with('conversion_source')
+            ->filter($request)
+            ->sort($request)
             ->latest()
-            ->paginate(6)
-            ->withQueryString();
+            ->pagination();
 
         return inertia(
             'Client/Index',
             [
                 'clients' => $clients,
-                'filters' => $filters,
-                'sort' => $sort,
+                'filters' => $request->session()->pull('filters'),
+                'sort' => $request->session()->pull('sort'),
             ]
         );
     }

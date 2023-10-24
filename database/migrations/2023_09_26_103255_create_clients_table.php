@@ -27,13 +27,18 @@ return new class extends Migration
             $table->string('country', 25)->nullable();
             $table->string('username', 30)->nullable();
             $table->string('social_link', 255)->nullable();
-            $table->string('conversion_source', 15)->nullable();
             $table->softDeletes();
 
             $table->foreignIdFor(
                 \App\Models\User::class,
                 'created_by_user_id'
             )->constrained('users');
+
+
+            $table->foreignIdFor(
+                \App\Models\User::class,
+                'conversion_source_id'
+            )->constrained('conversion_sources');
         });
     }
 

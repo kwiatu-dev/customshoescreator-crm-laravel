@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
             'by_user_id' => 2,
         ]);
 
-        \App\Models\Client::factory(20)->conversion()->create([
+        \App\Models\Client::factory(20)->create([
             'created_by_user_id' => 1,
         ]);
 

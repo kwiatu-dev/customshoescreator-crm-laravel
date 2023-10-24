@@ -3,6 +3,7 @@
     :objects="users" 
     :filters="filters" 
     :sort="sort" 
+    :sortable="sortable"
     :columns="columns" 
     :cards="cards"
     :filterable="filterable"
@@ -15,9 +16,9 @@
     <template #create>
       <Link
         :href="route('user.create')" 
-        class="btn-primary w-1/3 rounded-l-none h-11 text-center md:rounded-l-md md:w-auto md:text-left"
+        class="btn-primary"
       >
-        + Dodaj <span class="hidden md:inline">użytkownika</span>
+        + Dodaj użytkownika
       </Link>
     </template>
   </ListLayout>
@@ -35,32 +36,45 @@ defineProps({
 })
 
 const columns = {
-  first_name: { label: 'Imię', 'sortable': true},
-  last_name: { label: 'Nazwisko', 'sortable': true },
-  email: { label: 'Email', link: {field: 'email', prefix: 'mailto:'}, 'sortable': true},
+  first_name: { label: 'Imię'},
+  last_name: { label: 'Nazwisko' },
+  email: { label: 'Email', link: {field: 'email', prefix: 'mailto:'}},
   phone: { label: 'Telefon', link: {field: 'phone', prefix: 'tel:'}},
-  street: { label: 'Ulica', 'sortable': true },
-  street_nr: { label: 'Numer ulicy', 'sortable': true },
-  apartment_nr: { label: 'Numer mieszkania', 'sortable': true },
+  street: { label: 'Ulica' },
+  street_nr: { label: 'Numer ulicy' },
+  apartment_nr: { label: 'Numer mieszkania' },
   postcode: { label: 'Kod pocztowy' },
-  city: { label: 'Miasto', 'sortable': true },
-  country: { label: 'Kraj', 'sortable': true },
-  commission: { label: 'Prowizja', 'sortable': true },
-  costs: { label: 'Koszty', 'sortable': true },
+  city: { label: 'Miasto' },
+  country: { label: 'Kraj' },
+  commission: { label: 'Prowizja' },
+  costs: { label: 'Koszty' },
   distribution: { label: 'Podział' },
 }
 
 const cards = {
-  first_name: {concat: ['last_name']},
-  street: {concat: ['street_nr', 'apartment_nr']},
+  first_name: {title: true, concat: ['last_name']},
   email: {link: {field: 'email', prefix: 'mailto:'}},
-  postcode: {concat: ['city'], separator: ', '},
+  street: {concat: ['street_nr', 'apartment_nr']},
   phone: {link: {field: 'phone', prefix: 'tel:'}},
-  country: {},
+  postcode: {concat: ['city'], separator: ', '},
 }
 
 const filterable = {
   search: {},
-  others: { deleted: {} },
+  pagination: {},
+  others: [ { name: 'deleted', label: 'Pokaż usunięte' } ],
+}
+
+const sortable = {
+  first_name: true,
+  last_name: true,
+  email: true,
+  street: true,
+  street_nr: true,
+  apartment_nr: true,
+  city: true,
+  country: true,
+  commission: true,
+  costs: true,
 }
 </script>

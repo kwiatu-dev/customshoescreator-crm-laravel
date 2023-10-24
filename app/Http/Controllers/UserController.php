@@ -38,8 +38,7 @@ class UserController extends Controller
             ->filter($request)
             ->sort($request)
             ->latest()
-            ->paginate(6)
-            ->withQueryString();
+            ->pagination();
 
         return inertia(
             'User/Index',

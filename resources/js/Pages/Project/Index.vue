@@ -58,7 +58,6 @@ const cards = {
   status: { columns: ['name'] },
   start: { },
   deadline: { },
-  remarks: { remarks: true },
 }
   
 const filterable = {

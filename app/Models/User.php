@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\HasFilters;
 use App\Traits\HasSorting;
+use App\Traits\HasPagination;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Notifications\Notifiable;
@@ -17,7 +18,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
-    use HasApiTokens, HasFactory, Notifiable, HasFilters, HasSorting, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, HasFilters, HasSorting, HasPagination, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -58,8 +59,11 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     ];
 
     protected $filterable = [
-        'deleted' => 'boolean',
         'search' => 'string',
+        'others' => [
+            ['deleted' => 'boolean'],
+        ],
+        'pagination' => 'string',
     ];
 
     protected $sortable = [

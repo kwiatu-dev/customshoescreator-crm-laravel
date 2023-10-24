@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Project extends Model
 {
-    use HasFactory,  HasFilters, HasSorting, HasFooter, HasPagination, SoftDeletes;
+    use HasFactory, HasFilters, HasSorting, HasFooter, HasPagination, SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -43,12 +43,16 @@ class Project extends Model
             ['price_start' => 'numeric', 'price_end' => 'numeric'],
             ['visualization_start' => 'numeric', 'visualization_end' => 'numeric']
         ],
+        'dictionary' => [
+            ['type_id' => 'string'],
+            ['status_id' => 'string'],
+            ['created_by_user_id' => 'string'],
+        ],
+        'others' => [
+            ['deleted' => 'boolean'],
+            ['created_by_user' => 'boolean']
+        ],
         'pagination' => 'string',
-        'status_id' => 'string',
-        'type_id' => 'string',
-        'deleted' => 'boolean',
-        'created_by_user' => 'boolean',
-        'created_by_user_id' => 'string',
     ];
 
     protected $sortable = [

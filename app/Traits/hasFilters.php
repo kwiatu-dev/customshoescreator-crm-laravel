@@ -106,16 +106,17 @@ trait HasFilters
         );
 
         $query->when(
-            $filters['status_id'] ?? false,
-            function ($query, $value){
-                $query->where('status_id', $value);
-            }
-        );
-
-        $query->when(
-            $filters['type_id'] ?? false,
-            function ($query, $value){
-                $query->where('type_id', $value);
+            $this->filterable['dictionary'] ?? false,
+            function ($query, $value) use ($filters) {
+                foreach($value as $array){
+                    foreach ($array as $field => $type){
+                        if(!array_key_exists($field, $filters)){
+                            continue;
+                        }
+                        
+                        $query->where($field, $filters[$field]);
+                    }
+                }
             }
         );
 
@@ -123,13 +124,6 @@ trait HasFilters
             $filters['created_by_user'] ?? false,
             function ($query, $value){
                 $query->where('created_by_user_id', Auth::user()->id);
-            }
-        );
-
-        $query->when(
-            $filters['created_by_user_id'] ?? false,
-            function ($query, $value){
-                $query->where('created_by_user_id', $value);
             }
         );
         

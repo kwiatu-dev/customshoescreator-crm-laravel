@@ -4,6 +4,7 @@
     :filters="filters"
     :filterable="filterable" 
     :sort="sort" 
+    :sortable="sortable"
     :columns="columns" 
     :footer="footer"
     :cards="cards"
@@ -37,10 +38,10 @@ defineProps({
 })
 
 const columns = {
-  title: { label: 'Tytuł', 'sortable': true},
-  price: { label: 'Kwota', 'sortable': true, suffix: 'zł' },
-  date: { label: 'Data', 'sortable': true },
-  shop_name: { label: 'Nazwa sklepu', 'sortable': true },
+  title: { label: 'Tytuł'},
+  price: { label: 'Kwota', suffix: 'zł' },
+  date: { label: 'Data' },
+  shop_name: { label: 'Nazwa sklepu' },
 }
 
 const cards = {
@@ -52,11 +53,16 @@ const cards = {
 
 const filterable = {
   search: {},
-  price: {},
-  date: {},
+  numeric: { columns: ['price'] },
+  date: { columns: ['date'] },
   pagination: {},
-  others: { 
-    deleted: {},
-  },
+  others: [ { name: 'deleted', label: 'Pokaż usunięte' }, { name: 'created_by_user', label: 'Pokaż moje' } ],
+}
+
+const sortable = {
+  title: true,
+  price: true,
+  date: true,
+  shop_name: true,
 }
 </script>
