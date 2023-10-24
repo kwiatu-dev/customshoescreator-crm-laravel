@@ -7,6 +7,7 @@ use App\Http\Controllers\ForgotPassword;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\PageSpeedController;
@@ -108,3 +109,6 @@ Route::get('private/files/{catalog}/{file}', PrivateFilesController::class)->nam
 
 //ProjectController
 Route::resource('projects', ProjectController::class);
+
+//DictionaryController
+Route::get('dictionary/{table}', [DictionaryController::class, 'index'])->name('dictionary.index');

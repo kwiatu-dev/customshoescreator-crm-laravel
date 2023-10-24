@@ -4,6 +4,7 @@
     :filters="filters"
     :filterable="filterable" 
     :sort="sort" 
+    :sortable="sortable"
     :columns="columns" 
     :footer="footer"
     :cards="cards"
@@ -37,42 +38,48 @@ defineProps({
 })
   
 const columns = {
-  title: { label: 'Tytuł', 'sortable': true},
-  remarks: { label: 'Uwagi', 'sortable': true },
-  price: { label: 'Kwota', 'sortable': true, suffix: 'zł' },
-  visualization: { label: 'Koszt wizualizacji', sortable: true, suffix: 'zł' },
-  start: { label: 'Data rozpoczęcia', 'sortable': true },
-  deadline: { label: 'Deadline', 'sortable': true },
-  user: { label: 'Użytkownik', columns: ['first_name', 'last_name'], link: {field: 'email', prefix: 'mailto:'}},
-  client: { label: 'Klient', columns: ['first_name', 'last_name'], link: {field: 'email', prefix: 'mailto:'} },
+  title: { label: 'Tytuł'},
+  remarks: { label: 'Uwagi' },
+  price: { label: 'Kwota', suffix: ' zł' },
+  visualization: { label: 'Koszt wizualizacji', suffix: ' zł' },
+  start: { label: 'Data rozpoczęcia' },
+  deadline: { label: 'Deadline' },
+  user: { label: 'Użytkownik', columns: ['first_name', 'last_name'], link: {column: 'user', field: 'email', prefix: 'mailto:'}},
+  client: { label: 'Klient', columns: ['first_name', 'last_name'], link: {column: 'client', field: 'email', prefix: 'mailto:'} },
   status: { label: 'Status', columns: ['name'] },
   type: { label: 'Typ', columns: ['name'] },
 }
   
 const cards = {
   title: { title: true },
-  remarks: {  },
-  price: { suffix: 'zł' },
-  visualization: { suffix: 'zł' },
-  start: {  },
-  deadline: {  },
-  created_by_user_id: {  },
-  client_id: {  },
-  status_id: {  },
-  type_id: {  },
+  client: { columns: ['first_name', 'last_name'], link: {column: 'client', field: 'email', prefix: 'mailto:'} },
+  user: { columns: ['first_name', 'last_name'], link: {column: 'user', field: 'email', prefix: 'mailto:'} },
+  price: { suffix: ' zł', concat: ['visualization'], separator: ' + ' },
+  status: { columns: ['name'] },
+  start: { },
+  deadline: { },
+  remarks: { remarks: true },
 }
   
 const filterable = {
   search: {},
-  price: {},
-  visualization: {},
+  numeric: { columns: ['price', 'visualization'] },
   date: { columns: ['start', 'deadline'] },
+  dictionary: [ 
+    { table: 'User', column: 'created_by_user_id', label: 'Użytkownik' },
+    { table: 'ProjectStatus', column: 'status_id', label: 'Status' }, 
+    { table: 'ProjectType', column: 'type_id', label: 'Typ' },
+  ], 
   pagination: {},
-  others: { 
-    deleted: {},
-    created_by_user: {},
-  },
-  status: {},
-  type: {},
+  others: [ { name: 'deleted', label: 'Pokaż usunięte' }, { name: 'created_by_user', label: 'Pokaż moje' } ],
+}
+
+const sortable = { 
+  title: true,
+  remarks: true,
+  price: true,
+  visualization: true,
+  start: true,
+  deadline: true,
 }
 </script>

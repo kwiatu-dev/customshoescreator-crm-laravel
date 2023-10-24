@@ -4,7 +4,13 @@
       <slot name="title" />
     </h1>
     <section class="flex flex-row justify-between md:items-center mt-8">
-      <Filters :filters="filters" :filterable="filterable" :sort="sort" :get="get" :columns="columns" />
+      <Filters 
+        :filters="filters" 
+        :filterable="filterable" 
+        :sort="sort" 
+        :get="get" 
+        :columns="columns" 
+      />
       <slot name="create" />
     </section>
     <div v-if="objects.data.length">
@@ -15,6 +21,7 @@
           :objects="objects.data" 
           :filters="filters" 
           :sort="sort" 
+          :sortable="sortable"
           :page="objects.current_page" 
           :get="get" 
           :actions="actions"
@@ -35,14 +42,7 @@
       </section>
     </div>
     <div v-else>
-      <div>      
-        <h2 class="text-2xl font-bold mt-8">
-          Ups... nie znaleziono danych spełniających podane kryteria
-        </h2>
-        <div v-for="(value, field) in filters" :key="field" class="border-t border-gray-300 mt-4 py-2">
-          {{ field }} => {{ value }}
-        </div>
-      </div>
+      <DataNotFound :filters="filters" />
     </div>
   </div>
 </template>
@@ -53,12 +53,14 @@ import Filters from '@/Components/UI/List/Filters.vue'
 import Table from '@/Components/UI/List/Table.vue'
 import Cards from '@/Components/UI/List/Cards.vue'
 import Pagination from '@/Components/UI/Pagination.vue'
+import DataNotFound from '@/Components/UI/DataNotFound.vue'
 
 const isLargeScreen = useMediaQuery('(min-width: 768px)')
 
 defineProps({
   objects: Object,
   sort: Object,
+  sortable: Object,
   filters: Object,
   filterable: Object,
   cards: Object,

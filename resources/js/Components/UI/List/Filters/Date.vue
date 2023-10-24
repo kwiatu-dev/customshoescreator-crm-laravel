@@ -45,8 +45,6 @@ const form = reactive({
   [date_end]: props.form[date_end] ?? null,
 })
 
-console.log(form)
-
 onMounted(() => {
   Datepicker.locales.pl = language.pl
 

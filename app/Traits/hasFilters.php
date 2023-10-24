@@ -125,6 +125,13 @@ trait HasFilters
                 $query->where('created_by_user_id', Auth::user()->id);
             }
         );
+
+        $query->when(
+            $filters['created_by_user_id'] ?? false,
+            function ($query, $value){
+                $query->where('created_by_user_id', $value);
+            }
+        );
         
         return $query;
     }

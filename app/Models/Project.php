@@ -34,7 +34,6 @@ class Project extends Model
     ];
 
     protected $filterable = [
-        'deleted' => 'boolean',
         'search' => 'string',
         'dates' => [
             ['start_start' => 'date', 'start_end' => 'date'],
@@ -47,7 +46,9 @@ class Project extends Model
         'pagination' => 'string',
         'status_id' => 'string',
         'type_id' => 'string',
-        'created_by_user' => 'boolean'
+        'deleted' => 'boolean',
+        'created_by_user' => 'boolean',
+        'created_by_user_id' => 'string',
     ];
 
     protected $sortable = [

@@ -28,33 +28,27 @@
         </div>
       </div>
       <div id="accordion-flush" class="mt-4">
-        <div v-if="filterable?.price">
-          <Heading :title="'Kwota'" :class="{'active': !sections['price']}" @click="expand('price')" />
-          <Price :form="form" :class="{'hidden': sections['price']}" @filters-update="update" />
-        </div>
-        <div v-if="filterable?.visualization">
-          <Heading :title="'Koszt wizualizacji'" :class="{'active': !sections['visualization']}" @click="expand('visualization')" />
-          <VisualizationCost :form="form" :class="{'hidden': sections['visualization']}" @filters-update="update" />
+        <div v-for="(column) in filterable.numeric.columns" :key="column">
+          <Heading :title="columns[column].label" :class="{'active': !sections[column]}" @click="expand(column)" />
+          <Price :form="form" :class="{'hidden': sections[column]}" :column="column" @filters-update="update" /> 
         </div>
         <div v-for="(column) in filterable.date.columns" :key="column">
           <Heading :title="columns[column].label" :class="{'active': !sections[column]}" @click="expand(column)" />
           <Date :form="form" :class="{'hidden': sections[column]}" :column="column" @filters-update="update" /> 
         </div>
-        <div v-if="filterable?.status">
-          <Heading :title="'Status'" :class="{'active': !sections['status']}" @click="expand('status')" />
-          <Status :form="form" :class="{'hidden': sections['status']}" @filters-update="update" />
-        </div>
-        <div v-if="filterable?.type">
-          <Heading :title="'Typ'" :class="{'active': !sections['type']}" @click="expand('type')" />
-          <Type :form="form" :class="{'hidden': sections['type']}" @filters-update="update" />
+        <div v-for="(object, index) in filterable.dictionary" :key="index">
+          <Heading :title="object.label" :class="{'active': !sections[object.column]}" @click="expand(object.column)" />
+          <Dictionary :form="form" :class="{'hidden': sections[object.column]}" :column="object.column" :table="object.table" @filters-update="update" /> 
         </div>
         <div v-if="filterable?.pagination">
           <Heading :title="'Ilość'" :class="{'active': !sections['pagination']}" @click="expand('pagination')" />
           <Pagination :form="form" :class="{'hidden': sections['pagination']}" @filters-update="update" />
         </div>
         <div v-if="filterable?.others">
-          <Heading :title="'Inne'" :class="{'active': !sections['others']}" @click="expand('others')" />
-          <Others :form="form" :class="{'hidden': sections['others']}" :filterable="filterable.others" @filters-update="update" />
+          <Heading :title="'Inne'" :class="{'active': !sections['others']}" class="pb-3" @click="expand('others')" />
+          <div v-for="(object, index) in filterable.others" :key="index" :class="{'hidden': sections['others']}">
+            <Others :form="form" :label="object.label" :name="object.name" @filters-update="update" />
+          </div>
         </div>
       </div>
     </div>
@@ -65,11 +59,9 @@
 import Heading from '@/Components/UI/List/Filters/Heading.vue'
 import Others from '@/Components/UI/List/Filters/Others.vue'
 import Price from '@/Components/UI/List/Filters/Price.vue'
-import VisualizationCost from '@/Components/UI/List/Filters/VisualizationCost.vue'
 import Date from '@/Components/UI/List/Filters/Date.vue'
 import Pagination from '@/Components/UI/List/Filters/Pagination.vue'
-import Status from '@/Components/UI/List/Filters/Status.vue'
-import Type from '@/Components/UI/List/Filters/Type.vue'
+import Dictionary from '@/Components/UI/List/Filters/Dictionary.vue'
 import { ref, reactive, watch } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { debounce } from 'lodash'
@@ -87,12 +79,18 @@ const form = reactive({
 })
 
 const sections = reactive({
-  price: true,
   pagination: true,
   others: true,
-  status: true,
-  type: true,
-  visualization: true,
+
+  ...props.filterable.dictionary.map(item => item.column).reduce((acc, key) => {
+    acc[key] = true
+    return acc
+  }, {}),
+
+  ...props.filterable.numeric.columns.reduce((acc, key) => {
+    acc[key] = true
+    return acc
+  }, {}),
 
   ...props.filterable.date.columns.reduce((acc, key) => {
     acc[key] = true
