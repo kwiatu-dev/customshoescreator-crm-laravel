@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Client;
 use App\Models\Project;
+use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -61,7 +65,18 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+        $users = User::query()->get();
+        $clients = Client::query()->latest()->get();
+        $types = DB::table('project_types')->get();
+
+        return inertia(
+            'Project/Create',
+            [
+                'users' => $users,
+                'clients' => $clients,
+                'types' => $types
+            ]
+        );
     }
 
     /**
