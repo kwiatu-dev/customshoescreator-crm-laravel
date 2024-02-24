@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-nowrap items-center py-4">
+  <div v-if="loaded" class="flex flex-nowrap items-center py-4">
     <select 
       v-model="form[column]" 
       class="filter-input" 
@@ -28,14 +28,16 @@ const form = reactive({
 })
 
 const options = ref([])
+const loaded = ref(false)
 
 onMounted(() => {
   axios.get(route('dictionary.index', {table: props.table}))
     .then(response => {
       options.value = response.data
+      loaded.value = true
     })
     .catch(error => {
-      console.error(error)
+      loaded.value = false
     })
 })
       

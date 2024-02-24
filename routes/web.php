@@ -75,12 +75,15 @@ Route::prefix('realtor')->name('realtor.')->group(function() {
 Route::resource('client', ClientController::class)->except(['show']);
 
 Route::name('client.restore')->put('client/{client}/restore',
-        [ClientController::class, 'restore']
-    )->withTrashed();
+        [ClientController::class, 'restore'])->withTrashed();
 
 //Email Verification
 Route::get('/email/verify', function () {
-    return inertia('Auth/Verify');
+    if(!Auth::user() || !Auth::user()->hasVerifiedEmail()){
+        return inertia('Auth/Verify');
+    }
+
+    return redirect()->intended();
 })->middleware('auth')->name('verification.notice');
 
 //Password Reset

@@ -65,12 +65,12 @@ const filterable = {
   numeric: { columns: ['price', 'visualization'] },
   date: { columns: ['start', 'deadline'] },
   dictionary: [ 
-    { table: 'User', column: 'created_by_user_id', label: 'Użytkownik' },
+    { table: 'User', column: 'created_by_user_id', label: 'Użytkownik', admin: true },
     { table: 'ProjectStatus', column: 'status_id', label: 'Status' }, 
     { table: 'ProjectType', column: 'type_id', label: 'Typ' },
   ], 
   pagination: {},
-  others: [ { name: 'deleted', label: 'Pokaż usunięte' }, { name: 'created_by_user', label: 'Pokaż moje' } ],
+  others: [ { name: 'deleted', label: 'Pokaż usunięte' }, { name: 'created_by_user', label: 'Pokaż moje', admin: true }],
 }
 
 const sortable = { 

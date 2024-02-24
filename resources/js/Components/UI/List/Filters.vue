@@ -37,8 +37,8 @@
           <Date :form="form" :class="{'hidden': sections[column]}" :column="column" @filters-update="update" /> 
         </div>
         <div v-for="(object, index) in filterable?.dictionary" :key="index">
-          <Heading :title="object.label" :class="{'active': !sections[object.column]}" @click="expand(object.column)" />
-          <Dictionary :form="form" :class="{'hidden': sections[object.column]}" :column="object.column" :table="object.table" @filters-update="update" /> 
+          <Heading v-if="admin(object.admin)" :title="object.label" :class="{'active': !sections[object.column]}" @click="expand(object.column)" />
+          <Dictionary v-if="admin(object.admin)" :form="form" :class="{'hidden': sections[object.column]}" :column="object.column" :table="object.table" @filters-update="update" /> 
         </div>
         <div v-if="filterable?.pagination">
           <Heading :title="'Ilość'" :class="{'active': !sections['pagination']}" @click="expand('pagination')" />
@@ -47,7 +47,7 @@
         <div v-if="filterable?.others">
           <Heading :title="'Inne'" :class="{'active': !sections['others']}" class="pb-3" @click="expand('others')" />
           <div v-for="(object, index) in filterable.others" :key="index" :class="{'hidden': sections['others']}">
-            <Others :form="form" :label="object.label" :name="object.name" @filters-update="update" />
+            <Others v-if="admin(object.admin)" :form="form" :label="object.label" :name="object.name" @filters-update="update" />
           </div>
         </div>
       </div>
@@ -72,6 +72,7 @@ const props = defineProps({
   sort: Object,
   get: String,
   columns: Object,
+  currentUser: Object,
 })
   
 const form = reactive({
@@ -99,6 +100,7 @@ const sections = reactive({
 })
 
 const toggle = ref(true)
+const admin = (flag) => (flag === true && props.currentUser?.is_admin || flag === undefined)
 
 const open = () => {
   toggle.value = !toggle.value

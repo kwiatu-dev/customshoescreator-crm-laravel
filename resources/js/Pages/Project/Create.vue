@@ -2,30 +2,30 @@
   <form class="container mx-auto p-4" autocomplete="off" @submit.prevent="create">
     <h1 class="title">Dodaj projekt</h1>
     <section class="mt-8 flex flex-col justify-center md:grid md:grid-cols-6 gap-4">
-      <div class="col-span-6">
-        <label for="created_by_user" class="label">Wykonawca</label>
+      <div v-if="currentUser?.is_admin" class="col-span-6">
+        <label for="created_by_user_id" class="label">Wykonawca</label>
         <Autocomplete 
           :id="(item) => item.id" 
-          v-model="form.created_by_user" 
+          v-model="form.created_by_user_id" 
           :source="users"
           :fields="['first_name', 'last_name', 'email']"
           :list="(item) => `${item.first_name} ${item.last_name}: ${item.email}`"
           :name="(item) => `${item.first_name} ${item.last_name}`"
         />
-        <FormError :error="form.errors.created_by_user" />
+        <FormError :error="form.errors.created_by_user_id" />
       </div>
 
       <div class="col-span-6">
-        <label for="client" class="label">Klient</label>
+        <label for="client_id" class="label">Klient</label>
         <Autocomplete 
           :id="(item) => item.id" 
-          v-model="form.client" 
+          v-model="form.client_id" 
           :source="clients"
           :fields="['first_name', 'last_name', 'email']"
           :list="(item) => `${item.first_name} ${item.last_name}: ${item.email}`"
           :name="(item) => `${item.first_name} ${item.last_name}`"
         />
-        <FormError :error="form.errors.client" />
+        <FormError :error="form.errors.client_id" />
       </div>
 
       <div class="col-span-3">
@@ -38,11 +38,11 @@
         <label for="type" class="label">Rodzaj projektu</label>
         <DropdownList 
           :id="(item) => item.id" 
-          v-model="form.type"
+          v-model="form.type_id"
           :name="(item) => item.name"
           :source="types"
         />
-        <FormError :error="form.errors.type" />
+        <FormError :error="form.errors.type_id" />
       </div>
 
       <div class="col-span-3">
@@ -58,15 +58,15 @@
       </div>
   
       <div class="col-span-3">
-        <label for="date_start" class="label">Data rozpoczęcia</label>
-        <input id="date_start" ref="date_start" v-model="form.date_start" type="text" class="input" />
-        <FormError :error="form.errors.date_start" />
+        <label for="start" class="label">Data rozpoczęcia</label>
+        <input id="start" ref="start" v-model="form.start" type="text" class="input" />
+        <FormError :error="form.errors.start" />
       </div>
 
       <div class="col-span-3">
-        <label for="date_deadline" class="label">Data zakończenia</label>
-        <input id="date_deadline" ref="date_deadline" v-model="form.date_deadline" type="text" class="input" />
-        <FormError :error="form.errors.date_deadline" />
+        <label for="deadline" class="label">Data zakończenia</label>
+        <input id="deadline" ref="deadline" v-model="form.deadline" type="text" class="input" />
+        <FormError :error="form.errors.deadline" />
       </div>
 
       <div class="col-span-6">
@@ -101,25 +101,27 @@ defineProps({
     type: Array,
     required: true,
   },
+  currentUser: Object,
 })
   
 const form = useForm({
-  created_by_user: null,
-  client: null,
+  created_by_user_id: null,
+  visualization: null,
+  client_id: null,
   title: null,
-  type: null,
+  type_id: null,
   price: null,
-  date_start: null,
-  date_deadline: null,
+  start: null,
+  deadline: null,
   remarks: null,
 })
   
-const date_start = ref(null)
-const date_deadline = ref(null)
+const start = ref(null)
+const deadline = ref(null)
   
 onMounted(() => {
-  datepicker.create(date_start, null, (event) => form.date_start = event.target.value)
-  datepicker.create(date_deadline, null, (event) => form.date_deadline = event.target.value)
+  datepicker.create(start, null, (event) => form.start = event.target.value)
+  datepicker.create(deadline, null, (event) => form.deadline = event.target.value)
 })
   
 const create = () => form.post(route('projects.store'))

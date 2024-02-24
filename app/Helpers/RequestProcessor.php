@@ -23,9 +23,14 @@ class RequestProcessor{
         'title' => 'required|string|min:3|max:50',
         'shop_name' => 'required|string|min:3|max:50',
         'price' => 'required|decimal:0,2|min:0',
-        'date' => 'required|date_format:Y-m-d',
+        'visualization' => 'required|decimal:0,2|min:0',
+        'date' => 'required|date|date_format:Y-m-d',
         'file' => 'nullable|mimes:jpg,png,jpeg,pdf|max:5000',
-
+        'remarks' => 'nullable|string|max:150',
+        'start' => 'required|date|date_format:Y-m-d|after_or_equal:now',
+        'deadline' => 'required|date|date_format:Y-m-d|after_or_equal:now',
+        'created_by_user_id' => 'nullable|exists:users,id',
+        'client_id' => 'required|exists:clients,id'
     ];
 
     public static function getSortFields(Request $request, array $sortable): array{
@@ -76,14 +81,20 @@ class RequestProcessor{
         return $filters;
     }
 
-    public static function validation(Request $request, array $fields, Model $user = null): array{
+    public static function validation(Request $request, array $fields, Model $user = null, array $custom_validation = null): array{
         $validate = [];
 
         foreach($fields as $field){
-            $validate[$field] = str_replace("{objectId}", ($user ? ",$user->id" : ''), self::$fields[$field]);
+            if(array_key_exists($field, self::$fields)){
+                $validate[$field] = str_replace(
+                    "{objectId}", 
+                    ($user ? ",$user->id" : ''), 
+                    self::$fields[$field]);
+            }
         }
 
-        return $request->validate($validate);
+        return $request->validate(
+            array_merge($validate, $custom_validation));
     }
 
     public static function rememberPreviousUrl(){

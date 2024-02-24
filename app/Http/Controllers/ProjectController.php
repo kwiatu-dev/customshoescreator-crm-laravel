@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Models\User;
 use App\Models\Client;
 use App\Models\Project;
-use DB;
 use Illuminate\Http\Request;
+use App\Helpers\RequestProcessor;
 use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
@@ -39,6 +40,10 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
+        if(!Auth::user()?->is_admin){
+            $request->merge(['created_by_user' => true]);
+        }
+
         $projects = Project::with(['status', 'type', 'client', 'user'])
             ->filter($request)
             ->sort($request)
@@ -84,7 +89,26 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $fields = RequestProcessor::validation($request, $this->fields, null, [
+            'type_id' => 'required|exists:project_types,id',
+            'commission' => 'nullable',
+            'costs' => 'nullable',
+            'distribution' => 'nullable'
+        ]);
+
+        $user = User::find($fields['created_by_user_id'] ?? Auth::id());
+        $fields['created_by_user_id'] = $user->id;
+
+        Project::create([
+            ...$fields,
+            'commission' => $user->commission,
+            'costs' => $user->costs,
+            'distribution' => $user->distribution,
+            'status_id' => 1,
+        ]);
+
+        return redirect()->route('projects.index')
+            ->with('success', 'Projekt został dodany!');
     }
 
     /**
