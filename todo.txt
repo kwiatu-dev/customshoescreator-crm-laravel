@@ -1,0 +1,89 @@
+- Dodać możliwośc scrollowania filtra
+- Dodać akcje
+
+- Usunięcie możliwości resetowania hasła usuniętym użytkownikom
+- Poprawa kodu w kontrolerze Client analogicznie do Project
+- Dodać mozliwość otwierania linków w nowej karcie
+- Podczas tworzenia klienta załadować słownik związany z źródlem konwersji w formularzu (sprawdzić, czy zostala podana poprawna wartośc podczas walidacji)
+
+- Utworzyć SHOW dla klientów i użytkoników, aby następnie w widoku projektów móc przechodzić bezpośrednio do szczegółów klienta lub użytkownika jak przez link
+- Sprawdzić poprawność dotychczas utworzonego projektu
+
+
+
+Utworzenie powiadomień w systemie! TUTORIAL
+
+-------------------------------------------------------------------------------------------------
+
+Project_images:
+
+Dodać typ zdjęć: inspiracje, projekty, końcowe zdjęcia
+
+
+-------------------------------------------------------------------------------------------------
+
+Wydatki:
+
+Dodać do wydatków kategorię, aby było wiadomo na co/jakiego wykonawce, wydawane są pieniądze.
+
+-------------------------------------------------------------------------------------------------
+
+Zakładka wolne zlecenia: 
+
+Tytuł 
+Opis 
+Zdjęcia 
+Deadline
+Widełki cenowe
+Klient
+Status - oczekujące, archivalne, usunięte
+Zdjęcia typu inspiracje
+
+
+Create
+------
+
+Po utworzeniu wolnego zlecenia wykonawcy dostają wiadomość email oraz powiadomienie w systemie.
+
+
+Index
+-----
+
+- Tabela z zleceniami oczekującymi zleceniami.
+
+Przyciski
+Zgłoś się - wykonawca podaje termin realizacji oraz koszty (koszt malowania + koszt wizualizacji) spełniające wymagania otwartego zlecenia.
+Przypisz (admin) - przypisuje wybranego użytkownika do zlecenia, trzeba podać termin realizacji od do oraz koszty (koszt malowania + koszt wizualizacji) spełniające wymagania otwartego zlecenia, zmienia status na archivalne, tworzy projekt.
+Edytuj - zwykła edycja otwartego zlecenia.
+Usuń - ustawia status zlecenia na usunięty.
+
+Show
+----
+
+- Wszystkie informacje dotyczące zlecenia oraz klienta.
+- Moje zgłoszenie (zgłoszenie zalogowanej osóby).
+- Tabela z listą osób chętnych, które zgłosiło się, aby wykonać podane zlecenie (widoczne tylko dla administratora).  
+
+Przyciski (tabela)
+Zatwierdź - ustawia status wolnego zlecenia na archivalne i tworzy projekt.
+
+Przyciski (moje zgłoszenie)
+Usuń - usuwa zgłoszenie.
+Edytuj - edytuje zgłoszenie.
+
+-------------------------------------------------------------------------------------------------
+
+Zgłoszenie do wolnego zlecenia:
+
+Użytkownik
+Koszt malowania
+Koszt wizualizacji
+Termin rozpoczęcia
+Uwagi
+
+
+
+
+
+
+
