@@ -30,7 +30,7 @@
     :server="{
       url: '',
       process: {
-        url: '/filepond',
+        url: route('filepond.store'),
         method: 'POST',
         onload: handleFilePondLoad,
         onerror: handleFilePondProcessError,
@@ -73,10 +73,21 @@ const handleFilePondLoad = (uniqueId) => {
 }
 
 const handleFilePondRevert = (uniqueId, load, error) => {
-  images.value = images.value.filter((image) => image !== uniqueId)
-  errors.value = null
-  emit('update:modelValue', images.value)
-  router.delete(`/filepond/${uniqueId}`)
+  router.delete(
+    route('filepond.destroy', { filepond: uniqueId }),
+    {
+      preserveState: true,
+      preserveScroll: true,
+      onSuccess: () => {
+        images.value = images.value.filter((image) => image !== uniqueId)
+        errors.value = null
+        emit('update:modelValue', images.value)
+      },
+      onError: () => {
+        errors.value = { images: 'Wystąpił bląd podczas usuwania' }
+      },
+    },
+  )
 }
 
 const handleFilePondProcessError = (error, file, status) => {
