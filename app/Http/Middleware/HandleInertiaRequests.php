@@ -2,8 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Tightenco\Ziggy\Ziggy;
+use Illuminate\Http\Request;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -41,12 +42,18 @@ class HandleInertiaRequests extends Middleware
                 'success' => $request->session()->get('success'),
                 'failed' => $request->session()->get('failed'),
             ],
+            'ziggy' => function () use ($request) {
+                return array_merge((new Ziggy)->toArray(), [
+                    'location' => $request->url(),
+                ]);
+            },
             'currentUser' => $request->user() ? [
                 'id' => $request->user()->id,
                 'first_name' => $request->user()->first_name,
                 'email' => $request->user()->email,
                 'is_admin' => $request->user()->is_admin,
             ] : null,
+            'csrfToken' => csrf_token()
         ]);
     }
 }

@@ -70,17 +70,24 @@
       </div>
 
       <div class="col-span-6">
+        <label class="label">Inspiracje (zdjęcia)</label>
+        <UploadImages v-model="form.images" />
+        <FormError :error="form.errors.images" />
+      </div>
+
+      <div class="col-span-6">
         <label for="remarks" class="label">Uwagi do projektu</label>
         <textarea id="remarks" v-model="form.remarks" class="input" rows="5" />
         <FormError :error="form.errors.remarks" />
       </div>
-  
+
       <button type="submit" class="w-full btn-primary col-span-6 mt-4">Dodaj projekt</button>
     </section>
   </form>
 </template>
   
 <script setup>
+import UploadImages from '@/Components/UI/UploadImages.vue'
 import FormError from '@/Components/UI/FormError.vue'
 import Autocomplete from '@/Components/UI/Autocomplete.vue'
 import DropdownList from '@/Components/UI/DropdownList.vue'
@@ -114,6 +121,7 @@ const form = useForm({
   start: null,
   deadline: null,
   remarks: null,
+  images: [],
 })
   
 const start = ref(null)

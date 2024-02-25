@@ -8,6 +8,7 @@ use App\Models\Client;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Helpers\RequestProcessor;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
@@ -89,6 +90,7 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+
         $fields = RequestProcessor::validation($request, $this->fields, null, [
             'type_id' => 'required|exists:project_types,id',
             'commission' => 'nullable',

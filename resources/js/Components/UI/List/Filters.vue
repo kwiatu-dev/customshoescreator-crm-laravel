@@ -62,9 +62,16 @@ import Price from '@/Components/UI/List/Filters/Price.vue'
 import Date from '@/Components/UI/List/Filters/Date.vue'
 import Pagination from '@/Components/UI/List/Filters/Pagination.vue'
 import Dictionary from '@/Components/UI/List/Filters/Dictionary.vue'
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { debounce } from 'lodash'
+import { usePage } from '@inertiajs/vue3'
+
+const page = usePage()
+
+const currentUser = computed(
+  () => page.props.currentUser,
+)
 
 const props = defineProps({
   filters: Object,
@@ -72,7 +79,6 @@ const props = defineProps({
   sort: Object,
   get: String,
   columns: Object,
-  currentUser: Object,
 })
   
 const form = reactive({
@@ -100,7 +106,7 @@ const sections = reactive({
 })
 
 const toggle = ref(true)
-const admin = (flag) => (flag === true && props.currentUser?.is_admin || flag === undefined)
+const admin = (flag) => (flag === true && currentUser.value?.is_admin || flag === undefined)
 
 const open = () => {
   toggle.value = !toggle.value

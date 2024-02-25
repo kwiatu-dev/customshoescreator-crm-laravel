@@ -12,6 +12,13 @@
 
 
 Utworzenie powiadomień w systemie! TUTORIAL
+-------------------------------------------------------------------------------------------------
+
+Utworzyć w headerze profilowe z dostępnymi opcjami dla zalogowanego użytkownika tak jak w PromptHub2:
+- Powiadomienia
+- Profil -- resetowanie hasła
+- Zgłoszenia
+
 
 -------------------------------------------------------------------------------------------------
 

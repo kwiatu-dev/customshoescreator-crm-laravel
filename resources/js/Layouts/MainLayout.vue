@@ -15,7 +15,7 @@
 <script setup>
 import {computed} from 'vue'
 import Header from '@/Layouts/Header.vue'
-import {usePage} from '@inertiajs/vue3'
+import { usePage } from '@inertiajs/vue3'
 
 const page = usePage()
 

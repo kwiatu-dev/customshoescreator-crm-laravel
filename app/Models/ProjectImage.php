@@ -10,7 +10,11 @@ class ProjectImage extends Model
 {
     use HasFactory;
 
-    public function type(): BelongsTo{
+    public function project(): BelongsTo{
         return $this->belongsTo(Project::class, 'project_id');
+    }
+
+    public function projectImageType(): BelongsTo{
+        return $this->belongsTo(ProjectImageType::class, 'type_id');
     }
 }

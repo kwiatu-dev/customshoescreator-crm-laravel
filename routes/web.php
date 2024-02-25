@@ -9,6 +9,7 @@ use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\ExpensesController;
+use App\Http\Controllers\FilePondController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\PageSpeedController;
 use App\Http\Controllers\ListingOfferController;
@@ -115,3 +116,6 @@ Route::resource('projects', ProjectController::class);
 
 //DictionaryController
 Route::get('dictionary/{table}', [DictionaryController::class, 'index'])->name('dictionary.index');
+
+//FilePondController
+Route::resource('filepond', FilePondController::class);
