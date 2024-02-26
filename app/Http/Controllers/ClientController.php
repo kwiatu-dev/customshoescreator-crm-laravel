@@ -48,11 +48,15 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        $request->user()->clients()->create(
+        $client = $request->user()->clients()->create(
             $this->validation($request)
         );
 
-        return redirect()->route('client.index')->with('success', 'Client was created!');
+        if(request()->route()->getName() == 'client.create'){
+            return redirect()->route('client.index')->with('success', 'Client was created!');
+        }
+
+        return back()->with('inertia', $client);
     }
 
     /**

@@ -39,13 +39,18 @@ class FilePondController extends Controller
             'images' => 'required|mimes:jpg,png,jpeg|max:8000'
         ]);
 
-        if(!$validator->fails()){
-            $image = $request->file('images');
-            $dir = uniqid('filepond-');
-            $name = $image->hashName();
-            $image->storeAs('tmp/'. $dir, $name, 'private');
+        if($request->file('images')->getClientOriginalName()){
+            $validator->setAttributeNames(['images' => $request->file('images')->getClientOriginalName()]);
+        }
 
-            return response($dir, 200)->header('Content-Type', 'text/plain');
+        if(!$validator->fails()){
+            $folder = 'tmp';
+            $imageFile = $request->file('images');
+            $subfolder = uniqid('filepond-');
+            $imageName = $imageFile->hashName();
+            $path = $imageFile->storeAs($folder .'/'. $subfolder, $imageName, 'private');
+
+            return response()->json(['folder' => $folder, 'subfolder' => $subfolder, 'path' => dirname($path)], 200);
         }
 
         return response()->json($validator->errors(), 422);
@@ -78,17 +83,18 @@ class FilePondController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $dir)
+    public function destroy(Request $request, string $subfolder)
     {
         $disk = Storage::disk('private');
-        $path = 'tmp/'. $dir;
+        $folder = $request->string('folder');
+        $path = $folder .'/'. $subfolder;
 
         if($disk->exists($path)){
             $disk->deleteDirectory($path);
 
-            return response(null, 200);
+            return response()->json([], 200);
         }
 
-        return response(null, 404);
+        return response()->json([], 422);
     }
 }

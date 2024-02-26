@@ -3,11 +3,15 @@
     ref="pond"
     name="images"
     class-name="filepond"
-    label-idle="<b>Kliknij, aby przesłać</b> lub przeciągnij i upuść (JPEG, JPG, PNG)"
+    label-idle="<b>Kliknij, aby przesłać</b> lub przeciągnij i upuść"
     allow-multiple="true"
-    accepted-file-types="image/jpeg, image/png, image/jpg"
+    accepted-file-types="image/*"
     style-item-panel-aspect-ratio="1"
+    max-file-size="8MB"
+    label-max-file-size-exceeded="Plik jest za duży"
+    label-max-file-size="Dozwolona wielkość pliku: {filesize}"
     max-files="10"
+    force-revert="true"
     label-button-remove-item="Usuń"
     label-button-abort-item-load="Przerwij"
     label-button-retry-item-load="Spróbuj ponownie"
@@ -27,6 +31,8 @@
     label-file-load-error="Błąd poczas ładowania"
     label-file-loading="Ładowanie"
     label-invalid-field="Pole zawiera nieprawidłowe pliki"
+    label-file-type-not-allowed="Niepoprawny typ pliku"
+    file-validate-type-label-expected-types="Oczekiwane typy: {allTypes}"
     :server="{
       url: '',
       process: {
@@ -38,68 +44,92 @@
       revert: handleFilePondRevert,
       headers: {
         'X-CSRF-TOKEN': csrfToken
-      }
+      },
     }"
   />
-  <FormError :error="errors" />
+  <FormError 
+    v-for="(error, image_id) in errors" 
+    :key="image_id" 
+    :error="error.join('\n')"
+  />
 </template>
 
 <script setup>
 import FormError from '@/Components/UI/FormError.vue'
 import vueFilePond from 'vue-filepond'
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.esm.js'
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
+import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size'
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
 import { ref, computed } from 'vue'
-import { usePage, router } from '@inertiajs/vue3'
+import { usePage } from '@inertiajs/vue3'
+import axios from 'axios'
 
-const FilePond = vueFilePond(FilePondPluginImagePreview)
+const FilePond = vueFilePond(FilePondPluginImagePreview, FilePondPluginFileValidateType, FilePondPluginFileValidateSize)
 const page = usePage()
 const pond = ref(null)
 const images = ref([])
-const errors = ref(null)
+const errors = ref({})
 
 defineProps({
   modelValue: Array,
+  imagesErrors: Object,
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update:imagesErrors'])
 
-const handleFilePondLoad = (uniqueId) => {
-  images.value.push(uniqueId)
+const handleFilePondLoad = (response) => {
+  const data = JSON.parse(response)
+  images.value.push(data)
   emit('update:modelValue', images.value)
-  errors.value = null
-  return uniqueId
+
+  return data.subfolder
 }
 
-const handleFilePondRevert = (uniqueId, load, error) => {
-  router.delete(
-    route('filepond.destroy', { filepond: uniqueId }),
-    {
-      preserveState: true,
-      preserveScroll: true,
-      onSuccess: () => {
-        images.value = images.value.filter((image) => image !== uniqueId)
-        errors.value = null
-        emit('update:modelValue', images.value)
-      },
-      onError: () => {
-        errors.value = { images: 'Wystąpił bląd podczas usuwania' }
-      },
-    },
-  )
+const handleFilePondRevert = async (uniqueId, load, error) => {
+  const index = images.value.findIndex(image => image.subfolder === uniqueId)
+  const data = images.value[index]
+
+  if(data){
+    try{
+      await axios.delete(
+        route('filepond.destroy', { filepond: uniqueId }), 
+        { data },
+      )
+
+      images.value.splice(index, 1)
+      emit('update:modelValue', images.value)
+      return true
+    }
+    catch(e){
+      const image = pond.value.getFiles().find(image => image.serverId === uniqueId)
+      errors.value[image.id] = [`Wystąpił błąd podczas usuwania zdjęcia: ${image.filename}`]
+      emit('update:imagesErrors', errors.value)
+      error('ups')
+      return false
+    }
+  }
 }
 
-const handleFilePondProcessError = (error, file, status) => {
+const handleFilePondProcessError = (error) => {
   const errorMessages = JSON.parse(error)?.images
+  const files = pond.value.getFiles()
+  const file = files[0]
 
   if(errorMessages && errorMessages?.length){
-    errors.value = errorMessages.join('\n')
+    errors.value[file.id] = errorMessages
+    emit('update:imagesErrors', errors.value)
   }
 }
 
 document.addEventListener('FilePond:removefile', (e) => {
-  errors.value = null
+  const image_id = e.detail.file.id
+
+  if(errors.value.hasOwnProperty(image_id)){
+    delete errors.value[image_id]
+    emit('update:imagesErrors', errors.value)
+  }
 })
 
 const csrfToken = computed(
@@ -117,23 +147,27 @@ const csrfToken = computed(
 }
 
 .filepond--drop-label{
-  @apply cursor-pointer dark:text-gray-300;
+  @apply cursor-pointer dark:text-gray-300 text-gray-500;
 }
 
 .filepond--drop-label > label{
-  @apply cursor-pointer;
+  @apply cursor-pointer text-sm;
 }
 
 .filepond--panel .filepond--panel-root{
-  @apply dark:bg-gray-500;
+  @apply dark:bg-gray-500 bg-gray-100;
 }
 
 .filepond--panel .filepond--panel-root{
-  @apply border dark:border-gray-300;
+  @apply border dark:border-gray-300 border-gray-300;
 }
 
 .filepond--root{
   @apply mb-0;
+}
+
+.filepond--file-action-button{
+  @apply cursor-pointer;
 }
 
 @media (max-width: 800px) {

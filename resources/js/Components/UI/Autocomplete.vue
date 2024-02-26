@@ -1,7 +1,7 @@
 <template>
   <div class="w-full relative">
-    <input type="hidden" :value="modelValue" />
-    <input v-model="search" type="text" :class="classes" @input="handleInput" />
+    <input type="hidden" :value="objectId" />
+    <input :value="searchQuery" type="text" :class="classes" @input="handleInput" />
     <ul 
       v-show="searchResults.length && isOpen"
       class="mt-1 w-full max-h-60 border border-gray-200 dark:border-gray-400 rounded-md bg-gray-200 dark:bg-gray-800 absolute overflow-y-auto z-10"
@@ -50,15 +50,15 @@ const props = defineProps({
     required: false,
     default: 'input',
   },
-  modelValue: String,
+  searchQuery: String,
+  objectId: String,
 })
 
-const emit = defineEmits(['update:modelValue'])
-const search = ref('')
+const emit = defineEmits(['update:objectId', 'update:searchQuery'])
 const isOpen = ref(false)
 
 const searchResults = computed(() => {
-  if(search.value === '' || search.value.length < 3){
+  if(!props.searchQuery || props.searchQuery?.length < 3){
     return []
   }
 
@@ -67,18 +67,19 @@ const searchResults = computed(() => {
       return item[field]
         .toLowerCase()
         .includes(
-          search.value.toLowerCase())
+          props.searchQuery.toLowerCase())
     })
   })
 })
 
 const setSelected = (event) => {
-  search.value = event.target.getAttribute('data-name')
   isOpen.value = false
-  emit('update:modelValue', event.target.getAttribute('data-id'))
+  emit('update:objectId', event.target.getAttribute('data-id'))
+  emit('update:searchQuery', event.target.getAttribute('data-name'))
 }
 
-const handleInput = (_) => {
+const handleInput = (e) => {
   isOpen.value = true
+  emit('update:searchQuery', e.target.value)
 }
 </script>

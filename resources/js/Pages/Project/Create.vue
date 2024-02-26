@@ -6,7 +6,8 @@
         <label for="created_by_user_id" class="label">Wykonawca</label>
         <Autocomplete 
           :id="(item) => item.id" 
-          v-model="form.created_by_user_id" 
+          v-model:objectId="form.created_by_user_id"
+          v-model:searchQuery="userSearchQuery"
           :source="users"
           :fields="['first_name', 'last_name', 'email']"
           :list="(item) => `${item.first_name} ${item.last_name}: ${item.email}`"
@@ -19,12 +20,14 @@
         <label for="client_id" class="label">Klient</label>
         <Autocomplete 
           :id="(item) => item.id" 
-          v-model="form.client_id" 
+          v-model:objectId="form.client_id" 
+          v-model:searchQuery="clientSearchQuery"
           :source="clients"
           :fields="['first_name', 'last_name', 'email']"
           :list="(item) => `${item.first_name} ${item.last_name}: ${item.email}`"
           :name="(item) => `${item.first_name} ${item.last_name}`"
         />
+        <FormPopup :form="FormClientCreate" label="Dodaj nowego klienta" @form-action-created="onNewClientCreated" />
         <FormError :error="form.errors.client_id" />
       </div>
 
@@ -71,7 +74,7 @@
 
       <div class="col-span-6">
         <label class="label">Inspiracje (zdjęcia)</label>
-        <UploadImages v-model="form.images" />
+        <UploadImages v-model="form.images" v-model:images-errors="imagesErrors" />
         <FormError :error="form.errors.images" />
       </div>
 
@@ -90,10 +93,12 @@
 import UploadImages from '@/Components/UI/UploadImages.vue'
 import FormError from '@/Components/UI/FormError.vue'
 import Autocomplete from '@/Components/UI/Autocomplete.vue'
+import FormClientCreate from '@/Pages/Client/Create.vue'
 import DropdownList from '@/Components/UI/DropdownList.vue'
-import { onMounted, ref } from 'vue'
-import { useForm } from '@inertiajs/vue3'
+import { onMounted, ref, computed } from 'vue'
+import { useForm, usePage } from '@inertiajs/vue3'
 import datepicker from '@/Helpers/datepicker.js'
+import FormPopup from '@/Components/FormPopup.vue'
 
 defineProps({
   users: {
@@ -108,7 +113,6 @@ defineProps({
     type: Array,
     required: true,
   },
-  currentUser: Object,
 })
   
 const form = useForm({
@@ -126,6 +130,10 @@ const form = useForm({
   
 const start = ref(null)
 const deadline = ref(null)
+const imagesErrors = ref(null)
+const page = usePage()
+const clientSearchQuery = ref('')
+const userSearchQuery = ref('')
   
 onMounted(() => {
   datepicker.create(start, null, (event) => form.start = event.target.value)
@@ -133,4 +141,13 @@ onMounted(() => {
 })
   
 const create = () => form.post(route('projects.store'))
+
+const onNewClientCreated = (client) => {
+  form.client_id = client.id.toString()
+  clientSearchQuery.value = `${client.first_name} ${client.last_name}`
+}
+
+const currentUser = computed(
+  () => page.props.currentUser,
+)
 </script>

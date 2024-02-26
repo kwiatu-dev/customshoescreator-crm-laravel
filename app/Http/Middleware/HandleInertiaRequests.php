@@ -53,6 +53,7 @@ class HandleInertiaRequests extends Middleware
                 'email' => $request->user()->email,
                 'is_admin' => $request->user()->is_admin,
             ] : null,
+            'inertia' => $request->session()->get('inertia', []),
             'csrfToken' => csrf_token()
         ]);
     }

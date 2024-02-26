@@ -109,5 +109,12 @@ const form = useForm({
   conversion_source: null,
 })
 
-const create = () => form.post(route('client.store'))
+const emit = defineEmits(['created'])
+
+const create = () => form.post(route('client.store'), {
+  preserveScroll: true,
+  onSuccess: () => {
+    emit('created')
+  },
+})
 </script>

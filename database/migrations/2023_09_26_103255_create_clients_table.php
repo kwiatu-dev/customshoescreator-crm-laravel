@@ -38,7 +38,9 @@ return new class extends Migration
             $table->foreignIdFor(
                 \App\Models\User::class,
                 'conversion_source_id'
-            )->constrained('conversion_sources');
+            )->nullable()
+            ->constrained('conversion_sources');
+            
         });
     }
 

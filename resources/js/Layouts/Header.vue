@@ -46,16 +46,18 @@
 </template>
 
 <script setup>
-import { Link } from '@inertiajs/vue3'
-import { ref } from 'vue'
+import { Link, usePage } from '@inertiajs/vue3'
+import { ref, computed } from 'vue'
 
-defineProps({
-  currentUser: Object,
-})
 
+const page = usePage()
 const menu = ref(true)
 
 const toggle = () => {
   menu.value = !menu.value
 }
+
+const currentUser = computed(
+  () => page.props.currentUser,
+)
 </script>
