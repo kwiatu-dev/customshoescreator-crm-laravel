@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Exception;
 use App\Models\User;
 use App\Models\Client;
 use App\Models\Project;
+use App\Models\ProjectImage;
 use Illuminate\Http\Request;
 use App\Helpers\RequestProcessor;
-use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -90,7 +92,6 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-
         $fields = RequestProcessor::validation($request, $this->fields, null, [
             'type_id' => 'required|exists:project_types,id',
             'commission' => 'nullable',
@@ -101,13 +102,32 @@ class ProjectController extends Controller
         $user = User::find($fields['created_by_user_id'] ?? Auth::id());
         $fields['created_by_user_id'] = $user->id;
 
-        Project::create([
+        $project = Project::create([
             ...$fields,
             'commission' => $user->commission,
             'costs' => $user->costs,
             'distribution' => $user->distribution,
             'status_id' => 1,
         ]);
+
+        $tmp_files = $request->input('inspiration_images');
+
+        foreach($tmp_files as $file){
+            $disk = Storage::disk('private');
+
+            $disk->move(
+                $file['path'] .'/'. $file['name'], 
+                'projects/'. $project->id .'/'. $file['name']
+            );
+
+            $disk->deleteDirectory($file['path']);
+
+            ProjectImage::create([
+                'type_id' => 1,
+                'project_id' => $project->id,
+                'file' => $file['name']
+            ]);
+        }
 
         return redirect()->route('projects.index')
             ->with('success', 'Projekt został dodany!');

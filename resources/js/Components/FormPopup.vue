@@ -1,5 +1,5 @@
 <template>
-  <span class="text-sm text-gray-400 underline cursor-pointer" @click="open">{{ label }}</span>
+  <span class="text-sm text-gray-400 underline cursor-pointer hover:text-gray-500" @click="open">{{ label }}</span>
   <div class="fixed w-full h-full bg-gray-950 top-0 left-0 opacity-90 z-20" :class="[show ? 'block' : 'hidden']" />
   <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 z-20 bg-gray-800 overflow-y-auto" :class="[show ? 'block' : 'hidden']">
     <div class="w-full flex flex-col">

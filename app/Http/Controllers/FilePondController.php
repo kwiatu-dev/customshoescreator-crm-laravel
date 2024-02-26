@@ -36,7 +36,7 @@ class FilePondController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'images' => 'required|mimes:jpg,png,jpeg|max:8000'
+            'images' => 'required|mimes:jpg,png,jpeg|max:5000'
         ]);
 
         if($request->file('images')->getClientOriginalName()){
@@ -50,7 +50,12 @@ class FilePondController extends Controller
             $imageName = $imageFile->hashName();
             $path = $imageFile->storeAs($folder .'/'. $subfolder, $imageName, 'private');
 
-            return response()->json(['folder' => $folder, 'subfolder' => $subfolder, 'path' => dirname($path)], 200);
+            return response()->json([
+                'folder' => $folder, 
+                'subfolder' => $subfolder, 
+                'path' => dirname($path),
+                'name' => $imageName
+            ], 200);
         }
 
         return response()->json($validator->errors(), 422);

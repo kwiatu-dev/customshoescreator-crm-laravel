@@ -3,7 +3,7 @@
     ref="pond"
     name="images"
     class-name="filepond"
-    label-idle="<b>Kliknij, aby przesłać</b> lub przeciągnij i upuść"
+    label-idle="<b>Kliknij, aby przesłać</b> lub przeciągnij i upuść (max 10)"
     allow-multiple="true"
     accepted-file-types="image/*"
     style-item-panel-aspect-ratio="1"
@@ -69,27 +69,26 @@ import axios from 'axios'
 const FilePond = vueFilePond(FilePondPluginImagePreview, FilePondPluginFileValidateType, FilePondPluginFileValidateSize)
 const page = usePage()
 const pond = ref(null)
-const images = ref([])
-const errors = ref({})
+const images_in_processing = []
 
-defineProps({
-  modelValue: Array,
-  imagesErrors: Object,
+const props = defineProps({
+  images: Array,
+  errors: Object,
+  processing: Boolean,
 })
 
-const emit = defineEmits(['update:modelValue', 'update:imagesErrors'])
+const emit = defineEmits(['update:images', 'update:errors', 'update:processing'])
 
 const handleFilePondLoad = (response) => {
   const data = JSON.parse(response)
-  images.value.push(data)
-  emit('update:modelValue', images.value)
+  emit('update:images', [...props.images, data])
 
   return data.subfolder
 }
 
 const handleFilePondRevert = async (uniqueId, load, error) => {
-  const index = images.value.findIndex(image => image.subfolder === uniqueId)
-  const data = images.value[index]
+  const index = props.images.findIndex(image => image.subfolder === uniqueId)
+  const data = props.images[index]
 
   if(data){
     try{
@@ -98,15 +97,15 @@ const handleFilePondRevert = async (uniqueId, load, error) => {
         { data },
       )
 
-      images.value.splice(index, 1)
-      emit('update:modelValue', images.value)
+      emit('update:images', props.images.filter((_, i) => i !== index))
+
       return true
     }
     catch(e){
       const image = pond.value.getFiles().find(image => image.serverId === uniqueId)
-      errors.value[image.id] = [`Wystąpił błąd podczas usuwania zdjęcia: ${image.filename}`]
-      emit('update:imagesErrors', errors.value)
+      emit('update:errors', { ...props.errors, ...{ [image.id]: [`Wystąpił błąd podczas usuwania zdjęcia: ${image.filename}`] } })
       error('ups')
+
       return false
     }
   }
@@ -118,18 +117,38 @@ const handleFilePondProcessError = (error) => {
   const file = files[0]
 
   if(errorMessages && errorMessages?.length){
-    errors.value[file.id] = errorMessages
-    emit('update:imagesErrors', errors.value)
+    emit('update:errors', { ...props.errors, ...{ [file.id]: errorMessages } })
   }
 }
 
 document.addEventListener('FilePond:removefile', (e) => {
   const image_id = e.detail.file.id
+  console.log(image_id)
 
-  if(errors.value.hasOwnProperty(image_id)){
-    delete errors.value[image_id]
-    emit('update:imagesErrors', errors.value)
+  if(props.errors.hasOwnProperty(image_id)){
+    const errors = Object.keys(props.errors).reduce((acc, key) => {
+      if(key !== image_id){
+        acc[key] = props.errors[key]
+      }
+
+      return acc
+    }, {})
+
+    emit('update:errors', errors)
   }
+})
+
+document.addEventListener('FilePond:processfilestart', (e) => {
+  const image_id = e.detail.file.id
+  images_in_processing.push(image_id)
+  emit('update:processing', images_in_processing.length !== 0)
+})
+
+document.addEventListener('FilePond:processfile', (e) => {
+  const image_id = e.detail.file.id
+  const index = images_in_processing.findIndex(id => id === image_id)
+  images_in_processing.splice(index, 1)
+  emit('update:processing', images_in_processing.length !== 0)
 })
 
 const csrfToken = computed(

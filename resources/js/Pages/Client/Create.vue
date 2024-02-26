@@ -63,7 +63,7 @@
       </div>
 
       <div class="col-span-3">
-        <label for="username" class="label">Nazwa użytkownika</label>
+        <label for="username" class="label">Nazwa użytkownika (Instagram)</label>
         <input id="username" v-model="form.username" type="text" class="input" />
         <FormError :error="form.errors.username" />
       </div>

@@ -10,6 +10,14 @@ class ProjectImage extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
+    protected $fillable = [
+        'type_id',
+        'file',
+        'project_id'
+    ];
+
     public function project(): BelongsTo{
         return $this->belongsTo(Project::class, 'project_id');
     }
