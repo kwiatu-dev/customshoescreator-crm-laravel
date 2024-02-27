@@ -90,24 +90,22 @@ const handleFilePondRevert = async (uniqueId, load, error) => {
   const index = props.images.findIndex(image => image.subfolder === uniqueId)
   const data = props.images[index]
 
-  if(data){
-    try{
-      await axios.delete(
-        route('filepond.destroy', { filepond: uniqueId }), 
-        { data },
-      )
+  try{
+    await axios.delete(
+      route('filepond.destroy', { filepond: uniqueId }), 
+      { data },
+    )
 
-      emit('update:images', props.images.filter((_, i) => i !== index))
+    emit('update:images', props.images.filter((_, i) => i !== index))
 
-      return true
-    }
-    catch(e){
-      const image = pond.value.getFiles().find(image => image.serverId === uniqueId)
-      emit('update:errors', { ...props.errors, ...{ [image.id]: [`Wystąpił błąd podczas usuwania zdjęcia: ${image.filename}`] } })
-      error('ups')
+    return true
+  }
+  catch(e){
+    const image = pond.value.getFiles().find(image => image.serverId === uniqueId)
+    emit('update:errors', { ...props.errors, ...{ [image.id]: [`Wystąpił błąd podczas usuwania zdjęcia: ${image.filename}`] } })
+    error('ups')
 
-      return false
-    }
+    return false
   }
 }
 
@@ -123,7 +121,6 @@ const handleFilePondProcessError = (error) => {
 
 document.addEventListener('FilePond:removefile', (e) => {
   const image_id = e.detail.file.id
-  console.log(image_id)
 
   if(props.errors.hasOwnProperty(image_id)){
     const errors = Object.keys(props.errors).reduce((acc, key) => {
@@ -154,6 +151,10 @@ document.addEventListener('FilePond:processfile', (e) => {
 const csrfToken = computed(
   () => page.props.csrfToken,
 )
+
+defineExpose({
+  pond,
+})
 </script>
 
 <style>

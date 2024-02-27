@@ -47,11 +47,14 @@ class ProjectController extends Controller
             $request->merge(['created_by_user' => true]);
         }
 
-        $projects = Project::with(['status', 'type', 'client', 'user'])
+        $projects = Project::select('*', DB::raw('(CASE WHEN status_id != 3 THEN true ELSE false END) as editable')) //todo: ustawić odpowiedni warunek na editable
+            ->with(['status', 'type', 'client', 'user'])
             ->filter($request)
             ->sort($request)
             ->latest()
             ->pagination();
+
+
 
         $footer = Project::query()
             ->filter($request)
@@ -163,5 +166,22 @@ class ProjectController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function start_project(Request $request, Project $project)
+    {
+        //todo: sprawdź możliwość edycji projektu
+        if(true){
+            $project->status_id = 2;
+            $project->save();
+            $visualization_images = $request->input('visualization_images');
+
+            if(is_array($visualization_images)){
+                $project->addImages($visualization_images, 2);
+            }
+        }
+
+        return redirect()->back()
+            ->with('success', 'Status projektu został zmieniony!');
     }
 }

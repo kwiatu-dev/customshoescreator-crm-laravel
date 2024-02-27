@@ -84,7 +84,7 @@
         <FormError :error="form.errors.remarks" />
       </div>
 
-      <button type="submit" class="w-full btn-primary col-span-6 mt-4 disabled:opacity-20 disabled:cursor-not-allowed" :disabled="imageProcessing">Dodaj projekt</button>
+      <button type="submit" class="w-full btn-primary col-span-6 mt-4" :disabled="imageProcessing">Dodaj projekt</button>
     </section>
   </form>
 </template>
@@ -141,12 +141,7 @@ onMounted(() => {
   datepicker.create(deadline, null, (event) => form.deadline = event.target.value)
 })
   
-const create = () => {
-  console.log(form.inspiration_images)
-  console.log(imagesErrors.value)
-  console.log(imageProcessing)
-  //form.post(route('projects.store'))
-}
+const create = () => form.post(route('projects.store'))
 
 const onNewClientCreated = (client) => {
   form.client_id = client.id.toString()

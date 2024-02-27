@@ -114,6 +114,12 @@ Route::get('private/files/{catalog}/{file}', PrivateFilesController::class)->nam
 //ProjectController
 Route::resource('projects', ProjectController::class);
 
+Route::post('projects/{project}', [ProjectController::class, 'start_project'])
+    ->name('projects.start');
+
+// Route::delete('projects/{project}/images/{image}', [ProjectController::class, 'images_delete'])
+//     ->name('projects.images.destroy');
+
 //DictionaryController
 Route::get('dictionary/{table}', [DictionaryController::class, 'index'])->name('dictionary.index');
 

@@ -7,6 +7,7 @@ use App\Traits\HasFilters;
 use App\Traits\HasSorting;
 use App\Traits\HasPagination;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -96,5 +97,25 @@ class Project extends Model
 
     public function images(): HasMany{
         return $this->hasMany(ProjectImage::class, 'project_id');
+    }
+
+    public function addImages($tmp_files, $type_id)
+    {
+        foreach($tmp_files as $file){
+            $disk = Storage::disk('private');
+
+            $disk->move(
+                $file['path'] .'/'. $file['name'], 
+                'projects/'. $this->id .'/'. $file['name']
+            );
+
+            $disk->deleteDirectory($file['path']);
+
+            ProjectImage::create([
+                'type_id' => $type_id,
+                'project_id' => $this->id,
+                'file' => $file['name']
+            ]);
+        }
     }
 }
