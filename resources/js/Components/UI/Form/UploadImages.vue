@@ -41,11 +41,20 @@
         onload: onLoad,
         onerror: onError,
       },
+      load: (source, load, error, progress, abort, headers) => {
+        axios.get(source, { responseType: 'blob' })
+          .then(response => load(response.data))
+          .catch(reason => error())
+      },
       revert: onRevert,
       headers: {
         'X-CSRF-TOKEN': csrfToken
       },
     }"
+    @removefile="onRemoveFile"
+    @processfile="onProcessFile"
+    @processfilestart="onProcessFileStart"
+    @init="emit('init')"
   />
   <FormError 
     v-for="(error, image_id) in errors" 
@@ -98,6 +107,7 @@ const emit = defineEmits([
   'update:images', 
   'update:errors', 
   'update:processing',
+  'init',
 ])
 
 const onLoad = (uniqueId) => {
@@ -129,7 +139,7 @@ const onError = (response) => {
   }
 }
 
-document.addEventListener('FilePond:removefile', (e) => {
+const onRemoveFile = (e) => {
   const errors = Object.keys(props.errors).reduce((acc, key) => {
     if(key !== e.detail.file.id){
       acc[key] = props.errors[key]
@@ -140,18 +150,21 @@ document.addEventListener('FilePond:removefile', (e) => {
 
   emit('update:errors', errors)
   processFiles--
-})
+}
 
-document.addEventListener('FilePond:processfilestart', (_) => {
+const onProcessFileStart =  (_) => {
   emit('update:processing', true)
-})
+}
 
-document.addEventListener('FilePond:processfile', (_) => {
+const onProcessFile = (_) => {
   emit('update:processing', ++processFiles !== pond.value.getFiles().length)
-})
+}
 
-const addImages = (images) => {
-  pond.value.addFiles(images)
+const addImages = (images, options) => {
+  pond.value.addFiles(images.map(image => ({
+    source: image,
+    options,
+  })))
 }
 
 const clearImages = () => {

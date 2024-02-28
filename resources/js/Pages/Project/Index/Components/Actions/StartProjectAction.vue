@@ -28,8 +28,6 @@ const props = defineProps({
   project: Object,
 })
 
-
-
 const show = ref(false)
 const failed = ref(false)
 

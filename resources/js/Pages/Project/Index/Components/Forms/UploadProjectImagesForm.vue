@@ -16,6 +16,7 @@
           v-model:images="form.images" 
           v-model:errors="uploadErrors" 
           v-model:processing="uploading"
+          @init="emit('init')"
         />
         <FormError :error="form.errors.images" />
       </div>
@@ -64,7 +65,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['saved'])
+const emit = defineEmits(['saved', 'init'])
 
 const form = useForm({
   type_id: props.typeId,
@@ -77,14 +78,19 @@ const saveError = ref(null)
 const uploading = ref(false)
 
 const clearImages = () => uploadImagesComponent.value.clearImages()
-const addImages = (images) => uploadImagesComponent.value.addImages(images)
+const addImages = (images, options) => uploadImagesComponent.value.addImages(images, options)
 
 const saved = () => {
-  form.post(route('projects.upload', { project: props.project.id }), {
-    preserveScroll: true,
-    onSuccess: () => { saveError.value = null; emit('saved') },
-    onError: () => saveError.value = 'Wystąpił błąd podczas zapisywania!',
-  })
+  if(form.images.length){
+    form.post(route('projects.upload', { project: props.project.id }), {
+      preserveScroll: true,
+      onSuccess: () => { saveError.value = null; emit('saved') },
+      onError: () => saveError.value = 'Wystąpił błąd podczas zapisywania!',
+    })
+  }
+  else{
+    emit('saved')
+  }
 }
 
 defineExpose({
