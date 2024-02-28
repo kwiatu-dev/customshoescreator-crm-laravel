@@ -14,8 +14,8 @@
 </template>
 
 <script setup>
-import Box from '@/Components/UI/Box.vue'
-import Price from '@/Components/Price.vue'
+import Box from '@/Components/UI/List/Box.vue'
+import Price from '@/Components/UI/List/Price.vue'
 import {computed} from 'vue'
 
 const props = defineProps({

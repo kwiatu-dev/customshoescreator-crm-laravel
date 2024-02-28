@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Helpers\RequestProcessor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Validator;
 
 class ProjectController extends Controller
 {
@@ -48,7 +49,7 @@ class ProjectController extends Controller
         }
 
         $projects = Project::select('*', DB::raw('(CASE WHEN status_id != 3 THEN true ELSE false END) as editable')) //todo: ustawić odpowiedni warunek na editable
-            ->with(['status', 'type', 'client', 'user'])
+            ->with(['status', 'type', 'client', 'user', 'images'])
             ->filter($request)
             ->sort($request)
             ->latest()
@@ -168,20 +169,44 @@ class ProjectController extends Controller
         //
     }
 
-    public function start_project(Request $request, Project $project)
+    public function status(Request $request, Project $project)
     {
         //todo: sprawdź możliwość edycji projektu
         if(true){
-            $project->status_id = 2;
-            $project->save();
-            $visualization_images = $request->input('visualization_images');
+            $validator = Validator::make($request->all(), [
+                'status_id' => 'required|integer|exists:project_statuses,id'
+            ]);
 
-            if(is_array($visualization_images)){
-                $project->addImages($visualization_images, 2);
+            if(!$validator->fails()){
+                $status_id = $request->integer('status_id');
+                $project->status_id = $status_id;
+                $project->save();
+
+                return redirect()->back()
+                    ->with('success', 'Status projektu został zaktualizowany!');
             }
-        }
 
-        return redirect()->back()
-            ->with('success', 'Status projektu został zmieniony!');
+            return redirect()->back()->withErrors($validator->errors())
+                ->with('failed', 'Nie udało się zaktualizować statusu projektu!');
+        }
+    }
+
+    public function upload(Request $request, Project $project){
+        //todo: sprawdź możliwość edycji projektu
+        if(true){
+            $validator = Validator::make($request->all(), [
+                'type_id' => 'required|integer|exists:project_image_types,id'
+            ]);
+
+            if(!$validator->fails()){
+                $type_id = $request->integer('type_id');
+                $images = $request->input('images');
+                $project->addImages($images, $type_id);
+
+                return redirect()->back();
+            }
+
+            return redirect()->back()->withErrors($validator->errors());
+        }
     }
 }

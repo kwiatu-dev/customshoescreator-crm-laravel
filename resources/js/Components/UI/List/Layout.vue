@@ -52,8 +52,8 @@ import { useMediaQuery } from '@vueuse/core'
 import Filters from '@/Components/UI/List/Filters.vue'
 import Table from '@/Components/UI/List/Table.vue'
 import Cards from '@/Components/UI/List/Cards.vue'
-import Pagination from '@/Components/UI/Pagination.vue'
-import DataNotFound from '@/Components/UI/DataNotFound.vue'
+import Pagination from '@/Components/UI/List/Pagination.vue'
+import DataNotFound from '@/Components/UI/List/DataNotFound.vue'
 
 const isLargeScreen = useMediaQuery('(min-width: 768px)')
 

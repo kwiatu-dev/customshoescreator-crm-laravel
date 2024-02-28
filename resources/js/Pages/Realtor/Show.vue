@@ -21,8 +21,8 @@
 <script setup>
 import ListingAddress from '@/Components/ListingAddress.vue'
 import ListingSpace from '@/Components/ListingSpace.vue'
-import Price from '@/Components/Price.vue'
-import Box from '@/Components/UI/Box.vue'
+import Price from '@/Components/UI/List/Price.vue'
+import Box from '@/Components/UI/List/Box.vue'
 import { Link } from '@inertiajs/vue3'
 
 defineProps({

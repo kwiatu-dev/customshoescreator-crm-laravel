@@ -1,6 +1,6 @@
 <template>
   <button class="btn-action" @click="open">Rozpocznij</button>
-  <DialogWindow v-model:show="show" @close="close">
+  <DialogWindow v-if="show" v-model:show="show" @close="close">
     <form class="container mx-auto p-4" @submit.prevent="create">
       <h1 class="title">Dodaj wizualizacje (opcjonalne)</h1>
       <p class="text-sm text-gray-400">Wizualizacje możesz dodać teraz lub przed zakończeniem zlecenia.</p>
@@ -23,9 +23,9 @@
 </template>
 
 <script setup>
-import UploadImages from '@/Components/UI/UploadImages.vue'
-import DialogWindow from '@/Components/UI/DialogWindow.vue'
-import FormError from '@/Components/UI/FormError.vue'
+import UploadImages from '@/Components/UI/Form/UploadImages.vue'
+import DialogWindow from '@/Components/UI/Popup/Popup.vue'
+import FormError from '@/Components/UI/Form/FormError.vue'
 import { ref } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 

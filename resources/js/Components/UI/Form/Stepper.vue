@@ -1,29 +1,31 @@
 <template>
-  <ol
-    class="flex items-center w-full" 
-  >
-    <li 
-      v-for="i in steps" 
-      :key="i"
-      class="relative step"
-      :class="{ 
-        'step--active': i <= active,
-        'step--last': i === steps
-      }"
+  <div class="w-full overflow-hidden">
+    <ol
+      class="flex items-center w-full" 
     >
-      <span 
-        class="step_circle"
+      <li 
+        v-for="i in steps" 
+        :key="i"
+        class="relative step"
         :class="{ 
-          'step_circle--active': i <= active,
-          'step_circle--focus': i === focus
+          'step--active': i <= active,
+          'step--last': i === steps
         }"
-        :data-step="i"
-        @click="onClick"
       >
-        {{ i }}
-      </span>    
-    </li>
-  </ol>
+        <span 
+          class="step_circle"
+          :class="{ 
+            'step_circle--active': i <= active,
+            'step_circle--focus': i === focus
+          }"
+          :data-step="i"
+          @click="onClick"
+        >
+          {{ i }}
+        </span>    
+      </li>
+    </ol>
+  </div>
 </template>
 
 <script setup>

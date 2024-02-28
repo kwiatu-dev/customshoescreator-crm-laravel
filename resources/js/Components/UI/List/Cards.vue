@@ -21,7 +21,7 @@
 </template>
   
 <script setup>
-import Box from '@/Components/UI/Box.vue'
+import Box from '@/Components/UI/List/Box.vue'
 import Badge from '@/Components/UI/List/Badge.vue'
 import CardData from '@/Components/UI/List/CardData.vue'
 

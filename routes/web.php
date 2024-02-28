@@ -109,19 +109,25 @@ Route::post('expenses/{expense}', [ExpensesController::class, 'update'])
 
 
 //PrivateFilesController
-Route::get('private/files/{catalog}/{file}', PrivateFilesController::class)->name('private.files');
+Route::get('private/files/{catalog}/{file}', PrivateFilesController::class)
+    ->name('private.files');
 
 //ProjectController
 Route::resource('projects', ProjectController::class);
 
-Route::post('projects/{project}', [ProjectController::class, 'start_project'])
-    ->name('projects.start');
+Route::post('projects/{project}/status', [ProjectController::class, 'status'])
+    ->name('projects.status');
+
+Route::post('projects/{project}/upload', [ProjectController::class, 'upload'])
+    ->name('projects.upload');
 
 // Route::delete('projects/{project}/images/{image}', [ProjectController::class, 'images_delete'])
 //     ->name('projects.images.destroy');
 
 //DictionaryController
-Route::get('dictionary/{table}', [DictionaryController::class, 'index'])->name('dictionary.index');
+Route::get('dictionary/{table}', [DictionaryController::class, 'index'])
+    ->name('dictionary.index');
 
 //FilePondController
-Route::resource('filepond', FilePondController::class);
+Route::resource('filepond', FilePondController::class)
+    ->only(['store', 'destroy']);

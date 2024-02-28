@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import DialogWindow from '@/Components/UI/DialogWindow.vue'
+import DialogWindow from '@/Components/UI/Popup/Popup.vue'
 import { ref } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 

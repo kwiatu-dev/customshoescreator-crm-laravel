@@ -33,7 +33,7 @@
 
 <script setup>
 import ClientAddress from '@/Pages/Client/Index/Components/ClientAddress.vue'
-import Box from '@/Components/UI/Box.vue'
+import Box from '@/Components/UI/List/Box.vue'
 import { Link } from '@inertiajs/vue3'
 
 const props = defineProps({

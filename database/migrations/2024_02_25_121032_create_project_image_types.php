@@ -17,9 +17,10 @@ return new class extends Migration
         });
 
         DB::table('project_image_types')->insert([
-            ['name' => 'Inspiracje'],
             ['name' => 'Wizualizacje komputerowe'],
+            ['name' => 'Proces realizacji'],
             ['name' => 'Zdjęcia końcowe'],
+            ['name' => 'Inspiracje'],
         ]);
     }
 

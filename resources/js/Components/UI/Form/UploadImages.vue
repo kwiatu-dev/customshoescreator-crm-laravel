@@ -1,17 +1,17 @@
 <template>
   <file-pond 
     ref="pond"
-    name="images"
+    name="filepond"
     class-name="filepond"
-    label-idle="<b>Kliknij, aby przesłać</b> lub przeciągnij i upuść (max 10)"
-    allow-multiple="true"
-    accepted-file-types="image/*"
-    style-item-panel-aspect-ratio="1"
+    :label-idle="labelIdle"
+    :allow-multiple="allowMultiple"
+    :accepted-file-types="acceptedFileTypes"
+    :max-files="maxFiles"
     max-file-size="8MB"
+    style-item-panel-aspect-ratio="1"
+    force-revert="true"
     label-max-file-size-exceeded="Plik jest za duży"
     label-max-file-size="Dozwolona wielkość pliku: {filesize}"
-    max-files="10"
-    force-revert="true"
     label-button-remove-item="Usuń"
     label-button-abort-item-load="Przerwij"
     label-button-retry-item-load="Spróbuj ponownie"
@@ -38,10 +38,10 @@
       process: {
         url: route('filepond.store'),
         method: 'POST',
-        onload: handleFilePondLoad,
-        onerror: handleFilePondProcessError,
+        onload: onLoad,
+        onerror: onError,
       },
-      revert: handleFilePondRevert,
+      revert: onRevert,
       headers: {
         'X-CSRF-TOKEN': csrfToken
       },
@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import FormError from '@/Components/UI/FormError.vue'
+import FormError from '@/Components/UI/Form/FormError.vue'
 import vueFilePond from 'vue-filepond'
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.esm.js'
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
@@ -69,131 +69,98 @@ import axios from 'axios'
 const FilePond = vueFilePond(FilePondPluginImagePreview, FilePondPluginFileValidateType, FilePondPluginFileValidateSize)
 const page = usePage()
 const pond = ref(null)
-const images_in_processing = []
+const csrfToken = computed(() => page.props.csrfToken)
+let processFiles = 0
 
 const props = defineProps({
+  labelIdle: {
+    type: String,
+    default: '<b>Kliknij, aby przesłać</b> lub przeciągnij i upuść (max 10)',
+  },
+  allowMultiple: {
+    type: Boolean,
+    default: true,
+  },
+  acceptedFileTypes: {
+    type: String,
+    default: 'image/*',
+  },
+  maxFiles: {
+    type: Number,
+    default: 10,
+  },
   images: Array,
   errors: Object,
   processing: Boolean,
 })
 
-const emit = defineEmits(['update:images', 'update:errors', 'update:processing'])
+const emit = defineEmits([
+  'update:images', 
+  'update:errors', 
+  'update:processing',
+])
 
-const handleFilePondLoad = (response) => {
-  const data = JSON.parse(response)
-  emit('update:images', [...props.images, data])
-
-  return data.subfolder
+const onLoad = (uniqueId) => {
+  emit('update:images', [...props.images, uniqueId])
+  return uniqueId
 }
 
-const handleFilePondRevert = async (uniqueId, load, error) => {
-  const index = props.images.findIndex(image => image.subfolder === uniqueId)
-  const data = props.images[index]
+const onRevert = async (uniqueId, load, error) => {
+  const index = props.images.indexOf(id => id === uniqueId)
 
   try{
-    await axios.delete(
-      route('filepond.destroy', { filepond: uniqueId }), 
-      { data },
-    )
-
+    await axios.delete(route('filepond.destroy', { filepond: uniqueId }))
     emit('update:images', props.images.filter((_, i) => i !== index))
-
-    return true
   }
   catch(e){
     const image = pond.value.getFiles().find(image => image.serverId === uniqueId)
     emit('update:errors', { ...props.errors, ...{ [image.id]: [`Wystąpił błąd podczas usuwania zdjęcia: ${image.filename}`] } })
-    error('ups')
-
-    return false
+    error('')
   }
 }
 
-const handleFilePondProcessError = (error) => {
-  const errorMessages = JSON.parse(error)?.images
-  const files = pond.value.getFiles()
-  const file = files[0]
+const onError = (response) => {
+  const errors = JSON.parse(response)?.filepond
+  const images = pond.value.getFiles()
+  const image = images[0]
 
-  if(errorMessages && errorMessages?.length){
-    emit('update:errors', { ...props.errors, ...{ [file.id]: errorMessages } })
+  if(errors && errors?.length){
+    emit('update:errors', { ...props.errors, ...{ [image.id]: errors } })
   }
 }
 
 document.addEventListener('FilePond:removefile', (e) => {
-  const image_id = e.detail.file.id
+  const errors = Object.keys(props.errors).reduce((acc, key) => {
+    if(key !== e.detail.file.id){
+      acc[key] = props.errors[key]
+    }
 
-  if(props.errors.hasOwnProperty(image_id)){
-    const errors = Object.keys(props.errors).reduce((acc, key) => {
-      if(key !== image_id){
-        acc[key] = props.errors[key]
-      }
+    return acc
+  }, {})
 
-      return acc
-    }, {})
-
-    emit('update:errors', errors)
-  }
+  emit('update:errors', errors)
+  processFiles--
 })
 
-document.addEventListener('FilePond:processfilestart', (e) => {
-  const image_id = e.detail.file.id
-  images_in_processing.push(image_id)
-  emit('update:processing', images_in_processing.length !== 0)
+document.addEventListener('FilePond:processfilestart', (_) => {
+  emit('update:processing', true)
 })
 
-document.addEventListener('FilePond:processfile', (e) => {
-  const image_id = e.detail.file.id
-  const index = images_in_processing.findIndex(id => id === image_id)
-  images_in_processing.splice(index, 1)
-  emit('update:processing', images_in_processing.length !== 0)
+document.addEventListener('FilePond:processfile', (_) => {
+  emit('update:processing', ++processFiles !== pond.value.getFiles().length)
 })
 
-const csrfToken = computed(
-  () => page.props.csrfToken,
-)
+const addImages = (images) => {
+  pond.value.addFiles(images)
+}
+
+const clearImages = () => {
+  pond.value.removeFiles({ revert: true })
+}
 
 defineExpose({
-  pond,
+  addImages,
+  clearImages,
 })
 </script>
-
-<style>
-.filepond--credits{
-  @apply !hidden;
-}
-
-.filepond--item {
-    width: calc(33% - 0.5em);
-}
-
-.filepond--drop-label{
-  @apply cursor-pointer dark:text-gray-300 text-gray-500;
-}
-
-.filepond--drop-label > label{
-  @apply cursor-pointer text-sm;
-}
-
-.filepond--panel .filepond--panel-root{
-  @apply dark:bg-gray-500 bg-gray-100;
-}
-
-.filepond--panel .filepond--panel-root{
-  @apply border dark:border-gray-300 border-gray-300;
-}
-
-.filepond--root{
-  @apply mb-0;
-}
-
-.filepond--file-action-button{
-  @apply cursor-pointer;
-}
-
-@media (max-width: 800px) {
-    .filepond--item {
-        width: calc(100%);
-    }
-}
-</style>
 

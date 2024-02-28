@@ -68,12 +68,12 @@
 
 <script setup>
 import {Link} from '@inertiajs/vue3'
-import Box from '@/Components/UI/Box.vue'
-import Price from '@/Components/Price.vue'
+import Box from '@/Components/UI/List/Box.vue'
+import Price from '@/Components/UI/List/Price.vue'
 import ListingSpace from '@/Components/ListingSpace.vue'
 import ListingAddress from '@/Components/ListingAddress.vue'
 import RealtorFilters from '@/Pages/Realtor/Index/Components/RealtorFilters.vue'
-import Pagination from '@/Components/UI/Pagination.vue'
+import Pagination from '@/Components/UI/List/Pagination.vue'
 
 defineProps({
   listings: Object,

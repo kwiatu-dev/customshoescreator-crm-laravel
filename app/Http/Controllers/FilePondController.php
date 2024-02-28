@@ -14,92 +14,47 @@ class FilePondController extends Controller
     {
         $this->middleware(['auth']);
     }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'images' => 'required|mimes:jpg,png,jpeg|max:5000'
-        ]);
-
-        if($request->file('images')->getClientOriginalName()){
-            $validator->setAttributeNames(['images' => $request->file('images')->getClientOriginalName()]);
+        try{
+            $validator = Validator::make($request->all(), [
+                'filepond' => 'required|mimes:jpg,png,jpeg|max:5000'
+            ]);
+    
+            if(!$validator->fails()){
+                $file_name = $request->file('filepond')->getClientOriginalName();
+                $validator->setAttributeNames(['filepond' => $file_name]);
+                $dir = 'tmp';
+                $image = $request->file('filepond');
+                $image->store($dir, 'private');
+                $name = $image->hashName();
+    
+                return response($name, 200)->header('Content-Type', 'text/plain');
+            }
         }
-
-        if(!$validator->fails()){
-            $folder = 'tmp';
-            $imageFile = $request->file('images');
-            $subfolder = uniqid('filepond-');
-            $imageName = $imageFile->hashName();
-            $path = $imageFile->storeAs($folder .'/'. $subfolder, $imageName, 'private');
-
-            return response()->json([
-                'folder' => $folder, 
-                'subfolder' => $subfolder, 
-                'path' => dirname($path),
-                'name' => $imageName
-            ], 200);
-        }
-
+        catch(Exception $ex) { }
+        
         return response()->json($validator->errors(), 422);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Request $request, string $subfolder)
+    public function destroy(string $name)
     {
         $disk = Storage::disk('private');
-        $folder = $request->string('folder');
-        $path = $folder .'/'. $subfolder;
+        $dir = 'tmp';
+        $path = $dir .'/'. $name;
 
         if($disk->exists($path)){
-            $disk->deleteDirectory($path);
+            $disk->delete($path);
 
-            return response()->json([], 200);
+            return response(null, 200);
         }
 
-        return response()->json([], 422);
+        try{
+
+        }
+        catch(Exception $ex){
+            return response(null, 422);
+        }
     }
 }

@@ -88,7 +88,7 @@
 </template>
   
 <script setup>
-import FormError from '@/Components/UI/FormError.vue'
+import FormError from '@/Components/UI/Form/FormError.vue'
 import ClientSocialOptions from '@/Pages/Client/Index/Components/ClientSocialOptions.vue'
 import { useForm } from '@inertiajs/vue3'
 

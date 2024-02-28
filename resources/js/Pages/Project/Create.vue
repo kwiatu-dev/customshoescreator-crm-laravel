@@ -90,15 +90,15 @@
 </template>
   
 <script setup>
-import UploadImages from '@/Components/UI/UploadImages.vue'
-import FormError from '@/Components/UI/FormError.vue'
-import Autocomplete from '@/Components/UI/Autocomplete.vue'
+import UploadImages from '@/Components/UI/Form/UploadImages.vue'
+import FormError from '@/Components/UI/Form/FormError.vue'
+import Autocomplete from '@/Components/UI/Form/Autocomplete.vue'
 import FormClientCreate from '@/Pages/Client/Create.vue'
-import DropdownList from '@/Components/UI/DropdownList.vue'
+import DropdownList from '@/Components/UI/Form/DropdownList.vue'
 import { onMounted, ref, computed } from 'vue'
 import { useForm, usePage } from '@inertiajs/vue3'
 import datepicker from '@/Helpers/datepicker.js'
-import FormPopup from '@/Components/FormPopup.vue'
+import FormPopup from '@/Components/UI/Popup/FormPopup.vue'
 
 defineProps({
   users: {

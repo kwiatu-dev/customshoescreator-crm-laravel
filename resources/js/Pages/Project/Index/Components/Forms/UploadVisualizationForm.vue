@@ -1,11 +1,22 @@
 <template>
-  <form class="container mx-auto p-4" @submit.prevent="create">
-    <h1 class="title">{{ title }}</h1>
-    <p class="text-sm text-gray-400">{{ description }}</p>
+  <form @submit.prevent="create">
+    <h1 class="title">
+      {{ title }}
+    </h1>
+    <p class="text-sm text-gray-400">
+      {{ description }}
+    </p>
     <section class="mt-8 flex flex-col justify-center md:grid md:grid-cols-6 gap-4">
       <div class="col-span-6">
-        <label class="label">Wizualizacje (zdjęcia)</label>
-        <UploadImages ref="uploadImagesComponent" v-model:images="form.visualization_images" v-model:errors="visualization_errors" v-model:processing="visualization_processing" />
+        <label class="label">
+          Wizualizacje (zdjęcia)
+        </label>
+        <UploadImages 
+          ref="uploadImagesComponent" 
+          v-model:images="form.visualization_images" 
+          v-model:errors="visualization_errors" 
+          v-model:processing="visualization_processing"
+        />
         <FormError :error="form.errors.visualization_images" />
       </div>
       <button 
@@ -20,9 +31,9 @@
 </template>
 
 <script setup>
-import UploadImages from '@/Components/UI/UploadImages.vue'
-import FormError from '@/Components/UI/FormError.vue'
-import { ref } from 'vue'
+import UploadImages from '@/Components/UI/Form/UploadImages.vue'
+import FormError from '@/Components/UI/Form/FormError.vue'
+import { ref, onMounted } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 
 const props = defineProps({
@@ -38,9 +49,20 @@ const props = defineProps({
     type: String,
     default: 'Wizualizacje możesz dodać teraz lub przed zakończeniem zlecenia.',
   },
+  endpoint: {
+    type: String,
+    required: true,
+  },
+  onInit: Function,
 })
 
 const emit = defineEmits(['created'])
+
+onMounted(() => {
+  if(uploadImagesComponent.value?.pond && props.onInit){
+    props.onInit(uploadImagesComponent.value.pond)
+  }
+})
 
 const form = useForm({
   visualization_images: [],
@@ -52,25 +74,25 @@ const visualization_processing = ref(false)
 
 const clearUploadedImages = () => {
   if(uploadImagesComponent.value?.pond){
-    //todo: usuwaj tylko pliki tymczasowe
     uploadImagesComponent.value.pond.removeFiles({ revert: true })
   }
 }
 
-const create = () => {
-  //todo: dodaj tylko zdjęcia bez zmiany statusu
-//   form.post(route('projects.start', { project: props.project.id }), {
-//     preserveScroll: true,
-//     onSuccess: () => emit('created'),
-//   })
+const uploadImages = (images) => {
+  if(uploadImagesComponent.value?.pond){
+    uploadImagesComponent.value.pond.addFiles(images)
+  }
+}
 
-  emit('created')
+const create = () => {
+  form.post(route(props.endpoint, { project: props.project.id }), {
+    preserveScroll: true,
+    onSuccess: () => emit('created'),
+  })
 }
 
 defineExpose({
   clearUploadedImages,
+  uploadImages,
 })
-
-//todo: uzupełnij zdjęciami, które już zostały dodane
-//todo: ustawić aby FilePond mógł usuwać tylko zdjęcia z folderu tmp
 </script>

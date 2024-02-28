@@ -77,8 +77,8 @@
 <script setup>
 import ListingAddress from '@/Components/ListingAddress.vue'
 import ListingSpace from '@/Components/ListingSpace.vue'
-import Price from '@/Components/Price.vue'
-import Box from '@/Components/UI/Box.vue'
+import Price from '@/Components/UI/List/Price.vue'
+import Box from '@/Components/UI/List/Box.vue'
 import {ref, computed} from 'vue'
 import {useMonthlyPayment} from '@/Composables/useMonthlyPayment'
 import MakeOffer from '@/Pages/Listing/Show/Components/MakeOffer.vue'

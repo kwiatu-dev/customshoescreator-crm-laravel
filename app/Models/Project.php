@@ -99,22 +99,22 @@ class Project extends Model
         return $this->hasMany(ProjectImage::class, 'project_id');
     }
 
-    public function addImages($tmp_files, $type_id)
+    public function addImages($images, $type_id)
     {
-        foreach($tmp_files as $file){
+        foreach($images as $image){
             $disk = Storage::disk('private');
 
             $disk->move(
-                $file['path'] .'/'. $file['name'], 
-                'projects/'. $this->id .'/'. $file['name']
+                'tmp/'. $image, 
+                'projects/'. $image
             );
 
-            $disk->deleteDirectory($file['path']);
+            $disk->delete('tmp/'. $image);
 
             ProjectImage::create([
                 'type_id' => $type_id,
                 'project_id' => $this->id,
-                'file' => $file['name']
+                'file' => $image
             ]);
         }
     }

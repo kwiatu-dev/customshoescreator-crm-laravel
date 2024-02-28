@@ -10,7 +10,7 @@
 </template>
   
 <script setup>  
-import Pagination from '@/Components/UI/Pagination.vue'
+import Pagination from '@/Components/UI/List/Pagination.vue'
 import Listing from '@/Pages/Listing/Index/Components/Listing.vue'
 import Filters from '@/Pages/Listing/Index/Components/Filters.vue'
 

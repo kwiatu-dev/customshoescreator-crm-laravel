@@ -87,5 +87,47 @@
         @apply input-filter-r rounded-md w-full placeholder:text-black text-black dark:bg-gray-600 dark:border-gray-500 dark:placeholder:text-gray-400 dark:text-gray-400 font-normal text-sm;
     }
 
-
+    .filepond--credits{
+        @apply !hidden;
+      }
+      
+      .filepond--item {
+          width: calc(20% - 0.5em);
+      }
+      
+      .filepond--drop-label{
+        @apply cursor-pointer dark:text-gray-300 text-gray-500;
+      }
+      
+      .filepond--drop-label > label{
+        @apply cursor-pointer text-sm;
+      }
+      
+      .filepond--panel .filepond--panel-root{
+        @apply dark:bg-gray-500 bg-gray-100;
+      }
+      
+      .filepond--panel .filepond--panel-root{
+        @apply border dark:border-gray-300 border-gray-300;
+      }
+      
+      .filepond--root{
+        @apply mb-0;
+      }
+      
+      .filepond--file-action-button{
+        @apply cursor-pointer;
+      }
+      
+      @media (max-width: 800px) {
+          .filepond--item {
+              width: calc(100% - 0.5rem);
+          }
+      }
+      
+      @media (max-width: 1000px) {
+          .filepond--item {
+              width: calc(33% - 0.5rem);
+          }
+      }
 }

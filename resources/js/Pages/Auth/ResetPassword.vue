@@ -27,7 +27,7 @@
 </template>
   
 <script setup>
-import FormError from '@/Components/UI/FormError.vue'
+import FormError from '@/Components/UI/Form/FormError.vue'
 import {useForm} from '@inertiajs/vue3'
 
 const props = defineProps({

@@ -9,7 +9,7 @@
     :footer="footer"
     :cards="cards"
     :get="'projects.index'"
-    :actions="actions"
+    :actions="Actions"
   >
     <template #title>
       Lista projektów
@@ -28,8 +28,8 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
 import ListLayout from '@/Components/UI/List/Layout.vue'
-import actions from '@/Pages/Project/Index/Components/Actions.vue'
-  
+import Actions from '@/Pages/Project/Index/Components/Actions/AllActions.vue'
+
 defineProps({
   projects: Object,
   filters: Object,

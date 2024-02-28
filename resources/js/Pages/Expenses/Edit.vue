@@ -62,7 +62,7 @@
 </template>
 
 <script setup>
-import FormError from '@/Components/UI/FormError.vue'
+import FormError from '@/Components/UI/Form/FormError.vue'
 import { onMounted, ref } from 'vue'
 import { useForm, Link } from '@inertiajs/vue3'
 import Datepicker from 'flowbite-datepicker/Datepicker'

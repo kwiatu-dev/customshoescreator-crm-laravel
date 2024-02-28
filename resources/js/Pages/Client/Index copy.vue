@@ -28,7 +28,7 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
 import { useMediaQuery } from '@vueuse/core'
-import Pagination from '@/Components/UI/Pagination.vue'
+import Pagination from '@/Components/UI/List/Pagination.vue'
 import ClientTable from '@/Pages/Client/Index/Components/ClientTable.vue'
 import ClientFilters from '@/Pages/Client/Index/Components/ClientFilters.vue'
 import ClientCards from '@/Pages/Client/Index/Components/ClientCards.vue'
