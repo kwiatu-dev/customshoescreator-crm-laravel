@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('title', 50);
-            $table->string('remarks', 150);
+            $table->string('remarks', 150)->default('');
             $table->decimal('price', 8, 2, true);
             $table->date('start');
             $table->date('deadline');

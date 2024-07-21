@@ -1,4 +1,5 @@
 <template>
+  <Link :href="route('projects.show', { project: object.id })" as="button" class="btn-action">Zobacz</Link>
   <StartProjectAction v-if="object.status_id === 1" :project="object" />
   <EndProjectAction v-if="object.status_id === 2" :project="object" />
   <Link v-if="object.editable === 1" :href="route('projects.edit', { project: object.id })" class="btn-action">Edytuj</Link>

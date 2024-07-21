@@ -10,6 +10,7 @@
     max-file-size="8MB"
     style-item-panel-aspect-ratio="1"
     force-revert="true"
+    label-file-waiting-for-size="Trwa pobieranie rozmiaru"
     label-max-file-size-exceeded="Plik jest za duży"
     label-max-file-size="Dozwolona wielkość pliku: {filesize}"
     label-button-remove-item="Usuń"
@@ -54,6 +55,7 @@
     @removefile="onRemoveFile"
     @processfile="onProcessFile"
     @processfilestart="onProcessFileStart"
+    @error="onValidationError"
     @init="emit('init')"
   />
   <FormError 
@@ -127,6 +129,8 @@ const onRevert = async (uniqueId, load, error) => {
     emit('update:errors', { ...props.errors, ...{ [image.id]: [`Wystąpił błąd podczas usuwania zdjęcia: ${image.filename}`] } })
     error('')
   }
+
+  processFiles--
 }
 
 const onError = (response) => {
@@ -157,6 +161,10 @@ const onProcessFileStart =  (_) => {
 }
 
 const onProcessFile = (_) => {
+  emit('update:processing', ++processFiles !== pond.value.getFiles().length)
+}
+
+const onValidationError = (_) => {
   emit('update:processing', ++processFiles !== pond.value.getFiles().length)
 }
 

@@ -55,8 +55,6 @@ class ProjectController extends Controller
             ->latest()
             ->pagination();
 
-
-
         $footer = Project::query()
             ->filter($request)
             ->footer();
@@ -112,26 +110,11 @@ class ProjectController extends Controller
             'costs' => $user->costs,
             'distribution' => $user->distribution,
             'status_id' => 1,
+            'remarks' => $fields['remarks'] ?? '',
         ]);
 
         $tmp_files = $request->input('inspiration_images');
-
-        foreach($tmp_files as $file){
-            $disk = Storage::disk('private');
-
-            $disk->move(
-                $file['path'] .'/'. $file['name'], 
-                'projects/'. $project->id .'/'. $file['name']
-            );
-
-            $disk->deleteDirectory($file['path']);
-
-            ProjectImage::create([
-                'type_id' => 1,
-                'project_id' => $project->id,
-                'file' => $file['name']
-            ]);
-        }
+        $project->addImages($tmp_files, 1);
 
         return redirect()->route('projects.index')
             ->with('success', 'Projekt został dodany!');
@@ -140,9 +123,20 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Project $project)
     {
-        //
+        $project->load(['images', 'user', 'client', 'status', 'type']);
+
+        $project->images->each(function ($image) {
+            $image->url = route('private.files', ['catalog' => 'projects', 'file' => $image->file]);
+        });
+
+        return inertia(
+            'Project/Show',
+            [
+                'project' => $project,
+            ]
+        );
     }
 
     /**
