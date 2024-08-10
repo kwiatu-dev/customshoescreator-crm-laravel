@@ -5,11 +5,13 @@
     target="_blank" 
     class="text-indigo-600 hover:text-indigo-500"
   >
-    {{ cell }}
+    <component :is="props.element.component" v-if="hasComponent" :object="object" />
+    <span v-else>{{ cell }}</span>
   </a>
-  <span v-else>
-    {{ cell }}
-  </span>
+  <div v-else class="inline">
+    <component :is="props.element.component" v-if="hasComponent" :object="object" />
+    <span v-else>{{ cell }}</span>
+  </div>
 </template>
 
 <script setup>
@@ -46,4 +48,6 @@ const link = computed(() => {
 
   return `${props.element.link?.prefix || ''}${value}${props.element.link?.suffix || ''}`
 })
+
+const hasComponent = computed(() => typeof props.element.component === 'object')
 </script>

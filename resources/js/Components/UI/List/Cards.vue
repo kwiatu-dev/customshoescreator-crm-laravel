@@ -8,7 +8,8 @@
         class="w-1/2" 
         :class="{
           'w-full mt-4': element.remarks,
-          'w-full text-lg font-bold mb-4': element.title
+          'w-full text-lg font-bold mb-4': element.title,
+          'w-full': element.fullWidth,
         }"
       >
         <CardData :element="element" :object="object" :field="field" />

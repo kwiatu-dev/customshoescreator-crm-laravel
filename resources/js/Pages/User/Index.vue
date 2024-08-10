@@ -28,6 +28,7 @@
 import { Link } from '@inertiajs/vue3'
 import ListLayout from '@/Components/UI/List/Layout.vue'
 import actions from '@/Pages/User/Index/Components/Actions.vue'
+import AdminDistribution from '@/Components/UI/List/AdminDistribution.vue'
 
 defineProps({
   users: Object,
@@ -46,9 +47,9 @@ const columns = {
   postcode: { label: 'Kod pocztowy' },
   city: { label: 'Miasto' },
   country: { label: 'Kraj' },
-  commission: { label: 'Prowizja' },
-  costs: { label: 'Koszty' },
-  distribution: { label: 'Podział' },
+  commission: { label: 'Prowizja', suffix: '%' },
+  costs: { label: 'Koszty', suffix: '%' },
+  distribution: { label: 'Podział', component: AdminDistribution },
 }
 
 const cards = {

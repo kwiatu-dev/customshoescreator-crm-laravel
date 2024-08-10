@@ -48,6 +48,7 @@ Route::delete('logout', [AuthController::class, 'destroy'])->name('logout');
 //UserAccountController
 Route::resource('user', UserController::class)
     ->only(['create', 'store', 'index', 'edit', 'destroy', 'update']);
+
 Route::put('user/{user}/restore', [UserController::class, 'restore'])
     ->name('user.restore')
     ->withTrashed();
@@ -113,7 +114,16 @@ Route::get('private/files/{catalog}/{file}', PrivateFilesController::class)
     ->name('private.files');
 
 //ProjectController
-Route::resource('projects', ProjectController::class);
+Route::resource('projects', ProjectController::class)
+    ->except(['show']);
+
+Route::put('projects/{project}/restore', [ProjectController::class, 'restore'])
+    ->name('projects.restore')
+    ->withTrashed();
+
+Route::get('projects/{project}', [ProjectController::class, 'show'])
+    ->name('projects.show')
+    ->withTrashed();
 
 Route::post('projects/{project}/status', [ProjectController::class, 'status'])
     ->name('projects.status');

@@ -1,25 +1,43 @@
 <template>
-  <a 
-    v-if="link" 
-    :href="link" 
-    target="_blank" 
-    class="text-indigo-600 hover:text-indigo-500"
-  >
-    <span>{{ data }}</span>
-  </a>
-  <span v-else>
-    {{ data }}
-  </span>
+  <div v-if="onlyAdmin" class="inline">
+    <a 
+      v-if="link" 
+      :href="link" 
+      target="_blank" 
+      class="text-indigo-600 hover:text-indigo-500"
+    >
+      <component :is="props.element.component" v-if="hasComponent" :object="object" />
+      <span v-else>{{ data }}</span>
+    </a>
+    <div v-else class="inline">
+      <component :is="props.element.component" v-if="hasComponent" :object="object" />
+      <span v-else>{{ data }}</span>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import { usePage } from '@inertiajs/vue3'
 
 const props = defineProps({
   element: Object,
   object: Object,
   field: String,
 })
+
+const page = usePage()
+
+const currentUser = computed(
+  () => page.props.currentUser,
+)
+
+const onlyAdmin = computed(() => 
+  (Object.hasOwn(props.element, 'admin') ===  true && currentUser.value?.is_admin == true) ||
+  (Object.hasOwn(props.element, 'admin') === false), 
+)
+
+const hasComponent = computed(() => typeof props.element.component === 'object')
 
 const data = computed(() => {
   let value = ''

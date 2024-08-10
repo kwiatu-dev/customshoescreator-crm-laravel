@@ -126,6 +126,7 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         $project->load(['images', 'user', 'client', 'status', 'type']);
+        $project->editable = $project->status_id != 3 ? 1 : 0;
 
         $project->images->each(function ($image) {
             $image->url = route('private.files', ['catalog' => 'projects', 'file' => $image->file]);
@@ -142,23 +143,22 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Project $project)
     {
-        //
+        RequestProcessor::rememberPreviousUrl();
+
+        return inertia(
+            'Project/Edit',
+            [
+                'project' => $project,
+            ]
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
     {
         //
     }
@@ -202,5 +202,21 @@ class ProjectController extends Controller
 
             return redirect()->back()->withErrors($validator->errors());
         }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Project $project)
+    {
+        $project->deleteOrFail();
+
+        return redirect()->back()->with('success', 'Projekt został usunięty!');
+    }
+
+    public function restore(Project $project){
+        $project->restore();
+
+        return redirect()->back()->with('success', 'Projekt został przywrócony!');
     }
 }
