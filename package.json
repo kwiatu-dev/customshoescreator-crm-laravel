@@ -21,11 +21,13 @@
     "dependencies": {
         "@inertiajs/vue3": "^1.0.11",
         "@vueuse/core": "^10.4.1",
+        "chart.js": "^4.4.3",
         "filepond": "^4.30.6",
         "filepond-plugin-file-validate-size": "^2.2.8",
         "filepond-plugin-file-validate-type": "^1.2.9",
         "filepond-plugin-image-preview": "^4.6.12",
         "flowbite-datepicker": "^1.2.2",
+        "vue-chartjs": "^5.3.1",
         "vue-filepond": "^7.0.4",
         "vuedraggable": "^4.1.0"
     }

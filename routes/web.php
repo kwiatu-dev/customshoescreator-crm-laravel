@@ -5,7 +5,7 @@ use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ForgotPassword;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\IndexController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\ExpensesController;
@@ -31,8 +31,7 @@ use App\Notifications\UserCreate;
 */
 
 //IndexController
-Route::get('/', [IndexController::class, 'index'])->name('home');
-Route::get('/hello', [IndexController::class, 'show']);
+Route::get('/', [DashboardController::class, 'index'])->name('home');
 
 //ListingController
 Route::resource('listing', ListingController::class)->only('index', 'show');
