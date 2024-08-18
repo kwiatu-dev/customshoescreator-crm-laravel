@@ -170,7 +170,7 @@ const onValidationError = (_) => {
 
 const addImages = (images, options) => {
   pond.value.addFiles(images.map(image => ({
-    source: image,
+    source: window.location.origin + '/private/files/' + image,
     options,
   })))
 }

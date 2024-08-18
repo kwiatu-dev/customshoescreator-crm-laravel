@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 
 const props = defineProps({
   source: {
@@ -82,4 +82,11 @@ const handleInput = (e) => {
   isOpen.value = true
   emit('update:searchQuery', e.target.value)
 }
+
+onMounted(() => {
+  if (props.objectId) {
+    const selectedElement = props.source.find(o => props.id(o).toString() === props.objectId.toString())
+    emit('update:searchQuery', props.name(selectedElement))
+  }
+})
 </script>

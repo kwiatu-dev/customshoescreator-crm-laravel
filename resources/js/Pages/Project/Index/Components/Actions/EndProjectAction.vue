@@ -75,7 +75,6 @@ const close = () => {
 
 }
 
-const source = (catalog, file) => `private/files/${catalog}/${file}`
 const visualization = ref(null)
 const process = ref(null)
 
@@ -84,7 +83,7 @@ const onVisualizationSave = () => {
 }
 
 const onVisualizationInit = () => {
-  visualization.value.addImages(props.project.images.map(image => source('projects', image.file)), { type: 'local' })
+  visualization.value.addImages(props.project.images.map(image => `projects/${image.file}`), { type: 'local' })
 }
 
 const onProcessSave = () => {

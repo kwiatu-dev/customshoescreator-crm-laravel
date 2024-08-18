@@ -3,7 +3,7 @@
     <button 
       v-for="(label, index) in labels" :key="index"
       class="py-2 px-4 rounded-sm shadow-md text-gray-400 font-medium"
-      :style="`background: linear-gradient(45deg, ${ colors[index].backgroundColor.replace('{opacity}', '.2') } 0%, ${ colors[index].backgroundColor.replace('{opacity}', '.5') } 50%, ${ colors[index].backgroundColor.replace('{opacity}', '.9') } 100%);`"
+      :style="`background: linear-gradient(180deg, ${ colors[index].backgroundColor.replace('{opacity}', '.4') } 0%, ${ colors[index].backgroundColor.replace('{opacity}', '.7') } 50%, ${ colors[index].backgroundColor.replace('{opacity}', '.9') } 100%);`"
       :class="[{ '': label.visible, 'line-through': !label.visible }]"
       @click="emit('label_click', index)"
     >

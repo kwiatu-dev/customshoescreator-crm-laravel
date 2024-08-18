@@ -125,6 +125,8 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        $this->authorize('show', $project);
+
         $project->load(['images', 'user', 'client', 'status', 'type']);
         $project->editable = $project->status_id != 3 ? 1 : 0;
 
@@ -145,12 +147,25 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
+        $this->authorize('edit', $project);
+        $users = User::query()->get();
+        $clients = Client::query()->latest()->get();
+        $types = DB::table('project_types')->get();
+        $project->load(['images', 'user', 'client', 'status', 'type']);
+
+        $project->images->each(function ($image) {
+            $image->url = route('private.files', ['catalog' => 'projects', 'file' => $image->file]);
+        });
+
         RequestProcessor::rememberPreviousUrl();
 
         return inertia(
             'Project/Edit',
             [
                 'project' => $project,
+                'users' => $users,
+                'clients' => $clients,
+                'types' => $types
             ]
         );
     }
@@ -158,13 +173,15 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Project $project)
     {
-        //
+        $this->authorize('update', $project);
     }
 
     public function status(Request $request, Project $project)
     {
+        $this->authorize('status', $project);
+
         //todo: sprawdź możliwość edycji projektu
         if(true){
             $validator = Validator::make($request->all(), [
@@ -186,6 +203,7 @@ class ProjectController extends Controller
     }
 
     public function upload(Request $request, Project $project){
+        $this->authorize('upload', $project);
         //todo: sprawdź możliwość edycji projektu
         if(true){
             $validator = Validator::make($request->all(), [
@@ -209,12 +227,16 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        $this->authorize('destroy', $project);
+
         $project->deleteOrFail();
 
         return redirect()->back()->with('success', 'Projekt został usunięty!');
     }
 
     public function restore(Project $project){
+        $this->authorize('restore', $project);
+
         $project->restore();
 
         return redirect()->back()->with('success', 'Projekt został przywrócony!');

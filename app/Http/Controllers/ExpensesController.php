@@ -14,7 +14,7 @@ class ExpensesController extends Controller
 
     public function __construct()
     {
-        $this->middleware('admin');
+        $this->middleware(['auth', 'verified', 'admin']);
 
         $this->fields = [
             'title',

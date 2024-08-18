@@ -1,7 +1,7 @@
 <template>
   <div class="w-full bg-gray-800 rounded-md md:p-8 p-4 shadow-md">
     <div class="title text-center mb-8">
-      Przykładowy wykres
+      {{ title }}
     </div>
     <ChartNavButtons :labels="labels" @label_click="toggleDataset($event)" />
     <div style="height: 500px;">
@@ -21,6 +21,10 @@ const props = defineProps({
   data: { 
     required: true, 
     type: Object, 
+  },
+  title: {
+    type: String,
+    default: 'Chart title',
   },
 })
 
