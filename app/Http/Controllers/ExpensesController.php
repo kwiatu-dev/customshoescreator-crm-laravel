@@ -94,8 +94,6 @@ class ExpensesController extends Controller
      */
     public function edit(Expenses $expense)
     {
-        RequestProcessor::rememberPreviousUrl();
-
         return inertia(
             'Expenses/Edit',
             [
@@ -122,10 +120,7 @@ class ExpensesController extends Controller
 
         $expense->update($fields);
 
-        return RequestProcessor::backToPreviousUrlOrRoute(
-            'expenses.index', 
-            'Wydatek został edytowany!'
-        );
+        return redirect()->route('expanses.index')->with('success', 'Wydatek został edytowany!');
     }
 
     /**

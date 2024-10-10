@@ -77,8 +77,7 @@
         <UploadImages 
           ref="inspirations"
           v-model:images="form.inspiration_images" 
-          v-model:errors="imagesErrors" 
-          v-model:processing="imageProcessing" 
+          v-model:errors="imageErrors"
           @init="setImages"
         />
         <FormError :error="form.errors.images" />
@@ -90,7 +89,7 @@
         <FormError :error="form.errors.remarks" />
       </div>
 
-      <button type="submit" class="w-full btn-primary col-span-6 mt-4" :disabled="imageProcessing">Edytuj projekt</button>
+      <button type="submit" class="w-full btn-primary col-span-6 mt-4">Edytuj projekt</button>
     </section>
   </form>
 </template>
@@ -135,38 +134,42 @@ const form = useForm({
   start: props.project.start,
   deadline: props.project.deadline,
   remarks: props.project.remarks,
-  inspiration_images: props.project.images.filter(i => i.type_id == '1'),
+  inspiration_images: props.project.images
+    .filter(i => i.type_id === 1)
+    .map(i => i.file),
 })
   
 const start = ref(null)
 const deadline = ref(null)
-const imagesErrors = ref({})
-const imageProcessing = ref(false)
 const page = usePage()
+const imageErrors = {}
 const clientSearchQuery = ref('')
 const userSearchQuery = ref('')
 const inspirations = ref(null)
+
+const currentUser = computed(
+  () => page.props.currentUser,
+)
   
 onMounted(() => {
   datepicker.create(start, null, (event) => form.start = event.target.value)
   datepicker.create(deadline, null, (event) => form.deadline = event.target.value)
 })
-  
-const edit = () => form.post(route('projects.update', { user: props.project.id }))
 
 const onNewClientCreated = (client) => {
   form.client_id = client.id.toString()
   clientSearchQuery.value = `${client.first_name} ${client.last_name}`
 }
 
-const currentUser = computed(
-  () => page.props.currentUser,
-)
-
 const setImages = () => {
-  inspirations.value.addImages(props.project.images.map(image => `projects/${image.file}`), { type: 'local' })
+  inspirations.value.addImages(
+    props.project.images
+      .filter(image => image.type_id === 1)
+      .map(image => `projects/${image.file}`), { type: 'local' })
 }
 
-//todo - usuwanie zdjęć z serwera po kliknięciu przycisku edytuj
+const edit = () => form.put(route('projects.update', { project: props.project.id }))
+
 //todo - usuwanie zdjęć z popup zmiana statusu
+//todo - zaimplementować mechanizm który będzie zapamiętywać pozycje scrolla i paginacje po edycji
 </script>

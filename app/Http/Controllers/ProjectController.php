@@ -157,8 +157,6 @@ class ProjectController extends Controller
             $image->url = route('private.files', ['catalog' => 'projects', 'file' => $image->file]);
         });
 
-        RequestProcessor::rememberPreviousUrl();
-
         return inertia(
             'Project/Edit',
             [
@@ -173,53 +171,82 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Project $project)
+    public function update(Request $request, Project $project)
     {
         $this->authorize('update', $project);
+
+        $fields = RequestProcessor::validation($request, $this->fields, null, [
+            'type_id' => 'required|exists:project_types,id',
+            'start' => 'required|date|date_format:Y-m-d',
+            'deadline' => 'required|date|date_format:Y-m-d',
+            'commission' => 'nullable',
+            'costs' => 'nullable',
+            'distribution' => 'nullable'
+        ]);
+
+        $user = User::find($fields['created_by_user_id'] ?? Auth::id());
+        $fields['created_by_user_id'] = $user->id;
+
+        if ($project->created_by_user_id != $user->id) {
+            array_merge($fields, [
+                'commission' => $user->commission,
+                'costs' => $user->costs,
+                'distribution' => $user->distribution,
+            ]);
+        }
+
+        $project->update([
+            ...$fields,
+            'remarks' => $fields['remarks'] ?? '',
+        ]);
+
+        $images = $request->input('inspiration_images');
+        $project->addImages($images, 1);
+
+        $current_images = $project->images()->where('type_id', 1)->pluck('file')->toArray();
+        $images_to_delete = array_diff($current_images, $images);
+        $project->removeImages($images_to_delete);
+
+        return redirect()->route('projects.index')->with('success', 'Projekt został edytowany!');
     }
 
     public function status(Request $request, Project $project)
     {
         $this->authorize('status', $project);
 
-        //todo: sprawdź możliwość edycji projektu
-        if(true){
-            $validator = Validator::make($request->all(), [
-                'status_id' => 'required|integer|exists:project_statuses,id'
-            ]);
+        $validator = Validator::make($request->all(), [
+            'status_id' => 'required|integer|exists:project_statuses,id'
+        ]);
 
-            if(!$validator->fails()){
-                $status_id = $request->integer('status_id');
-                $project->status_id = $status_id;
-                $project->save();
+        if(!$validator->fails()){
+            $status_id = $request->integer('status_id');
+            $project->status_id = $status_id;
+            $project->save();
 
-                return redirect()->back()
-                    ->with('success', 'Status projektu został zaktualizowany!');
-            }
-
-            return redirect()->back()->withErrors($validator->errors())
-                ->with('failed', 'Nie udało się zaktualizować statusu projektu!');
+            return redirect()->back()
+                ->with('success', 'Status projektu został zaktualizowany!');
         }
+
+        return redirect()->back()->withErrors($validator->errors())
+            ->with('failed', 'Nie udało się zaktualizować statusu projektu!');
     }
 
     public function upload(Request $request, Project $project){
         $this->authorize('upload', $project);
-        //todo: sprawdź możliwość edycji projektu
-        if(true){
-            $validator = Validator::make($request->all(), [
-                'type_id' => 'required|integer|exists:project_image_types,id'
-            ]);
 
-            if(!$validator->fails()){
-                $type_id = $request->integer('type_id');
-                $images = $request->input('images');
-                $project->addImages($images, $type_id);
+        $validator = Validator::make($request->all(), [
+            'type_id' => 'required|integer|exists:project_image_types,id'
+        ]);
 
-                return redirect()->back();
-            }
+        if(!$validator->fails()){
+            $type_id = $request->integer('type_id');
+            $images = $request->input('images');
+            $project->addImages($images, $type_id);
 
-            return redirect()->back()->withErrors($validator->errors());
+            return redirect()->back();
         }
+
+        return redirect()->back()->withErrors($validator->errors());
     }
 
     /**

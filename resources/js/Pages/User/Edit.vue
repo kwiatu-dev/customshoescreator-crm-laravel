@@ -120,7 +120,6 @@ const filip = computed(() => parseInt(percentage.value))
 const aleksandra = computed(() => parseInt(100 - percentage.value))
 
 const update = () => {
-  
   form.distribution = JSON.stringify({1: filip.value, 2: aleksandra.value})
   form.put(route('user.update', {user: props.user.id}))
 }

@@ -96,18 +96,4 @@ class RequestProcessor{
         return $request->validate(
             array_merge($validate, $custom_validation));
     }
-
-    public static function rememberPreviousUrl(){
-        if(url()->previous() !== url()->current())
-            session()->put('back_to_url', url()->previous());
-    }
-
-    public static function backToPreviousUrlOrRoute(string $route, string $message): RedirectResponse{
-        $back_to_url = session()->pull('back_to_url');
-
-        if($back_to_url)
-            return redirect($back_to_url)->with('success', $message);
-        else
-            return redirect()->route($route)->with('success', $message);
-    }
 }

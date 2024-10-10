@@ -69,8 +69,6 @@ class UserController extends Controller
     }
 
     public function edit(User $user){
-        RequestProcessor::rememberPreviousUrl();
-
         return inertia(
             'User/Edit',
             [
@@ -84,10 +82,7 @@ class UserController extends Controller
             RequestProcessor::validation($request, $this->fields, $user)
         );
 
-        return RequestProcessor::backToPreviousUrlOrRoute(
-            'user.index', 
-            'Użytkownik został edytowany!'
-        );
+        return redirect()->route('user.index')->with('success', 'Użytkownik został edytowany!');
     }
 
     public function destroy(User $user)

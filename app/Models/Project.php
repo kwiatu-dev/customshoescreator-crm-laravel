@@ -104,6 +104,10 @@ class Project extends Model
         foreach($images as $image){
             $disk = Storage::disk('private');
 
+            if (!$disk->exists('tmp/'. $image)) {
+                continue;
+            }
+
             $disk->move(
                 'tmp/'. $image, 
                 'projects/'. $image
@@ -116,6 +120,18 @@ class Project extends Model
                 'project_id' => $this->id,
                 'file' => $image
             ]);
+        }
+    }
+
+    public function removeImages($images) {
+        $disk = Storage::disk('private');
+
+        foreach($images as $image) {
+            $disk->delete('projects/' . $image);
+
+            $this->images()
+                ->where('file', $image)
+                ->delete();
         }
     }
 }

@@ -53,9 +53,6 @@
       },
     }"
     @removefile="onRemoveFile"
-    @processfile="onProcessFile"
-    @processfilestart="onProcessFileStart"
-    @error="onValidationError"
     @init="emit('init')"
   />
   <FormError 
@@ -81,7 +78,6 @@ const FilePond = vueFilePond(FilePondPluginImagePreview, FilePondPluginFileValid
 const page = usePage()
 const pond = ref(null)
 const csrfToken = computed(() => page.props.csrfToken)
-let processFiles = 0
 
 const props = defineProps({
   labelIdle: {
@@ -102,13 +98,11 @@ const props = defineProps({
   },
   images: Array,
   errors: Object,
-  processing: Boolean,
 })
 
 const emit = defineEmits([
   'update:images', 
   'update:errors', 
-  'update:processing',
   'init',
 ])
 
@@ -118,7 +112,7 @@ const onLoad = (uniqueId) => {
 }
 
 const onRevert = async (uniqueId, load, error) => {
-  const index = props.images.indexOf(id => id === uniqueId)
+  const index = props.images.indexOf(uniqueId)
 
   try{
     await axios.delete(route('filepond.destroy', { filepond: uniqueId }))
@@ -129,8 +123,6 @@ const onRevert = async (uniqueId, load, error) => {
     emit('update:errors', { ...props.errors, ...{ [image.id]: [`Wystąpił błąd podczas usuwania zdjęcia: ${image.filename}`] } })
     error('')
   }
-
-  processFiles--
 }
 
 const onError = (response) => {
@@ -143,7 +135,10 @@ const onError = (response) => {
   }
 }
 
-const onRemoveFile = (e) => {
+const onRemoveFile = (e, file) => {
+  const index = props.images.indexOf(file.filename)
+  emit('update:images', props.images.filter((_, i) => i !== index))
+
   const errors = Object.keys(props.errors).reduce((acc, key) => {
     if(key !== e.detail.file.id){
       acc[key] = props.errors[key]
@@ -153,19 +148,6 @@ const onRemoveFile = (e) => {
   }, {})
 
   emit('update:errors', errors)
-  processFiles--
-}
-
-const onProcessFileStart =  (_) => {
-  emit('update:processing', true)
-}
-
-const onProcessFile = (_) => {
-  emit('update:processing', ++processFiles !== pond.value.getFiles().length)
-}
-
-const onValidationError = (_) => {
-  emit('update:processing', ++processFiles !== pond.value.getFiles().length)
 }
 
 const addImages = (images, options) => {

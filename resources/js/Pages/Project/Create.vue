@@ -74,7 +74,10 @@
 
       <div class="col-span-6">
         <label class="label">Inspiracje (zdjęcia)</label>
-        <UploadImages v-model:images="form.inspiration_images" v-model:errors="imagesErrors" v-model:processing="imageProcessing" />
+        <UploadImages 
+          v-model:images="form.inspiration_images" 
+          v-model:errors="imageErrors"
+        />
         <FormError :error="form.errors.images" />
       </div>
 
@@ -84,7 +87,7 @@
         <FormError :error="form.errors.remarks" />
       </div>
 
-      <button type="submit" class="w-full btn-primary col-span-6 mt-4" :disabled="imageProcessing">Dodaj projekt</button>
+      <button type="submit" class="w-full btn-primary col-span-6 mt-4">Dodaj projekt</button>
     </section>
   </form>
 </template>
@@ -130,9 +133,8 @@ const form = useForm({
   
 const start = ref(null)
 const deadline = ref(null)
-const imagesErrors = ref({})
-const imageProcessing = ref(false)
 const page = usePage()
+const imageErrors = {}
 const clientSearchQuery = ref('')
 const userSearchQuery = ref('')
   
@@ -140,8 +142,6 @@ onMounted(() => {
   datepicker.create(start, null, (event) => form.start = event.target.value)
   datepicker.create(deadline, null, (event) => form.deadline = event.target.value)
 })
-  
-const create = () => form.post(route('projects.store'))
 
 const onNewClientCreated = (client) => {
   form.client_id = client.id.toString()
@@ -151,4 +151,6 @@ const onNewClientCreated = (client) => {
 const currentUser = computed(
   () => page.props.currentUser,
 )
+
+const create = () => form.post(route('projects.store'))
 </script>
