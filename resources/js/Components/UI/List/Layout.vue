@@ -14,7 +14,7 @@
       <slot name="create" />
     </section>
     <div v-if="objects.data.length">
-      <section v-if="isLargeScreen" class="overflow-auto my-4">
+      <section v-if="isLargeScreen" class="overflow-auto my-4 table-element" scroll-region>
         <Table 
           :columns="columns" 
           :footer="footer"
@@ -54,6 +54,7 @@ import Table from '@/Components/UI/List/Table.vue'
 import Cards from '@/Components/UI/List/Cards.vue'
 import Pagination from '@/Components/UI/List/Pagination.vue'
 import DataNotFound from '@/Components/UI/List/DataNotFound.vue'
+import { nextTick, onMounted } from 'vue'
 
 const isLargeScreen = useMediaQuery('(min-width: 768px)')
 
@@ -69,5 +70,21 @@ defineProps({
   get: String,
   title: String,
   actions: Object,
+})
+
+onMounted(() => {
+  nextTick(() => {
+    const params = new URLSearchParams(window.location.search)
+    const element = document.querySelector('.table-element')
+
+    const scrollX = params.get('scrollX')
+    const scrollY = params.get('scrollY')
+
+    if (scrollY)
+      window.scrollTo({ top: scrollY })
+
+    if (scrollX)
+      element.scrollTo({ left: scrollX })
+  })
 })
 </script>

@@ -171,5 +171,4 @@ const setImages = () => {
 const edit = () => form.put(route('projects.update', { project: props.project.id }))
 
 //todo - usuwanie zdjęć z popup zmiana statusu
-//todo - zaimplementować mechanizm który będzie zapamiętywać pozycje scrolla i paginacje po edycji
 </script>
