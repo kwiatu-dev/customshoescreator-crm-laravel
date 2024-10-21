@@ -76,11 +76,7 @@
 
       <div class="col-span-6">
         <label for="distribution" class="label">Podział</label>
-        <input id="distribution" v-model="percentage" type="range" class="w-full h-4 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
-        <div class="w-full flex flex-row flex-nowrap justify-between">
-          <span class="text-xs ml-1 select-none">Dla Filipa {{ filip }}%</span>
-          <span class="text-xs mr-1 select-none">Dla Aleksandry {{ aleksandra }}%</span>
-        </div>
+        <AdminDistribution v-model="form.distribution" :distribution="form.distribution" />
         <FormError :error="form.errors.distribution" />
       </div>
   
@@ -90,9 +86,9 @@
 </template>
   
 <script setup>
+import AdminDistribution from '@/Components/UI/Form/AdminDistribution.vue'
 import FormError from '@/Components/UI/Form/FormError.vue'
 import { useForm } from '@inertiajs/vue3'
-import { ref, computed } from 'vue'
 
 const props = defineProps({
   user: Object,
@@ -114,13 +110,7 @@ const form = useForm({
   distribution: JSON.parse(props.user.distribution),
 })
 
-const distribution = form.distribution
-const percentage = ref(distribution['1'])
-const filip = computed(() => parseInt(percentage.value))
-const aleksandra = computed(() => parseInt(100 - percentage.value))
-
 const update = () => {
-  form.distribution = JSON.stringify({1: filip.value, 2: aleksandra.value})
   form.put(route('user.update', {user: props.user.id}))
 }
 </script>

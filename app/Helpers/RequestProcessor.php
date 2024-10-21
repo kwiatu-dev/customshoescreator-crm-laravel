@@ -9,8 +9,8 @@ class RequestProcessor{
     private static $fields = [
         'first_name' => 'required|string|min:3|max:50', 
         'last_name' => 'required|string|min:3|max:50',
-        'email' => 'required|email|unique:users,email' . "{objectId}",
-        'phone' => 'required|regex:/\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/|unique:users,phone' . "{objectId}",
+        'email' => 'required|email|unique:users,email',  
+        'phone' => 'required|regex:/\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/|unique:users,phone',
         'street' => 'nullable|string|min:3|max:50',
         'street_nr' => 'nullable|string|min:1|max:10',
         'apartment_nr' => 'nullable|string|min:1|max:10',
@@ -19,7 +19,7 @@ class RequestProcessor{
         'country' => 'nullable|string|min:3|max:25',
         'costs' => 'required|integer|min:0|max:100',
         'commission' => 'required|integer|min:0|max:100',
-        'distribution' => 'required|json|max:30',
+        'distribution' => ['required'],
         'title' => 'required|string|min:3|max:50',
         'shop_name' => 'required|string|min:3|max:50',
         'price' => 'required|decimal:0,2|min:0',
@@ -81,19 +81,37 @@ class RequestProcessor{
         return $filters;
     }
 
+    public static function validateDistribution($attribute, $value, $fail){
+        if (!is_array($value)) {
+            $fail('Pole ' . $attribute . ' musi zawierać poprawną strukturę JSON.');
+            return;
+        }
+
+        $sum = array_sum($value);
+
+        if ($sum > 100) {
+            $fail('Suma wartości w polach nie może przekraczać 100% aktualna wartość wynosi: ' . $sum);
+        }
+    }
+
     public static function validation(Request $request, array $fields, Model $user = null, array $custom_validation = null): array{
         $validate = [];
 
         foreach($fields as $field){
             if(array_key_exists($field, self::$fields)){
-                $validate[$field] = str_replace(
-                    "{objectId}", 
-                    ($user ? ",$user->id" : ''), 
-                    self::$fields[$field]);
+                $rule = self::$fields[$field];
+                if(in_array($field, ['email', 'phone'])){
+                    $rule .= $user ? ",{$user->id}" : '';
+                }
+                $validate[$field] = $rule;
             }
         }
 
+        $validate['distribution'][] = function($attribute, $value, $fail){
+            self::validateDistribution($attribute, $value, $fail);
+        };
+
         return $request->validate(
-            array_merge($validate, $custom_validation));
+            array_merge($validate, $custom_validation ?? []));
     }
 }

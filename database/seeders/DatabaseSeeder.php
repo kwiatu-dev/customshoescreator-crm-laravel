@@ -15,7 +15,14 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::factory()->verified()->create([
             'first_name' => 'Filip',
             'last_name' => 'Kwiatkowski',
-            'email' => 'test@example.com',
+            'email' => 'filip@example.com',
+            'is_admin' => true,
+        ]);
+
+        \App\Models\User::factory()->verified()->create([
+            'first_name' => 'Aleksandra',
+            'last_name' => 'Owidzka',
+            'email' => 'aleksandra@example.com',
             'is_admin' => true,
         ]);
 

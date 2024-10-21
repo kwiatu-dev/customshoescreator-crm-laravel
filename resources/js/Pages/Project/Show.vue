@@ -36,8 +36,9 @@ import PhotoGrid from '@/Pages/Project/Show/Components/PhotoGrid.vue'
 import AdminDistribution from '@/Components/UI/List/AdminDistribution.vue'
 import { provide } from 'vue'
 
-defineProps({
+const props = defineProps({
   project: Object,
+  users: Array,
 })
 
 const cards = {
@@ -50,9 +51,12 @@ const cards = {
   deadline: { },
   commission: { suffix: '%' },
   costs: { suffix: '%' },
-  distribution: { admin: true, component: AdminDistribution },
-  remarks: { remarks: true },
+  distribution: { admin: true, component: AdminDistribution, fullWidth: true },
+  remarks: { fullWidth: true, remarks: true },
 }
 
 provide('disable_show_button', true)
+provide('users', props.users)
+//todo: wyświetlanie zdjęć w lightbox
+//todo: nie rozciągać zdjęć
 </script>

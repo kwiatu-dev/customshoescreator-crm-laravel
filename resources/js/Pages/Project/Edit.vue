@@ -89,6 +89,32 @@
         <FormError :error="form.errors.remarks" />
       </div>
 
+      <HiddenSection title="Zaawansowane opcje" class="col-span-6" :danger="hasHiddenSectionErrors">
+        <div v-if="currentUser?.is_admin" class="col-span-6">
+          <label for="status" class="label">Status</label>
+          <DropdownList :id="(item) => item.id" v-model="form.status_id" :name="(item) => item.name" :source="statuses" :class="{'input-disabled': !isAdmin}" :disabled="!isAdmin" />
+          <FormError :error="form.errors.status_id" />
+        </div>
+
+        <div class="col-span-3">
+          <label for="costs" class="label">Koszty stałe</label>
+          <input id="costs" v-model="form.costs" type="number" class="input" :class="{'input-disabled': !isAdmin}" :disabled="!isAdmin" />
+          <FormError :error="form.errors.costs" />
+        </div>
+  
+        <div class="col-span-3">
+          <label for="commission" class="label">Prowizja</label>
+          <input id="commission" v-model="form.commission" type="number" class="input" :class="{'input-disabled': !isAdmin}" :disabled="!isAdmin" />
+          <FormError :error="form.errors.commission" />
+        </div>
+
+        <div v-if="isAdmin" class="col-span-6">
+          <label for="distribution" class="label">Podział</label>
+          <AdminDistribution v-model="form.distribution" :distribution="form.distribution" :users="users" />
+          <FormError :error="form.errors.distribution" />
+        </div>
+      </HiddenSection>
+
       <button type="submit" class="w-full btn-primary col-span-6 mt-4">Edytuj projekt</button>
     </section>
   </form>
@@ -104,6 +130,8 @@ import { onMounted, ref, computed } from 'vue'
 import { useForm, usePage } from '@inertiajs/vue3'
 import datepicker from '@/Helpers/datepicker.js'
 import FormPopup from '@/Components/UI/Popup/FormPopup.vue'
+import AdminDistribution from '@/Components/UI/Form/AdminDistribution.vue'
+import HiddenSection from '@/Components/UI/Form/HiddenSection.vue'
 
 const props = defineProps({
   users: {
@@ -122,6 +150,10 @@ const props = defineProps({
     required: true,
     type: Object,
   },
+  statuses: {
+    required: true,
+    type: Array,
+  },
 })
   
 const form = useForm({
@@ -137,6 +169,10 @@ const form = useForm({
   inspiration_images: props.project.images
     .filter(i => i.type_id === 1)
     .map(i => i.file),
+  status_id: props.project.status.id.toString(),
+  costs: props.project.costs,
+  commission: props.project.commission,
+  distribution: JSON.parse(props.project.distribution),
 })
   
 const start = ref(null)
@@ -150,6 +186,11 @@ const inspirations = ref(null)
 const currentUser = computed(
   () => page.props.currentUser,
 )
+
+const isAdmin = computed(() => currentUser.value?.is_admin)
+
+const hasHiddenSectionErrors = computed(() => 
+  form.errors.distribution !== undefined || form.errors.commission !== undefined || form.errors.costs !== undefined || form.errors.status_id !== undefined)
   
 onMounted(() => {
   datepicker.create(start, null, (event) => form.start = event.target.value)

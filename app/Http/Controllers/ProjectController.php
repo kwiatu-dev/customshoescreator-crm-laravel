@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\ProjectImage;
 use Illuminate\Http\Request;
 use App\Helpers\RequestProcessor;
+use App\Models\ProjectStatus;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Validator;
@@ -127,6 +128,7 @@ class ProjectController extends Controller
     {
         $this->authorize('show', $project);
 
+        $users = User::query()->get();
         $project->load(['images', 'user', 'client', 'status', 'type']);
         $project->editable = $project->status_id != 3 ? 1 : 0;
 
@@ -138,6 +140,7 @@ class ProjectController extends Controller
             'Project/Show',
             [
                 'project' => $project,
+                'users' => $users,
             ]
         );
     }
@@ -152,6 +155,7 @@ class ProjectController extends Controller
         $clients = Client::query()->latest()->get();
         $types = DB::table('project_types')->get();
         $project->load(['images', 'user', 'client', 'status', 'type']);
+        $statuses = ProjectStatus::query()->get();
 
         $project->images->each(function ($image) {
             $image->url = route('private.files', ['catalog' => 'projects', 'file' => $image->file]);
@@ -165,7 +169,8 @@ class ProjectController extends Controller
                 'project' => $project,
                 'users' => $users,
                 'clients' => $clients,
-                'types' => $types
+                'types' => $types,
+                'statuses' => $statuses
             ]
         );
     }
@@ -181,9 +186,7 @@ class ProjectController extends Controller
             'type_id' => 'required|exists:project_types,id',
             'start' => 'required|date|date_format:Y-m-d',
             'deadline' => 'required|date|date_format:Y-m-d',
-            'commission' => 'nullable',
-            'costs' => 'nullable',
-            'distribution' => 'nullable'
+            'status_id' => 'nullable|integer|exists:project_statuses,id'
         ]);
 
         $user = User::find($fields['created_by_user_id'] ?? Auth::id());

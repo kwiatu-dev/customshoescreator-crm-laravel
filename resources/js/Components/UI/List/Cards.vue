@@ -3,13 +3,14 @@
     <Badge :object="object" />
     <div class="flex flex-row flex-wrap">
       <div 
-        v-for="(element, field) in cards" 
+        v-for="(element, field, index) in cards" 
         :key="field" 
         class="w-1/2" 
         :class="{
           'w-full mt-4': element.remarks,
           'w-full text-lg font-bold mb-4': element.title,
           'w-full': element.fullWidth,
+          'text-right': index % 2 === 0 && !element.fullWidth
         }"
       >
         <CardData :element="element" :object="object" :field="field" />
