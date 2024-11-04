@@ -13,6 +13,7 @@ class ProjectPolicy
         }
     }
 
+    //todo: ustawienie polityk sprawdzać, czy mozna edytowac dodawac usuwac itd.
     public function show(User $user, Project $project): bool
     {
         return $user->id === $project->created_by_user_id;

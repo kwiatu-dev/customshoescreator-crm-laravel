@@ -124,7 +124,7 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Project $project)
+    public function show(Project $project, Request $request)
     {
         $this->authorize('show', $project);
 
@@ -160,8 +160,6 @@ class ProjectController extends Controller
         $project->images->each(function ($image) {
             $image->url = route('private.files', ['catalog' => 'projects', 'file' => $image->file]);
         });
-
-        $request->session()->put('project_queries', $request->query());
 
         return inertia(
             'Project/Edit',
@@ -212,9 +210,7 @@ class ProjectController extends Controller
         $images_to_delete = array_diff($current_images, $images);
         $project->removeImages($images_to_delete);
 
-        $queries = $request->session()->pull('project_queries', []);
-
-        return redirect()->route('projects.index', $queries)->with('success', 'Projekt został edytowany!');
+        return redirect()->route('restore.state', ['url' => route('projects.index')])->with('success', 'Projekt został edytowany!');
     }
 
     public function status(Request $request, Project $project)

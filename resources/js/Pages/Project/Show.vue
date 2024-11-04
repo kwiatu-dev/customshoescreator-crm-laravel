@@ -1,4 +1,7 @@
 <template>
+  <div class="mb-4">
+    <RestoreStateButton class="underline" :url="route('projects.index')" label="← Cofnij" />
+  </div>
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
     <Box>
       <div class="flex flex-col gap-4">
@@ -34,7 +37,9 @@ import Cards from '@/Components/UI/List/Cards.vue'
 import Actions from '@/Pages/Project/Index/Components/Actions/AllActions.vue'
 import PhotoGrid from '@/Pages/Project/Show/Components/PhotoGrid.vue'
 import AdminDistribution from '@/Components/UI/List/AdminDistribution.vue'
+import { Link } from '@inertiajs/vue3'
 import { provide } from 'vue'
+import RestoreStateButton from '@/Components/UI/Buttons/RestoreStateButton.vue'
 
 const props = defineProps({
   project: Object,
@@ -57,6 +62,4 @@ const cards = {
 
 provide('disable_show_button', true)
 provide('users', props.users)
-//todo: wyświetlanie zdjęć w lightbox
-//todo: nie rozciągać zdjęć
 </script>

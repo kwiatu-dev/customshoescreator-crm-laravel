@@ -3,6 +3,8 @@ import { createInertiaApp } from '@inertiajs/vue3'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import { ZiggyVue } from 'ziggy'
 import '../css/app.css'
+import { fullscreenImagePlugin } from 'vue-3-fullscreen-image-directive-plugin'
+import 'vue-3-fullscreen-image-directive-plugin/style.css'
 
 createInertiaApp({
   progress: { 
@@ -21,6 +23,7 @@ createInertiaApp({
     createApp({ render: () => h(App, props) })
       .use(plugin)
       .use(ZiggyVue)
+      .use(fullscreenImagePlugin)
       .mount(el)
   },
 })

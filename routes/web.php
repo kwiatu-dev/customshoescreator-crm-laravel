@@ -1,23 +1,25 @@
 <?php
 
+use App\Notifications\UserCreate;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ForgotPassword;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\DictionaryController;
+use App\Http\Controllers\ListingController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\FilePondController;
-use App\Http\Controllers\ListingController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PageSpeedController;
+use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\ListingOfferController;
 use App\Http\Controllers\PrivateFilesController;
-use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\RestoreStateController;
+use App\Http\Controllers\RememberStateController;
 use App\Http\Controllers\RealtorListingController;
 use App\Http\Controllers\RealtorListingImageController;
-use App\Notifications\UserCreate;
 
 /*
 |--------------------------------------------------------------------------
@@ -140,3 +142,9 @@ Route::get('dictionary/{table}', [DictionaryController::class, 'index'])
 //FilePondController
 Route::resource('filepond', FilePondController::class)
     ->only(['store', 'destroy']);
+
+Route::post('/remember-state', [RememberStateController::class, 'store'])
+    ->name('remember.state');
+
+Route::get('/restore-state', [RestoreStateController::class, 'index'])
+    ->name('restore.state');

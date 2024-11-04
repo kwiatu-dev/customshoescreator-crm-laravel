@@ -1,13 +1,13 @@
 <template>
   <Header :current-user="currentUser" />
   <main class="container p-4 mx-auto w-full">
-    <div v-if="flashSuccess" class="mb-4 border rounded-md shadow-sm border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900 p-2 px-4 flex flex-row flex-nowrap justify-between items-center">
+    <div v-if="flashSuccess" class="flash flash-success">
       <div>{{ flashSuccess }}</div>
-      <div class="cursor-pointer p-2 text-xl" @click="hideFlashMessage">[x]</div>
+      <span class="cursor-pointer p-2 text-xl" @click="hideFlashMessage">✖</span>
     </div>
-    <div v-if="flashFailed" class="mb-4 border rounded-md shadow-sm border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900 p-2 px-4 flex flex-row flex-nowrap justify-between items-center">
+    <div v-if="flashFailed" class="flash flash-failed">
       <div>{{ flashFailed }}</div>
-      <div class="cursor-pointer p-2 text-xl" @click="hideFlashMessage">[x]</div>
+      <div class="cursor-pointer p-2 text-xl" @click="hideFlashMessage">✖</div>
     </div>
     <slot />
   </main>
@@ -37,3 +37,22 @@ const hideFlashMessage = () => {
   page.props.flash.failed = null
 }
 </script>
+
+<style scoped>
+.flash {
+  @apply border rounded-md shadow-sm  p-2 px-4 flex flex-row flex-nowrap justify-between items-center;
+
+  position: fixed;
+  z-index: 10;
+  left: 50px;
+  bottom: 50px;
+}
+
+.flash-success {
+  @apply border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900;
+}
+
+.flash-failed {
+  @apply border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900;
+}
+</style>
