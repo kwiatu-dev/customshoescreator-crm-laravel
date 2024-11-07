@@ -204,11 +204,7 @@ class ProjectController extends Controller
         ]);
 
         $images = $request->input('inspiration_images');
-        $project->addImages($images, 1);
-
-        $current_images = $project->images()->where('type_id', 1)->pluck('file')->toArray();
-        $images_to_delete = array_diff($current_images, $images);
-        $project->removeImages($images_to_delete);
+        $project->replaceImages($images, 0);
 
         return redirect()->route('restore.state', ['url' => route('projects.index')])->with('success', 'Projekt został edytowany!');
     }
@@ -244,7 +240,7 @@ class ProjectController extends Controller
         if(!$validator->fails()){
             $type_id = $request->integer('type_id');
             $images = $request->input('images');
-            $project->addImages($images, $type_id);
+            $project->replaceImages($images, $type_id);
 
             return redirect()->back();
         }

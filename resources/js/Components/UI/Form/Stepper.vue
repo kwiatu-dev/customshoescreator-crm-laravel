@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
   steps: {
     type: Number,
     required: true,
@@ -48,12 +48,39 @@ const emit = defineEmits([
   'update:steps',
   'update:active',
   'update:focus',
+  'changed',
 ])
 
 const onClick = (e) => {
-  const step = e.target.getAttribute('data-step') * 1
-  emit('update:focus', step)
+  const step_before = props.focus
+  const step_after = e.target.getAttribute('data-step') * 1
+  emit('update:focus', step_after)
+  emit('changed', step_before, step_after)
 }
+
+const next = () => {
+  if (props.steps >= props.focus + 1) {
+    emit('update:focus', props.focus + 1)
+  }
+}
+
+const back = () => {
+  if (props.steps <= props.focus - 1) {
+    emit('update:focus', props.focus - 1)
+  }
+}
+
+const activate_step = (step) => {
+  if (props.steps >= step && props.active < step) {
+    emit('update:active', step + 1)
+  }
+}
+
+defineExpose({
+  next,
+  back,
+  activate_step,
+})
 </script>
 
 <style scoped>

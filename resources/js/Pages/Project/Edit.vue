@@ -167,7 +167,7 @@ const form = useForm({
   deadline: props.project.deadline,
   remarks: props.project.remarks,
   inspiration_images: props.project.images
-    .filter(i => i.type_id === 1)
+    .filter(i => i.type_id === 0)
     .map(i => i.file),
   status_id: props.project.status.id.toString(),
   costs: props.project.costs,
@@ -205,7 +205,7 @@ const onNewClientCreated = (client) => {
 const setImages = () => {
   inspirations.value.addImages(
     props.project.images
-      .filter(image => image.type_id === 1)
+      .filter(image => image.type_id === 0)
       .map(image => `projects/${image.file}`), { type: 'local' })
 }
 

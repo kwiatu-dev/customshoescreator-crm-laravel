@@ -21,7 +21,7 @@ defineProps({
 const emit = defineEmits(['update:show', 'close'])
 
 const close = () => {
-  emit('close')
   emit('update:show', false)
+  emit('close')
 }
 </script>

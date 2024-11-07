@@ -14,20 +14,17 @@
         <UploadImages 
           ref="uploadImagesComponent" 
           v-model:images="form.images" 
-          v-model:errors="uploadErrors" 
-          v-model:processing="uploading"
-          @init="emit('init')"
+          v-model:errors="uploadImagesErrors"
+          @init="init"
         />
         <FormError :error="form.errors.images" />
       </div>
       <button 
         type="submit" 
         class="w-full btn-primary col-span-6 mt-4"
-        :disabled="uploading"
       >
         {{ caption(form.images.length) }}
       </button>
-      <FormError :error="saveError" class="-mt-4" />
     </section>
   </form>
 </template>
@@ -35,7 +32,7 @@
 <script setup>
 import UploadImages from '@/Components/UI/Form/UploadImages.vue'
 import FormError from '@/Components/UI/Form/FormError.vue'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 
 const props = defineProps({
@@ -63,35 +60,48 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  saved: Boolean,
 })
 
-const emit = defineEmits(['saved', 'init'])
+const emit = defineEmits(['uploaded', 'init', 'update:saved'])
 
 const form = useForm({
   type_id: props.typeId,
-  images: [],
+  images: props.project.images
+    .filter(i => i.type_id === props.typeId)
+    .map(i => i.file),
 })
 
+const projectImagesLength = form.images.length
 const uploadImagesComponent = ref(null)
-const uploadErrors = ref({})
-const saveError = ref(null)
-const uploading = ref(false)
+const uploadImagesErrors = ref({})
 
-const clearImages = () => uploadImagesComponent.value.clearImages()
-const addImages = (images, options) => uploadImagesComponent.value.addImages(images, options)
+const init = () => {
+  const images = props.project.images
+    .filter(image => image.type_id === props.typeId)
+    .map(image => `projects/${image.file}`)
+
+  addImages(images, { type: 'local' })
+  emit('init')
+}
 
 const saved = () => {
-  if(form.images.length){
+  if(form.images.length || projectImagesLength){
     form.post(route('projects.upload', { project: props.project.id }), {
       preserveScroll: true,
-      onSuccess: () => { saveError.value = null; emit('saved') },
-      onError: () => saveError.value = 'Wystąpił błąd podczas zapisywania!',
+      onSuccess: () => { emit('uploaded'); emit('update:saved', true) },
     })
   }
   else{
-    emit('saved')
+    emit('uploaded') 
+    emit('update:saved')
   }
 }
+
+watch(() => form.images, () => { emit('update:saved', false) })
+
+const clearImages = () => uploadImagesComponent.value.clearImages()
+const addImages = (images, options) => uploadImagesComponent.value.addImages(images, options)
 
 defineExpose({
   clearImages,

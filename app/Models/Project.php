@@ -134,4 +134,11 @@ class Project extends Model
                 ->delete();
         }
     }
+
+    public function replaceImages($images, $type_id) {
+        $this->addImages($images, $type_id);
+        $current_images = $this->images()->where('type_id', $type_id)->pluck('file')->toArray();
+        $images_to_delete = array_diff($current_images, $images);
+        $this->removeImages($images_to_delete);
+    }
 }

@@ -1,11 +1,18 @@
 <template>
-  <button class="btn-action" :disabled="failed" @click="open">Rozpocznij</button>
+  <button 
+    class="btn-action" 
+    @click="open"
+  >
+    Rozpocznij
+  </button>
   <DialogWindow 
     v-if="show" 
     v-model:show="show" 
+    @close="closeDialogWindow"
   >
     <UploadProjectImagesForm 
       ref="form"
+      v-model:saved="isSaved"
       :project="project"
       :type-id="1"
       title="Dodaj wizualizacje (opcjonalnie)"
@@ -13,7 +20,7 @@
       label="Wizualizacje (zdjęcia)"
       :caption="(some) => some ? 'Zapisz' : 'Pomiń'"
       class="p-4"
-      @saved="uploaded"
+      @uploaded="updateProjectStatus"
     />
   </DialogWindow>
 </template>
@@ -29,27 +36,29 @@ const props = defineProps({
 })
 
 const show = ref(false)
-const failed = ref(false)
+const isSaved = ref(true)
 
 const open = async () => {
   if(props.project.visualization * 1 > 0){
     show.value = true
   }
   else{
-    await updateStatus()
+    await updateProjectStatus()
   }
 }
 
-const updateStatus = async () => {
-  const form = useForm({ status_id: 2 })
-
-  form.post(route('projects.status', { project: props.project.id }), {
-    preserveScroll: true,
-  })
+const closeDialogWindow = () => {
+  if (!isSaved.value) {
+    show.value = !confirm('Zmiany nie zostały zapisane! Czy na pewno chcesz kontynuować?')
+  }
 }
 
-const uploaded = async () => {
-  show.value = false
-  await updateStatus()
+const updateProjectStatus = async () => {
+  const form = useForm({ status_id: 2 }) 
+
+  form.post(route('projects.status', { project: props.project.id }), {
+    onSuccess: () => { show.value = false },
+    preserveScroll: true,
+  })
 }
 </script>
