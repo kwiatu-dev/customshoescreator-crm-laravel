@@ -65,8 +65,89 @@
         <p class="text-sm text-gray-400">
           Przed zakończeniem projektu upewnij się, że wszystkie dane zostały poprawnie uzupełnione.
         </p>
-        <section class="mt-8">
-          <!-- todo: wypisać tutaj dane do podsumowania np. ilość czasu spędzone nad projektem, zdjęcia, prowizje -->
+        <section class="mt-8 flex flex-col gap-8">
+          <Box class="!border-indigo-500 !bg-gray-900">
+            <template #header>
+              Terminy
+            </template>
+            <div>
+              <div>
+                <span>Data rozpoczęcia:</span>
+                {{ project.start }}
+              </div>
+              <div>
+                <span>Data zakończenia:</span>
+                {{ today }} (aktualna data)
+              </div>
+              <div>
+                <span>Czas realizacji:</span>
+                {{ useProjectDurationTime(project.start, today).durationDays }} dni
+              </div>
+            </div>
+          </Box>
+          <Box class="!border-indigo-500 !bg-gray-900">
+            <template #header>
+              Koszty i prowizje
+            </template>
+            <div>
+              <span>Koszt wizualizacji: </span>
+              {{ project.visualization }} zł
+            </div>
+            <div>
+              <span>Koszt projektu: </span>
+              {{ project.price }} zł
+            </div>
+            <div>
+              <span>Koszty stałe: </span>
+              {{ project.costs }}%
+            </div>
+            <div>
+              <span>Prowizja: </span>
+              {{ project.commission }}%
+            </div>
+          </Box>
+          <Box class="!border-indigo-500 !bg-gray-900">
+            <template #header>
+              Rozliczenie
+            </template>
+            <div>
+              <span>Dochód organizacji: </span>
+              {{ useProjectCosts(project).organizationProfit }} zł
+            </div>
+            <div>
+              <span>Zysk wykonawcy projektu: </span>
+              {{ useProjectCosts(project).employeeProfit }} zł (wizualizacja wliczona)
+            </div>
+            <div>
+              <span>Zysk zarządu: </span>
+              {{ useProjectCosts(project).managementProfit }} zł
+            </div>
+          </Box>
+          <Box class="!border-indigo-500 !bg-gray-900">
+            <template #header>
+              Zdjęcia
+            </template>
+            <div class="flex flex-col gap-4">
+              <div>
+                <div>Inspiracje</div>
+                <PhotoGrid :photos="project.images.filter(image => image.type_id === 0)" />
+              </div>
+              <div>
+                <div>Wizualizacje komputerowe</div>
+                <PhotoGrid :photos="project.images.filter(image => image.type_id === 1)" />
+              </div>
+              <div>
+                <div>Proces realizacji</div>
+                <PhotoGrid :photos="project.images.filter(image => image.type_id === 2)" />
+              </div>
+              <div>
+                <div>Zdjęcia końcowe</div>
+                <PhotoGrid :photos="project.images.filter(image => image.type_id === 3)" />
+              </div>
+            </div>
+          </Box>
+          
+          <!-- todo: zamykać popup po kliknięciu na overlay  -->
         </section>
         <button 
           class="w-full btn-primary col-span-6 mt-4"
@@ -81,10 +162,15 @@
   
 <script setup>
 import UploadProjectImagesForm from '@/Pages/Project/Index/Components/Forms/UploadProjectImagesForm.vue'
+import PhotoGrid from '@/Pages/Project/Show/Components/PhotoGrid.vue'
 import DialogWindow from '@/Components/UI/Popup/Popup.vue'
 import Stepper from '@/Components/UI/Form/Stepper.vue'
 import { ref } from 'vue'
 import { useForm } from '@inertiajs/vue3'
+import dayjs from 'dayjs'
+import { useProjectDurationTime } from '@/Composables/useProjectDurationTime'
+import Box from '@/Components/UI/List/Box.vue'
+import { useProjectCosts } from '@/Composables/useProjectCosts'
 
 const props = defineProps({
   project: Object,
@@ -107,6 +193,7 @@ const process = ref(null)
 const isProcessSaved = ref(true)
 const final = ref(null)
 const isFinalSaved = ref(true)
+const today = dayjs().format('YYYY-MM-DD')
 
 const changedStepInStepper = (step_before, step_after) => {
   const showAlert = () => {
@@ -117,15 +204,15 @@ const changedStepInStepper = (step_before, step_after) => {
     }
   }
 
-  if (step_before === 1 && !isVisualizationSaved.value) {
+  if (step_before === 1 && step_after !== 1 && !isVisualizationSaved.value) {
     showAlert()
   }
 
-  if (step_before === 2 && !isProcessSaved.value) {
+  if (step_before === 2 && step_after !== 2 && !isProcessSaved.value) {
     showAlert()
   }
 
-  if (step_before === 3 && !isFinalSaved.value) {
+  if (step_before === 3 && step_after !== 3 && !isFinalSaved.value) {
     showAlert()
   }
 }

@@ -20,19 +20,22 @@ class ProjectFactory extends Factory
      */
     public function definition(): array
     {
+        $status = $this->status();
+
         return [
             'title' => fake()->text(50),
             'remarks' => fake()->text(150),
             'price' => fake()->randomFloat(2, 10, 1000),
-            'start' => fake()->date,
-            'deadline' => fake()->date,
+            'start' => fake()->date(),
+            'deadline' => fake()->date(),
+            'end' => $status->id === 3 ? fake()->date() : null,
             'commission' => 65,
             'costs' => 30,
             'distribution' => json_encode(['1' => 50, '2' => 50]),
             'visualization' => fake()->randomFloat(2, 0, 100),
             'created_by_user_id' => $this->user(),
             'client_id' => $this->client(),
-            'status_id' => $this->status(),
+            'status_id' => $status->id,
             'type_id' => $this->type(),
         ];
     }

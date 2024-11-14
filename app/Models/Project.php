@@ -24,6 +24,7 @@ class Project extends Model
         'price',
         'start',
         'deadline',
+        'end',
         'commission',
         'costs',
         'distribution',
@@ -39,6 +40,7 @@ class Project extends Model
         'dates' => [
             ['start_start' => 'date', 'start_end' => 'date'],
             ['deadline_start' => 'date', 'deadline_end' => 'date'],
+            ['end_start' => 'date', 'end_end' => 'date']
         ],
         'numbers' => [
             ['price_start' => 'numeric', 'price_end' => 'numeric'],
@@ -62,6 +64,7 @@ class Project extends Model
         'price',
         'start',
         'deadline',
+        'end',
         'visualization', 
     ];
 
@@ -71,6 +74,7 @@ class Project extends Model
         'price',
         'start',
         'deadline',
+        'end',
         'visualization', 
     ];
 
@@ -97,6 +101,11 @@ class Project extends Model
 
     public function images(): HasMany{
         return $this->hasMany(ProjectImage::class, 'project_id');
+    }
+
+    public function getEndAttribute($value)
+    {
+        return $value === null ? '' : $value;
     }
 
     public function addImages($images, $type_id)

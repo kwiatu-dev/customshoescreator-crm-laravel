@@ -98,7 +98,14 @@ const saved = () => {
   }
 }
 
-watch(() => form.images, () => { emit('update:saved', false) })
+watch(() => form.images, (before, after) => { 
+  const before_ = JSON.stringify(before)
+  const after_ = JSON.stringify(after)
+
+  if (before_ !== after_) {
+    emit('update:saved', false)
+  }
+})
 
 const clearImages = () => uploadImagesComponent.value.clearImages()
 const addImages = (images, options) => uploadImagesComponent.value.addImages(images, options)

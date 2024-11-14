@@ -44,6 +44,7 @@ const columns = {
   visualization: { label: 'Koszt wizualizacji', suffix: ' zł' },
   start: { label: 'Data rozpoczęcia' },
   deadline: { label: 'Deadline' },
+  end: { label: 'Data zakończenia' },
   user: { label: 'Użytkownik', columns: ['first_name', 'last_name'], link: {column: 'user', field: 'email', prefix: 'mailto:'}},
   client: { label: 'Klient', columns: ['first_name', 'last_name'], link: {column: 'client', field: 'email', prefix: 'mailto:'} },
   status: { label: 'Status', columns: ['name'] },
@@ -58,12 +59,13 @@ const cards = {
   status: { columns: ['name'] },
   start: { },
   deadline: { },
+  end: {},
 }
   
 const filterable = {
   search: {},
   numeric: { columns: ['price', 'visualization'] },
-  date: { columns: ['start', 'deadline'] },
+  date: { columns: ['start', 'deadline', 'end'] },
   dictionary: [ 
     { table: 'User', column: 'created_by_user_id', label: 'Użytkownik', admin: true },
     { table: 'ProjectStatus', column: 'status_id', label: 'Status' }, 
@@ -80,6 +82,7 @@ const sortable = {
   visualization: true,
   start: true,
   deadline: true,
+  end: true,
 }
 
 

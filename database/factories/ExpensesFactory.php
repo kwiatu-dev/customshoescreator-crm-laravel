@@ -18,7 +18,7 @@ class ExpensesFactory extends Factory
     {
         return [
             'title' => fake()->text(50),
-            'date' => fake()->date,
+            'date' => fake()->date(),
             'price' => fake()->randomFloat(2, 10, 1000),
             'shop_name' => fake()->company,
             'file' => fake()->word . '.pdf'

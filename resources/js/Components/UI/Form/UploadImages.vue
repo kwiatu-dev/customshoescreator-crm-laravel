@@ -140,7 +140,7 @@ const onRemoveFile = (e, file) => {
   emit('update:images', props.images.filter((_, i) => i !== index))
 
   const errors = Object.keys(props.errors).reduce((acc, key) => {
-    if(key !== e.detail.file.id){
+    if(key !== file.id){
       acc[key] = props.errors[key]
     }
 

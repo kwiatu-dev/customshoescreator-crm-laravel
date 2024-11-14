@@ -60,6 +60,12 @@ class ProjectController extends Controller
             ->filter($request)
             ->footer();
 
+        $projects->each(function ($project) {
+            $project->images->each(function ($image) {
+                $image->url = route('private.files', ['catalog' => 'projects', 'file' => $image->file]);
+            });
+        });
+        
         return inertia(
             'Project/Index',
             [

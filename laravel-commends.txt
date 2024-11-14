@@ -22,3 +22,5 @@ php artisan make:policy ListingPolicy --model=Listing
 php artisan storage:link
 php artisan config:cache
 php artisan make:notification UserCreate 
+php artisan make:migration add_age_to_users_table --table=users
+
