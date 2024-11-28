@@ -61,5 +61,6 @@ const cards = {
 }
 
 provide('disable_show_button', true)
+provide('disable_remember_state', true)
 provide('users', props.users)
 </script>

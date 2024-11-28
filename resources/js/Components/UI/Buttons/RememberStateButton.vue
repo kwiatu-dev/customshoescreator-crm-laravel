@@ -9,6 +9,7 @@
   
 <script setup>
 import { router } from '@inertiajs/vue3'
+import { inject } from 'vue'
   
 const props = defineProps({
   url: {
@@ -20,6 +21,8 @@ const props = defineProps({
     type: String,
   },
 })
+
+const disableRememberState = inject('disable_remember_state', false)
   
 const clicked = () => {
   const params = new URLSearchParams(window.location.search)
@@ -50,8 +53,12 @@ const clicked = () => {
       ...queries,
     },
   }
-  
-  //router.post(route('remember.state'), data) 
-  //todo: naprawić bład po przejściu na stronę show page przycisk remeber state powinien nie zapamiętywać
+
+  if (!disableRememberState) {
+    router.post(route('remember.state'), data) 
+  } 
+  else {
+    router.visit(props.url)
+  }
 }
 </script>
