@@ -223,17 +223,42 @@ class ProjectController extends Controller
             'status_id' => 'required|integer|exists:project_statuses,id'
         ]);
 
-        if(!$validator->fails()){
-            $status_id = $request->integer('status_id');
-            $project->status_id = $status_id;
-            $project->save();
-
-            return redirect()->back()
-                ->with('success', 'Status projektu został zaktualizowany!');
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator->errors())
+            ->with('failed', 'Nie udało się zaktualizować statusu projektu!');
         }
 
-        return redirect()->back()->withErrors($validator->errors())
-            ->with('failed', 'Nie udało się zaktualizować statusu projektu!');
+        $status_id = $request->integer('status_id');
+
+        if ($status_id == 3) {
+            $errors = [];
+            $hasVisualizationPrice = $project->visualization > 0;
+            $hasVisualizationImages = $project->images()->where('type_id', 1)->exists();
+            $hasAtLeastFiveProcessImages = $project->images()->where('type_id', 2)->count() >= 5;
+            $hasAtLeastFiveFinalImages = $project->images()->where('type_id', 3)->count() >= 5;
+
+            if ($hasVisualizationPrice == true && $hasVisualizationImages == false) {
+                $errors = array_merge($errors, ['visualization' => 'Wizualizacja musi zostać przesłana przed zakończeniem projektu.']);
+            } 
+
+            if ($hasAtLeastFiveProcessImages == false) {
+                $errors = array_merge($errors, ['process' => 'Co najmniej 5 zdjęć z procesu realizacji musi zostać przesłane przed zakończeniem projektu.']);
+            }
+
+            if ($hasAtLeastFiveFinalImages == false) {
+                $errors = array_merge($errors, ['final' => 'Co najmniej 5 zdjęć końcowych musi zostać przesłane przed zakończeniem projektu.']);
+            }
+
+            if (count($errors) > 0) {
+                return redirect()->back()->withErrors($errors);
+            }
+        }
+
+        $project->status_id = $status_id;
+        $project->save();
+
+        return redirect()->back()
+            ->with('success', 'Status projektu został zaktualizowany!');
     }
 
     public function upload(Request $request, Project $project){

@@ -34,8 +34,13 @@ const clicked = () => {
   }
     
   const element = document.querySelector('.table-element')
-  const scrollX = element.scrollLeft
-  const scrollY = window.scrollY
+  let scrollX, scrollY
+
+  if (element) {
+    scrollX = element.scrollLeft
+    scrollY = window.scrollY
+  }
+
 
   const data = {
     url: props.url,
@@ -46,6 +51,7 @@ const clicked = () => {
     },
   }
   
-  router.post(route('remember.state'), data) 
+  //router.post(route('remember.state'), data) 
+  //todo: naprawić bład po przejściu na stronę show page przycisk remeber state powinien nie zapamiętywać
 }
 </script>

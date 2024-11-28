@@ -146,15 +146,14 @@
               </div>
             </div>
           </Box>
-          
-          <!-- todo: zamykać popup po kliknięciu na overlay  -->
         </section>
         <button 
-          class="w-full btn-primary col-span-6 mt-4"
+          class="w-full btn-primary col-span-6 mt-4 mb-2"
           @click="updateProjectStatus"
         >
           Zakończ projekt
         </button>
+        <FormError v-for="(error, index) in form.errors" :key="index" :error="error" />
       </div>
     </div>
   </DialogWindow>
@@ -171,6 +170,7 @@ import dayjs from 'dayjs'
 import { useProjectDurationTime } from '@/Composables/useProjectDurationTime'
 import Box from '@/Components/UI/List/Box.vue'
 import { useProjectCosts } from '@/Composables/useProjectCosts'
+import FormError from '@/Components/UI/Form/FormError.vue'
 
 const props = defineProps({
   project: Object,
@@ -186,7 +186,7 @@ const open = () => {
   show.value = true
 }
 
-
+const form = useForm({ status_id: 3 })
 const visualization = ref(null)
 const isVisualizationSaved = ref(true)
 const process = ref(null)
@@ -239,16 +239,9 @@ const onFinalSave = () => {
 }
 
 const updateProjectStatus = () => {
-  const form = useForm({ status_id: 3 })
-
   form.post(route('projects.status', { project: props.project.id }), {
     onSuccess: () => { show.value = false },
     preserveScroll: true,
   })
-
-  //todo: zwrócić błędy z backend po dodaniu walidacji: 
-  //- jezeli jest ustawiona cena wizualizacji to musi zostac dodane conajmniej jedno zdjecie
-  //- musza zostac przeslane zdjecia z procesu realizacji conajmniej 5
-  //- musza zostac przeslane zdjecia z konca realizacji conajmniej 5
 }
 </script>
