@@ -2,7 +2,7 @@
   <RememberStateButton v-if="!disableShowButton" label="Zobacz" :url="route('projects.show', { project: object.id })" />
   <StartProjectAction v-if="canStartProject" :project="object" />
   <EndProjectAction v-if="canEndProject" :project="object" />
-  <RememberStateButton v-if="!object.deleted_at && object.editable === 1" label="Edytuj" :url="route('projects.edit', { project: object.id })" />
+  <RememberStateButton v-if="!object.deleted_at && object.editable" label="Edytuj" :url="route('projects.edit', { project: object.id })" />
   <Link v-if="canDestroyProject" :href="route('projects.destroy', { project: object.id })" method="delete" as="button" class="btn-action" preserve-scroll>Usuń</Link>
   <Link v-if="canRestoreProject" :href="route('projects.restore', { project: object.id })" method="put" as="button" class="btn-action" preserve-scroll>Odzyskaj</Link>
 </template>

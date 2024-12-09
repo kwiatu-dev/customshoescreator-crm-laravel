@@ -29,9 +29,11 @@ import { Link } from '@inertiajs/vue3'
 import ListLayout from '@/Components/UI/List/Layout.vue'
 import actions from '@/Pages/User/Index/Components/Actions.vue'
 import AdminDistribution from '@/Components/UI/List/AdminDistribution.vue'
+import { provide } from 'vue'
 
-defineProps({
+const props = defineProps({
   users: Object,
+  admins: Array,
   filters: Object,
   sort: Object,
 })
@@ -78,4 +80,6 @@ const sortable = {
   commission: true,
   costs: true,
 }
+
+provide('users', props.admins)
 </script>

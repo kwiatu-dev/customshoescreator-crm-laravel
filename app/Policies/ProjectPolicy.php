@@ -48,6 +48,4 @@ class ProjectPolicy
     {
         return $user->id === $project->created_by_user_id;
     }
-
-
 }

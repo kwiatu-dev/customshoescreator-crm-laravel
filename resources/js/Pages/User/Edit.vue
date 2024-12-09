@@ -76,7 +76,7 @@
 
       <div class="col-span-6">
         <label for="distribution" class="label">Podział</label>
-        <AdminDistribution v-model="form.distribution" :distribution="form.distribution" />
+        <AdminDistribution v-model="form.distribution" :distribution="form.distribution" :users="admins" />
         <FormError :error="form.errors.distribution" />
       </div>
   
@@ -92,6 +92,7 @@ import { useForm } from '@inertiajs/vue3'
 
 const props = defineProps({
   user: Object,
+  admins: Array,
 })
   
 const form = useForm({

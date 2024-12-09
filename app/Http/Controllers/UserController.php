@@ -40,14 +40,21 @@ class UserController extends Controller
             ->latest()
             ->pagination();
 
+        $admins = $admins = User::query()->where('is_admin', true)->get();
+
         return inertia(
             'User/Index',
             [
                 'users' => $users,
+                'admins' => $admins,
                 'filters' => $request->session()->pull('filters'),
                 'sort' => $request->session()->pull('sort'),
             ]
         );
+    }
+
+    public function show(User $user) {
+        return inertia('User/Show');
     }
 
     public function create() {
@@ -68,16 +75,23 @@ class UserController extends Controller
             ->with('success', 'Konto użytkownika zostało utworzone!');
     }
 
-    public function edit(User $user){
+    public function edit(User $user) {
+        $this->authorize('edit', $user);
+
+        $admins = User::query()->where('is_admin', true)->get();
+
         return inertia(
             'User/Edit',
             [
                 'user' => $user,
+                'admins' => $admins,
             ]
         );
     }
 
-    public function update(Request $request, User $user){
+    public function update(Request $request, User $user) {
+        $this->authorize('update', $user);
+
         $user->update(
             RequestProcessor::validation($request, $this->fields, $user)
         );
@@ -85,14 +99,17 @@ class UserController extends Controller
         return redirect()->route('user.index')->with('success', 'Użytkownik został edytowany!');
     }
 
-    public function destroy(User $user)
-    {
+    public function destroy(User $user) {
+        $this->authorize('destroy', $user);
+
         $user->deleteOrFail();
 
         return redirect()->back()->with('success', 'Użytkownik został usunięty!');
     }
 
     public function restore(User $user){
+        $this->authorize('restore', $user);
+
         $user->restore();
 
         return redirect()->back()->with('success', 'Użytkownik został przywrócony!');

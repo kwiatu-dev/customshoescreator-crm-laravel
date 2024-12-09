@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 class ForgotPassword extends Controller
 {
@@ -21,6 +22,13 @@ class ForgotPassword extends Controller
 
         if($validator->fails()){
             $error = $validator->errors()->first('email');
+            return redirect()->back()->with(['failed' => $error]);
+        }
+
+        $user = User::query()->where('email', $request->only('email'))->first();
+
+        if ($user?->is_admin) {
+            $error = "Nie można zresetować hasła tego użytkownika.";
             return redirect()->back()->with(['failed' => $error]);
         }
 

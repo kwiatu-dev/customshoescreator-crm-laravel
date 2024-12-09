@@ -49,12 +49,22 @@ class ProjectController extends Controller
             $request->merge(['created_by_user' => true]);
         }
 
-        $projects = Project::select('*', DB::raw('(CASE WHEN status_id != 3 THEN true ELSE false END) as editable')) //todo: ustawić odpowiedni warunek na editable
-            ->with(['status', 'type', 'client', 'user', 'images'])
-            ->filter($request)
-            ->sort($request)
-            ->latest()
-            ->pagination();
+        $projects = Project::query()
+        ->with([
+            'status',
+            'type',
+            'client' => function ($query) {
+                $query->withTrashed();
+            },
+            'user' => function ($query) {
+                $query->withTrashed();
+            },
+            'images'
+        ])
+        ->filter($request)
+        ->sort($request)
+        ->latest()
+        ->pagination();
 
         $footer = Project::query()
             ->filter($request)
@@ -135,8 +145,18 @@ class ProjectController extends Controller
         $this->authorize('show', $project);
 
         $users = User::query()->get();
-        $project->load(['images', 'user', 'client', 'status', 'type']);
-        $project->editable = $project->status_id != 3 ? 1 : 0;
+
+        $project->load([
+            'images',
+            'user' => function ($query) {
+                $query->withTrashed();
+            },
+            'client' => function($query) {
+                $query->withTrashed();
+            },
+            'status',
+            'type'
+        ]);
 
         $project->images->each(function ($image) {
             $image->url = route('private.files', ['catalog' => 'projects', 'file' => $image->file]);

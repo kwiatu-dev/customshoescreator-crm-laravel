@@ -42,6 +42,8 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'distribution'
     ];
 
+    protected $appends = ['editable'];
+
     protected $searchable = [
         'first_name', 
         'last_name', 
@@ -140,5 +142,10 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         else{
             return false;
         }
-   }
+    }
+
+    public function getEditableAttribute()
+    {
+        return $this->deleted_at == null;
+    }
 }

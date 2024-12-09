@@ -35,6 +35,8 @@ class Project extends Model
         'type_id'
     ];
 
+    protected $appends = ['editable'];
+
     protected $filterable = [
         'search' => 'string',
         'dates' => [
@@ -106,6 +108,11 @@ class Project extends Model
     public function getEndAttribute($value)
     {
         return $value === null ? '' : $value;
+    }
+
+    public function getEditableAttribute()
+    {
+        return $this->status_id != 3 && $this->deleted_at == null;
     }
 
     public function addImages($images, $type_id)

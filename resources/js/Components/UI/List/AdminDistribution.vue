@@ -18,8 +18,12 @@ const props = defineProps({
 })
 
 const distribution = JSON.parse(props.object.distribution)
+const users = inject('users')
+let admins = null
 
-const admins = inject('users').filter(user => user.is_admin === 1)
+if (users) {
+  admins = inject('users').filter(user => user.is_admin === 1)
+}
 </script>
 
 <style scope>
