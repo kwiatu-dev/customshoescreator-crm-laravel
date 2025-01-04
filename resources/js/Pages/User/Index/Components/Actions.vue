@@ -19,8 +19,8 @@ const props = defineProps({
 const isAdmin = computed(() => props.object?.is_admin == true)
 
 //todo
-//1. sprawdzić, czy działa dodawanie, edycja
-//2. przy dodawaniu dać możliwość wprowadzania prowizji dla administratorów
+//1. sprawdzić, czy działa dodawanie (działa), edycja
+//2. przy dodawaniu dać możliwość wprowadzania prowizji dla administratorów (zrobione)
 //3. ustawić zapamiętywanie stanów
 //4. dodać stronę show dla użytkownika (tam dodać linki które pozwalają zadzwonić lub napisać maila, a w projektach kierować na stronę show)
 </script>

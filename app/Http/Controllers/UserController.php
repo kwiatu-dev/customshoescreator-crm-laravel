@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\RequestProcessor;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 
@@ -58,7 +59,14 @@ class UserController extends Controller
     }
 
     public function create() {
-        return inertia('User/Create');
+        $admins = User::query()->where('is_admin', true)->get();
+
+        return inertia(
+            'User/Create',
+            [
+                'users' => $admins,
+            ]
+        );
     }
 
     public function store(Request $request){

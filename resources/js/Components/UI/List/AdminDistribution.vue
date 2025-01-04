@@ -17,7 +17,7 @@ const props = defineProps({
   object: { type: Object, required: true },
 })
 
-const distribution = JSON.parse(props.object.distribution)
+const distribution = typeof props.object.distribution === 'string' ? JSON.parse(props.object.distribution) : props.object.distribution
 const users = inject('users')
 let admins = null
 

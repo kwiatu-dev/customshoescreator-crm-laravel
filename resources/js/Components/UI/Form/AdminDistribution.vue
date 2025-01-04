@@ -29,7 +29,7 @@ const props = defineProps({
 
 const percentage = ref(null)
 
-const admins = props.users.filter((user) => user.is_admin === 1)
+const admins = props.users.filter((user) => user.is_admin === 1 && user.deleted_at === null)
 
 const input = (event) => {
   if (event.target.value > 100) {

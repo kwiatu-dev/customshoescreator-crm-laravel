@@ -99,6 +99,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'distribution' => 'array'
     ];
 
     protected function password(): Attribute
@@ -147,5 +148,35 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     public function getEditableAttribute()
     {
         return $this->deleted_at == null;
+    }
+
+    public function getStreetAttribute($value)
+    {
+        return $value === null ? '' : $value;
+    }
+
+    public function getStreetNrAttribute($value)
+    {
+        return $value === null ? '' : $value;
+    }
+
+    public function getApartmentNrAttribute($value)
+    {
+        return $value === null ? '' : $value;
+    }
+
+    public function getPostcodeAttribute($value)
+    {
+        return $value === null ? '' : $value;
+    }
+
+    public function getCityAttribute($value)
+    {
+        return $value === null ? '' : $value;
+    }
+
+    public function getCountryAttribute($value)
+    {
+        return $value === null ? '' : $value;
     }
 }

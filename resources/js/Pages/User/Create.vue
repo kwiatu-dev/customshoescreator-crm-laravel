@@ -74,14 +74,28 @@
         <FormError :error="form.errors.commission" />
       </div>
 
+      <div class="col-span-6">
+        <label for="distribution" class="label">Podział</label>
+        <AdminDistribution v-model="form.distribution" :distribution="form.distribution" :users="users" />
+        <FormError :error="form.errors.distribution" />
+      </div>
+
       <button type="submit" class="w-full btn-primary col-span-6 mt-4">Dodaj użytkownika</button>
     </section>
   </form>
 </template>
 
 <script setup>
+import AdminDistribution from '@/Components/UI/Form/AdminDistribution.vue'
 import FormError from '@/Components/UI/Form/FormError.vue'
 import { useForm } from '@inertiajs/vue3'
+
+defineProps({
+  users: {
+    type: Array, 
+    required: true,
+  },
+})
 
 const form = useForm({
   first_name: null,
@@ -96,7 +110,7 @@ const form = useForm({
   country: null,
   commission: null,
   costs: null,
-  distribution: JSON.stringify({'1': 50, '2': 50}),
+  distribution: { 1: '50', 2: '50' },
 })
 
 const create = () => form.post(route('user.store'))

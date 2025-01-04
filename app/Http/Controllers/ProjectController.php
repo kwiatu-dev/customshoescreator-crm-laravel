@@ -180,8 +180,27 @@ class ProjectController extends Controller
         $users = User::query()->get();
         $clients = Client::query()->latest()->get();
         $types = DB::table('project_types')->get();
-        $project->load(['images', 'user', 'client', 'status', 'type']);
         $statuses = ProjectStatus::query()->get();
+
+        $project = $project->load([
+            'images',
+            'user' => function ($query) {
+                $query->withTrashed();
+            },
+            'client' => function ($query) {
+                $query->withTrashed();
+            },
+            'status',
+            'type'
+        ]);
+
+        if (!$users->contains('id', $project->user->id)) {
+            $users->push($project->user);
+        }
+
+        if (!$clients->contains('id', $project->client->id)) {
+            $clients->push($project->client);
+        }
 
         $project->images->each(function ($image) {
             $image->url = route('private.files', ['catalog' => 'projects', 'file' => $image->file]);
@@ -212,8 +231,9 @@ class ProjectController extends Controller
             'deadline' => 'required|date|date_format:Y-m-d',
             'status_id' => 'nullable|integer|exists:project_statuses,id'
         ]);
+        dd($fields);
 
-        $user = User::find($fields['created_by_user_id'] ?? Auth::id());
+        $user = User::withTrashed()->find($fields['created_by_user_id'] ?? Auth::id());
         $fields['created_by_user_id'] = $user->id;
 
         if ($project->created_by_user_id != $user->id) {
