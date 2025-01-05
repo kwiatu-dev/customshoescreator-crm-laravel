@@ -55,7 +55,31 @@ class UserController extends Controller
     }
 
     public function show(User $user) {
-        return inertia('User/Show');
+        $user->load([
+            'projects' => function ($query) {
+                $query->with([
+                    'images',
+                    'user' => function ($query) {
+                        $query->withTrashed();
+                    },
+                    'client' => function ($query) {
+                        $query->withTrashed();
+                    },
+                    'status',
+                    'type',
+                ]);
+            },
+        ]);
+        
+        $admins = User::query()->where('is_admin', true)->get();
+
+        return inertia(
+            'User/Show',
+            [
+                'user' => $user,
+                'admins' => $admins
+            ]
+        );
     }
 
     public function create() {
@@ -104,7 +128,7 @@ class UserController extends Controller
             RequestProcessor::validation($request, $this->fields, $user)
         );
 
-        return redirect()->route('user.index')->with('success', 'Użytkownik został edytowany!');
+        return redirect()->route('restore.state', ['url' => route('user.index')])->with('success', 'Użytkownik został edytowany!');
     }
 
     public function destroy(User $user) {

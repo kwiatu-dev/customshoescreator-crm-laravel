@@ -108,7 +108,7 @@ const form = useForm({
   country: props.user.country,
   commission: props.user.commission,
   costs: props.user.costs,
-  distribution: JSON.parse(props.user.distribution),
+  distribution: typeof props.user.distribution === 'string' ? JSON.parse(props.user.distribution) : props.user.distribution,
 })
 
 const update = () => {

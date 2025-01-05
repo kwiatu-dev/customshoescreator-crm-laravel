@@ -20,7 +20,7 @@ const props = defineProps({
 
 const canStartProject = computed(() => !props.object.deleted_at && props.object.status_id === 1)
 const canEndProject = computed(() => !props.object.deleted_at && props.object.status_id === 2)
-const canDestroyProject = computed(() => !props.object.deleted_at && props.object.editable === 1)
+const canDestroyProject = computed(() => !props.object.deleted_at && props.object.editable == 1)
 const canRestoreProject = computed(() => props.object.deleted_at)
 
 const disableShowButton = inject('disable_show_button', false)

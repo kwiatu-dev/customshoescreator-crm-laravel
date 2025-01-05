@@ -231,7 +231,6 @@ class ProjectController extends Controller
             'deadline' => 'required|date|date_format:Y-m-d',
             'status_id' => 'nullable|integer|exists:project_statuses,id'
         ]);
-        dd($fields);
 
         $user = User::withTrashed()->find($fields['created_by_user_id'] ?? Auth::id());
         $fields['created_by_user_id'] = $user->id;

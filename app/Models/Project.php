@@ -85,6 +85,10 @@ class Project extends Model
         'visualization' => 'sum',
     ];
 
+    protected $casts = [
+        'distribution' => 'array'
+    ];
+
     public function user(): BelongsTo{
         return $this->belongsTo(User::class, 'created_by_user_id');
     }

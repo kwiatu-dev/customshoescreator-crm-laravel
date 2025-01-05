@@ -172,7 +172,7 @@ const form = useForm({
   status_id: props.project.status.id.toString(),
   costs: props.project.costs,
   commission: props.project.commission,
-  distribution: JSON.parse(props.project.distribution),
+  distribution: typeof props.project.distribution === 'string' ? JSON.parse(props.project.distribution) : props.project.distribution,
 })
   
 const start = ref(null)

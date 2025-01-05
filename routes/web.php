@@ -48,7 +48,11 @@ Route::delete('logout', [AuthController::class, 'destroy'])->name('logout');
 
 //UserAccountController
 Route::resource('user', UserController::class)
-    ->only(['create', 'store', 'index', 'edit', 'destroy', 'update', 'show']);
+    ->only(['create', 'store', 'index', 'edit', 'destroy', 'update']);
+
+Route::get('user/{user}', [UserController::class, 'show'])
+    ->name('user.show')
+    ->withTrashed();
 
 Route::put('user/{user}/restore', [UserController::class, 'restore'])
     ->name('user.restore')

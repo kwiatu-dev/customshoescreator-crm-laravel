@@ -56,11 +56,18 @@ const data = computed(() => {
 
   if(props.element?.concat)
   {
-    value += separator + props.element.concat
+    const c = props.element.concat
       .map(field => props.object[field])
       .join(separator)
+
+    if (c) {
+      value += separator + c
+    }
   }
 
+  if (value === '') {
+    return ''
+  }
 
   return `${props.element?.prefix || ''}${value}${props.element?.suffix || ''}`
 })
