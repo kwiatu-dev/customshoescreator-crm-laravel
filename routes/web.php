@@ -81,6 +81,10 @@ Route::prefix('realtor')->name('realtor.')->group(function() {
 //ClientController
 Route::resource('client', ClientController::class)->except(['show']);
 
+Route::get('client/{client}', [ClientController::class, 'show'])
+    ->name('client.show')
+    ->withTrashed();
+
 Route::name('client.restore')->put('client/{client}/restore',
         [ClientController::class, 'restore'])->withTrashed();
 

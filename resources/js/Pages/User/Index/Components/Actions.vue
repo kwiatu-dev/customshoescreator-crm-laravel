@@ -19,6 +19,4 @@ const props = defineProps({
 
 const isAdmin = computed(() => props.object?.is_admin == true)
 const disableShowButton = inject('disable_show_button', false)
-
-//4. dodać stronę show dla użytkownika (tam dodać linki które pozwalają zadzwonić lub napisać maila, a w projektach kierować na stronę show)
 </script>

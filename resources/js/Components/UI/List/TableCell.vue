@@ -1,8 +1,7 @@
 <template>
   <a 
     v-if="link" 
-    :href="link" 
-    target="_blank" 
+    :href="link"  
     class="text-indigo-600 hover:text-indigo-500"
   >
     <component :is="props.element.component" v-if="hasComponent" :object="object" />

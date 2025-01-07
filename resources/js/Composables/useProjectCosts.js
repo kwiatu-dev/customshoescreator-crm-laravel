@@ -5,7 +5,7 @@ export const useProjectCosts = (project) => {
   const price = parseFloat(project.price)
   const costs = parseFloat(project.costs)
   const commission = parseFloat(project.commission)
-  const distribution = JSON.parse(project.distribution)
+  const distribution = typeof project.distribution === 'string' ? JSON.parse(project.distribution) : project.distribution
 
   const organizationProfit = computed(() => parseFloat((price * costs / 100).toFixed(2)))
   const employeeProfit = computed(() => parseFloat((((price - organizationProfit.value) * commission / 100) + visualization).toFixed(2)))

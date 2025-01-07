@@ -45,8 +45,8 @@ const columns = {
   start: { label: 'Data rozpoczęcia' },
   deadline: { label: 'Deadline' },
   end: { label: 'Data zakończenia' },
-  user: { label: 'Użytkownik', columns: ['first_name', 'last_name'], link: {column: 'user', field: 'email', prefix: 'mailto:'}},
-  client: { label: 'Klient', columns: ['first_name', 'last_name'], link: {column: 'client', field: 'email', prefix: 'mailto:'} },
+  user: { label: 'Użytkownik', columns: ['first_name', 'last_name'], link: {column: 'user', field: 'id', prefix: route('user.show', { user: '' }) + '/'}},
+  client: { label: 'Klient', columns: ['first_name', 'last_name'], link: {column: 'client', field: 'id', prefix: route('client.show', { client: '' }) + '/'} },
   status: { label: 'Status', columns: ['name'] },
   type: { label: 'Typ', columns: ['name'] },
 }

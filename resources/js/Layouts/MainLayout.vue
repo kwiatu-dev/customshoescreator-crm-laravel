@@ -1,6 +1,6 @@
 <template>
   <Header :current-user="currentUser" />
-  <main class="container p-4 mx-auto w-full">
+  <main class="p-4 mx-auto w-full">
     <div v-if="flashSuccess" class="flash flash-success">
       <div>{{ flashSuccess }}</div>
       <span class="cursor-pointer p-2 text-xl" @click="hideFlashMessage">✖</span>

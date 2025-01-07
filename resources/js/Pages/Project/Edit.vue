@@ -1,4 +1,5 @@
 <template>
+  <BackButton />
   <form class="container mx-auto p-4" autocomplete="off" @submit.prevent="edit">
     <h1 class="title">Edytuj projekt</h1>
     <section class="mt-8 flex flex-col justify-center md:grid md:grid-cols-6 gap-4">
@@ -132,6 +133,7 @@ import datepicker from '@/Helpers/datepicker.js'
 import FormPopup from '@/Components/UI/Popup/FormPopup.vue'
 import AdminDistribution from '@/Components/UI/Form/AdminDistribution.vue'
 import HiddenSection from '@/Components/UI/Form/HiddenSection.vue'
+import BackButton from '@/Components/UI/Buttons/BackButton.vue'
 
 const props = defineProps({
   users: {

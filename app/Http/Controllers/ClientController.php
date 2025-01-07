@@ -33,6 +33,34 @@ class ClientController extends Controller
         );
     }
 
+    public function show(Client $client) { 
+        $client->load([
+            'projects' => function ($query) {
+                $query->with([
+                    'images', 
+                    'user' => function ($query) {
+                        $query->withTrashed(); 
+                    },
+                    'client' => function ($query) {
+                        $query->withTrashed(); 
+                    },
+                    'status', 
+                    'type', 
+                ]);
+            },
+        ]);
+
+        $projects = $client->projects;
+
+        return inertia(
+            'Client/Show',
+            [
+                'client' => $client,
+                'projects' => $projects
+            ]
+        );
+    }
+
     /**
      * Show the form for creating a new resource.
      */

@@ -1,7 +1,5 @@
 <template>
-  <div class="mb-4">
-    <RestoreStateButton class="underline" :url="route('user.index')" label="← Cofnij" />
-  </div>
+  <BackButton />
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
     <Box>
       <template #header>Podsumowanie</template>
@@ -35,19 +33,7 @@
       :actions="Actions"
     />
   </div>
-  <div class="mb-4">
-    <Box>
-      <template #header>Statystyki</template>
-      <div class="grid grid-cols-12 gap-2">
-        <div class="col-span-12">
-          Wybierz rodzaj podsumowania z listy rozwijanej:
-          <DropdownList v-model="selectedChart" :options="charts.map(o => o.label)" caption="Wybierz opcję" />
-        </div>
-        <LineChart :data="data" title="Wykres - podsumowanie dochodu" class="col-span-12" />
-      </div>
-    </Box>
-  </div>
-  <div v-if="user.projects.length">
+  <div v-if="user.projects.length" class="mb-4">
     <div class="text-gray-500 font-medium mb-1">Zlecenia</div>
     <div class="grid md:grid-cols-2 grid-cols-1 gap-2">
       <Cards 
@@ -56,20 +42,34 @@
       />
     </div>
   </div>
+  <HiddenSection class="w-full" title="Dodatkowe statystyki">
+    <div class="col-span-6">
+      <Box>
+        <template #header>Statystyki</template>
+        <div class="grid grid-cols-12 gap-2">
+          <div class="col-span-12">
+            Wybierz rodzaj podsumowania z listy rozwijanej:
+            <DropdownList v-model="selectedChart" :options="charts.map(o => o.label)" caption="Wybierz opcję" />
+          </div>
+          <LineChart :data="data" title="Wykres - podsumowanie dochodu" class="col-span-12" />
+        </div>
+      </Box>
+    </div>
+  </HiddenSection>
 </template>
 
 <script setup>
 import '@/Pages/Dashboard/Index/Components/ChartRegister.js'
 import LineChart from '@/Pages/Dashboard/Index/Components/LineChart.vue'
 import DropdownList from '@/Components/UI/Buttons/DropdownList.vue'
-import RestoreStateButton from '@/Components/UI/Buttons/RestoreStateButton.vue'
 import Box from '@/Components/UI/List/Box.vue'
 import Actions from '@/Pages/User/Index/Components/Actions.vue'
 import Cards from '@/Components/UI/List/Cards.vue'
 import AdminDistribution from '@/Components/UI/List/AdminDistribution.vue'
+import BackButton from '@/Components/UI/Buttons/BackButton.vue'
 import dayjs from 'dayjs'
 import { provide, ref } from 'vue'
-
+import HiddenSection from '@/Components/UI/Form/HiddenSection.vue'
 
 const props = defineProps({
   user: Object,
@@ -124,8 +124,7 @@ const data = {
   ],
 }
 
-//todo 
-//1. Do dokończenia wykresy po skończeniu wszystkich zakładek
+//todo 1. Do dokończenia wykresy po skończeniu wszystkich zakładek
 </script>
 
 <style scoped>

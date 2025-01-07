@@ -1,4 +1,5 @@
 <template>
+  <BackButton />
   <form class="container mx-auto p-4" @submit.prevent="update">
     <h1 class="title">Edytuj użytkownika</h1>
     <section class="mt-8 flex flex-col justify-center md:grid md:grid-cols-6 gap-4">
@@ -88,6 +89,7 @@
 <script setup>
 import AdminDistribution from '@/Components/UI/Form/AdminDistribution.vue'
 import FormError from '@/Components/UI/Form/FormError.vue'
+import BackButton from '@/Components/UI/Buttons/BackButton.vue'
 import { useForm } from '@inertiajs/vue3'
 
 const props = defineProps({
