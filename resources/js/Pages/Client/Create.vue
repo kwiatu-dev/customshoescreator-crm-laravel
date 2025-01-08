@@ -69,12 +69,14 @@
       </div>
 
       <div class="col-span-3">
-        <label for="conversion_source" class="label">Źródło konwersji</label>
-        <select id="conversion_source" v-model="form.conversion_source" class="input cursor-pointer">
-          <ClientSocialOptions />
-        </select>
-        
-        <FormError :error="form.errors.conversion_source" />
+        <label for="conversion_source_id" class="label">Źródło konwersji</label>
+        <DropdownList 
+          :id="(item) => item.id" 
+          v-model.number="form.conversion_source_id"
+          :name="(item) => item.name"
+          :source="conversionSources"
+        />
+        <FormError :error="form.errors.conversion_source_id" />
       </div>
 
       <div v-if="form.username" class="col-span-6">
@@ -90,8 +92,15 @@
 
 <script setup>
 import FormError from '@/Components/UI/Form/FormError.vue'
-import ClientSocialOptions from '@/Pages/Client/Index/Components/ClientSocialOptions.vue'
+import DropdownList from '@/Components/UI/Form/DropdownList.vue'
 import { useForm } from '@inertiajs/vue3'
+
+defineProps({
+  conversionSources: {
+    type: Array,
+    required: true,
+  },
+})
 
 const form = useForm({
   first_name: null,
@@ -106,7 +115,7 @@ const form = useForm({
   country: null,
   username: null,
   social_link: null,
-  conversion_source: null,
+  conversion_source_id: null,
 })
 
 const emit = defineEmits(['created'])

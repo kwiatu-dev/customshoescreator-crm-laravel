@@ -24,7 +24,7 @@ const props = defineProps({
     type: Function,
     required: true,
   },
-  modelValue: String,
+  modelValue: [String, Number],
 })
 
 const emit = defineEmits(['update:modelValue'])

@@ -77,4 +77,5 @@ const projectCards = {
 }
 
 provide('disable_show_button', true)
+provide('disable_remember_state', true)
 </script>

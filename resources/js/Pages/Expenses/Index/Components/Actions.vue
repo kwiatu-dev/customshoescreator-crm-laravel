@@ -12,4 +12,6 @@ import { Link } from '@inertiajs/vue3'
 defineProps({
   object: Object,
 })
+
+//todo 1. dodać kategorie w wydatkach, 2. zmienić created_by_user_id na losowego użytkownika w klientach i w wydatkach, 3. dodać remember state, 4. wyświetlać odpowiednie przyciski akcji (jeżeli nie ma faktury to nie wyświetlać przycisku), 5. dodać przychód zakładkę
 </script>

@@ -69,11 +69,14 @@
       </div>
   
       <div class="col-span-3">
-        <label for="conversion_source" class="label">Źródło konwersji</label>
-        <select id="conversion_source" v-model="form.conversion_source" class="input cursor-pointer">
-          <ClientSocialOptions />
-        </select>
-        <FormError :error="form.errors.conversion_source" />
+        <label for="conversion_source_id" class="label">Źródło konwersji</label>
+        <DropdownList 
+          :id="(item) => item.id" 
+          v-model.number="form.conversion_source_id"
+          :name="(item) => item.name"
+          :source="conversionSources"
+        />
+        <FormError :error="form.errors.conversion_source_id" />
       </div>
   
       <div v-if="form.username" class="col-span-6">
@@ -89,11 +92,18 @@
   
 <script setup>
 import FormError from '@/Components/UI/Form/FormError.vue'
-import ClientSocialOptions from '@/Pages/Client/Index/Components/ClientSocialOptions.vue'
+import DropdownList from '@/Components/UI/Form/DropdownList.vue'
 import { useForm } from '@inertiajs/vue3'
 
 const props = defineProps({
-  client: Object,
+  client: {
+    type: Object,
+    required: true,
+  },
+  conversionSources: {
+    type: Array,
+    required: true,
+  },
 })
   
 const form = useForm({
@@ -109,7 +119,7 @@ const form = useForm({
   country: props.client.country,
   username: props.client.username,
   social_link: props.client.social_link,
-  conversion_source: props.client.conversion_source,
+  conversion_source_id: props.client.conversion_source_id,
 })
   
 const update = () => form.put(route('client.update', {client: props.client.id}))

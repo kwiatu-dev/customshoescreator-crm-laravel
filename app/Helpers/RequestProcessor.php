@@ -9,8 +9,8 @@ class RequestProcessor{
     private static $fields = [
         'first_name' => 'required|string|min:3|max:50', 
         'last_name' => 'required|string|min:3|max:50',
-        'email' => 'required|email|unique:users,email',  
-        'phone' => 'required|regex:/\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/|unique:users,phone',
+        'email' => 'required|email|unique:{model},email',  
+        'phone' => 'required|regex:/\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/|unique:{model},phone',
         'street' => 'nullable|string|min:3|max:50',
         'street_nr' => 'nullable|string|min:1|max:10',
         'apartment_nr' => 'nullable|string|min:1|max:10',
@@ -30,7 +30,10 @@ class RequestProcessor{
         'start' => 'required|date|date_format:Y-m-d|after_or_equal:now',
         'deadline' => 'required|date|date_format:Y-m-d|after_or_equal:now',
         'created_by_user_id' => 'nullable|exists:users,id',
-        'client_id' => 'required|exists:clients,id'
+        'client_id' => 'required|exists:clients,id',
+        'username' => 'nullable|string|min:3|max:30',
+        'conversion_source_id' => 'required|exists:conversion_sources,id',
+        'social_link' => 'nullable|url:http,https|max:255'
     ];
 
     public static function getSortFields(Request $request, array $sortable): array{
@@ -94,14 +97,19 @@ class RequestProcessor{
         }
     }
 
-    public static function validation(Request $request, array $fields, Model $user = null, array $custom_validation = null): array{
+    public static function validation(Request $request, array $fields, Model $model = null, array $custom_validation = null): array{
         $validate = [];
 
         foreach($fields as $field){
             if(array_key_exists($field, self::$fields)){
                 $rule = self::$fields[$field];
                 if(in_array($field, ['email', 'phone'])){
-                    $rule .= $user ? ",{$user->id}" : '';
+                    $rule .= $model ? ",{$model->id}" : '';
+
+                    if ($model) {
+                        $rule = str_replace('{model}', strtolower(class_basename($model)) . 's', $rule);
+                    }
+                    
                 }
                 $validate[$field] = $rule;
             }

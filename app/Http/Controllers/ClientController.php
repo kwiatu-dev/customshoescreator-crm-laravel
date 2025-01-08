@@ -2,14 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\RequestProcessor;
 use App\Models\Client;
+use App\Models\ConversionSource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
+    private $fields;
+
     public function __construct()
     {
         $this->middleware(['auth', 'verified']);
+
+        $this->fields = [
+            'first_name',
+            'last_name',
+            'email',
+            'phone', 
+            'street',
+            'street_nr', 
+            'apartment_nr', 
+            'postcode', 
+            'city', 
+            'country', 
+            'username', 
+            'conversion_source_id', 
+            'social_link',
+        ];
     }
 
     /**
@@ -66,8 +87,13 @@ class ClientController extends Controller
      */
     public function create()
     {
+        $conversion_sources = ConversionSource::query()->get();
+
         return inertia(
-            'Client/Create'
+            'Client/Create',
+            [
+                'conversionSources' => $conversion_sources
+            ]
         );
     }
 
@@ -76,15 +102,11 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        $client = $request->user()->clients()->create(
-            $this->validation($request)
+        $request->user()->clients()->create(
+            RequestProcessor::validation($request, $this->fields, new Client())
         );
 
-        if(request()->route()->getName() == 'client.create'){
-            return redirect()->route('client.index')->with('success', 'Client was created!');
-        }
-
-        return back()->with('inertia', $client);
+        return redirect()->route('client.index')->with('success', 'Klient został dodany!');
     }
 
     /**
@@ -92,13 +114,15 @@ class ClientController extends Controller
      */
     public function edit(Client $client)
     {
-        if(url()->previous() !== url()->current())
-            session()->put('back_to_url', url()->previous());
+        $this->authorize('edit', $client);
+
+        $conversion_sources = ConversionSource::query()->get();
 
         return inertia(
             'Client/Edit',
             [
                 'client' => $client,
+                'conversionSources' => $conversion_sources
             ]
         );
     }
@@ -108,16 +132,13 @@ class ClientController extends Controller
      */
     public function update(Request $request, Client $client)
     {
+        $this->authorize('update', $client);
+
         $client->update(
-            $this->validation($request, $client)
+            RequestProcessor::validation($request, $this->fields, $client)
         );
 
-        $back_to_url = session()->pull('back_to_url');
-
-        if($back_to_url)
-            return redirect($back_to_url)->with('success', 'Client was changed!');
-        else
-            return redirect()->route('client.index')->with('success', 'Client was changed!');
+        return redirect()->route('restore.state', ['url' => route('client.index')])->with('success', 'Klient został edytowany!');
     }
 
     /**
@@ -125,32 +146,18 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
+        $this->authorize('delete', $client);
+
         $client->deleteOrFail();
 
-        return redirect()->back()->with('success', 'Client was deleted!');
+        return redirect()->back()->with('success', 'Klient został usunięty!');
     }
 
     public function restore(Client $client){
+        $this->authorize('restore', $client);
+
         $client->restore();
 
-        return redirect()->back()->with('success', 'Client was restored!');
-    }
-
-    private function validation(Request $request, Client $client = null): array{
-        return $request->validate([
-            'first_name' => 'required|string|min:3|max:50', 
-            'last_name' => 'required|string|min:3|max:50',
-            'email' => 'required|email|unique:clients,email' . ($client ? ",$client->id" : ''),
-            'phone' => 'required|regex:/\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/|unique:clients,phone' . ($client ? ",$client->id" : ''),
-            'street' => 'nullable|string|min:3|max:50',
-            'street_nr' => 'nullable|string|min:1|max:10',
-            'apartment_nr' => 'nullable|string|min:1|max:10',
-            'postcode' => 'nullable|string|min:3|max:10',
-            'city' => 'nullable|string|min:3|max:25',
-            'country' => 'nullable|string|min:3|max:25',
-            'username' => 'nullable|string|min:3|max:30',
-            'conversion_source' => 'nullable|string|in:google,instagram,facebook,tiktok,olx,allegro,znajomi',
-            'social_link' => 'nullable|url:http,https|max:255'
-        ]);
+        return redirect()->back()->with('success', 'Klient został odzyskany!');
     }
 }

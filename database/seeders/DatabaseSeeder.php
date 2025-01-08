@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
             'is_admin' => true,
         ]);
 
-        \App\Models\User::factory()->create([
+        \App\Models\User::factory()->verified()->create([
             'first_name' => 'Test User 2',
             'email' => 'test2@example.com',
         ]);

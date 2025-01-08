@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 
 class Client extends Model
 {
@@ -33,6 +34,8 @@ class Client extends Model
         'conversion_source_id',
         'social_link'
     ];
+
+    protected $appends = ['editable', 'deletable', 'restorable'];
 
     protected $filterable = [
         'search' => 'string',
@@ -82,5 +85,55 @@ class Client extends Model
 
     public function conversion_source(): BelongsTo{
         return $this->belongsTo(ConversionSource::class, 'conversion_source_id');
+    }
+
+    public function getStreetAttribute($value)
+    {
+        return $value === null ? '' : $value;
+    }
+
+    public function getStreetNrAttribute($value)
+    {
+        return $value === null ? '' : $value;
+    }
+
+    public function getApartmentNrAttribute($value)
+    {
+        return $value === null ? '' : $value;
+    }
+
+    public function getPostcodeAttribute($value)
+    {
+        return $value === null ? '' : $value;
+    }
+
+    public function getCityAttribute($value)
+    {
+        return $value === null ? '' : $value;
+    }
+
+    public function getCountryAttribute($value)
+    {
+        return $value === null ? '' : $value;
+    }
+
+    public function getUsernameAttribute($value)
+    {
+        return $value === null ? '' : $value;
+    }
+
+    public function getEditableAttribute()
+    {
+        return $this->deleted_at == null && $this->created_by_user_id === Auth::user()->id;
+    }
+
+    public function getDeletableAttribute()
+    {
+        return $this->deleted_at === null && $this->created_by_user_id === Auth::user()->id;
+    }
+    
+    public function getRestorableAttribute()
+    {
+        return $this->deleted_at !== null && $this->created_by_user_id === Auth::user()->id;
     }
 }
