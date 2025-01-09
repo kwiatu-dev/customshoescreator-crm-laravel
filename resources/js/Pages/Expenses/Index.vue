@@ -39,7 +39,7 @@ defineProps({
 
 const columns = {
   title: { label: 'Tytuł'},
-  price: { label: 'Kwota', suffix: 'zł' },
+  price: { label: 'Kwota', suffix: ' zł' },
   date: { label: 'Data' },
   shop_name: { label: 'Nazwa sklepu' },
 }

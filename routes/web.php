@@ -158,4 +158,4 @@ Route::post('/remember-state', [RememberStateController::class, 'store'])
 Route::get('/restore-state', [RestoreStateController::class, 'index'])
     ->name('restore.state');
 
-Route::resource('income', IncomeController::class);
+Route::resource('incomes', IncomeController::class);

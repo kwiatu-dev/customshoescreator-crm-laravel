@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('title', 50);
             $table->unsignedDecimal('price', 8, 2);
-            $table->date('date');
+            $table->date('date')->nullable();
             $table->string('remarks', 150)->nullable();
             $table->softDeletes();
 

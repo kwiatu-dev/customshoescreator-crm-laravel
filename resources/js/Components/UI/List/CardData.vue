@@ -1,14 +1,13 @@
 <template>
   <div v-if="onlyAdmin" class="inline">
-    <a 
+    <Link 
       v-if="link" 
       :href="link" 
-      target="_blank" 
       class="text-indigo-600 hover:text-indigo-500"
     >
       <component :is="props.element.component" v-if="hasComponent" :object="object" />
       <span v-else>{{ data }}</span>
-    </a>
+    </Link>
     <div v-else class="inline">
       <component :is="props.element.component" v-if="hasComponent" :object="object" />
       <span v-else>{{ data }}</span>
@@ -18,7 +17,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { usePage } from '@inertiajs/vue3'
+import { usePage, Link } from '@inertiajs/vue3'
 
 const props = defineProps({
   element: Object,
@@ -48,16 +47,26 @@ const data = computed(() => {
   }
 
   if(props.element?.columns){
-    value = props.element.columns.map(key => props.object[props.field][key]).join(' ')
+    value = props.element.columns.map(key => {
+      if (props.object?.[props.field]?.[key]) {
+        return props.object[props.field][key]
+      }
+    }).join(' ')
   }
   else{
-    value = props.object[props.field]
+    if (props.object?.[props.field]) {
+      value = props.object[props.field]
+    }
   }
 
   if(props.element?.concat)
   {
     const c = props.element.concat
-      .map(field => props.object[field])
+      .map(field => {
+        if (props.object?.[field]) {
+          return props.object[field]
+        }
+      })
       .join(separator)
 
     if (c) {
@@ -78,6 +87,14 @@ const link = computed(() => {
   if(props.element?.link){
     const field = props.element.link?.field
     const column = props.element.link?.column
+
+    if (column && !props.object?.[column]?.[field]) {
+      return ''
+    }
+
+    if (!column && !props.object?.[field]) {
+      return ''
+    }
 
     if(field)
       value = column ? props.object[column][field] : props.object[field]

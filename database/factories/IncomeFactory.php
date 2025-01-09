@@ -19,11 +19,13 @@ class IncomeFactory extends Factory
      */
     public function definition(): array
     {
+        $status_id = $this->random_status_id();
+
         return [
             'title' => fake()->text(50),
-            'date' => fake()->date(),
+            'date' => $status_id == 2 ? fake()->date() : null,
             'price' => fake()->randomFloat(2, 10, 1000),
-            'status_id' => $this->random_status_id(),
+            'status_id' => $status_id,
             'remarks' => $this->generate_remarks(),
             'project_id' => null,
             'created_by_user_id' => $this->random_user_id()
