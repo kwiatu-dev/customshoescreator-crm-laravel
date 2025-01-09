@@ -24,6 +24,8 @@ class Expenses extends Model
         'file'
     ];
 
+    protected $appends = ['editable'];
+
     protected $filterable = [
         'search' => 'string',
         'dates' => [
@@ -65,5 +67,10 @@ class Expenses extends Model
         return Attribute::make(
             get: fn ($value) => $value ? array_combine(['catalog', 'file'], array_map('basename', [dirname($value), $value])) : null,
         );
+    }
+
+    public function getEditableAttribute()
+    {
+        return $this->deleted_at == null;
     }
 }

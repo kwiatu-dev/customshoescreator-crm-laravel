@@ -82,14 +82,6 @@ class ExpensesController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Expenses $expense)
@@ -120,7 +112,7 @@ class ExpensesController extends Controller
 
         $expense->update($fields);
 
-        return redirect()->route('expanses.index')->with('success', 'Wydatek został edytowany!');
+        return redirect()->route('restore.state', ['url' => route('expenses.index')])->with('success', 'Wydatek został edytowany!');
     }
 
     /**

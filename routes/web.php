@@ -14,6 +14,7 @@ use App\Http\Controllers\FilePondController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PageSpeedController;
 use App\Http\Controllers\DictionaryController;
+use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\ListingOfferController;
 use App\Http\Controllers\PrivateFilesController;
 use App\Http\Controllers\RestoreStateController;
@@ -156,3 +157,5 @@ Route::post('/remember-state', [RememberStateController::class, 'store'])
 
 Route::get('/restore-state', [RestoreStateController::class, 'index'])
     ->name('restore.state');
+
+Route::resource('income', IncomeController::class);

@@ -23,4 +23,6 @@ php artisan storage:link
 php artisan config:cache
 php artisan make:notification UserCreate 
 php artisan make:migration add_age_to_users_table --table=users
+php artisan make:factory NazwaFactory --model=NazwaModelu
+
 

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\ConversionSource;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -32,6 +33,7 @@ class ClientFactory extends Factory
             'username' => fake('pl_PL')->userName(),
             'conversion_source_id' => $this->random_conversion_source(),
             'social_link' => fake('pl_PL')->url(),
+            'created_by_user_id' => $this->random_user_id()
         ];
     }
 
@@ -49,5 +51,10 @@ class ClientFactory extends Factory
     public function random_conversion_source()
     {
         return ConversionSource::all()->random();
+    }
+
+    public function random_user_id()
+    {
+        return User::all()->random();
     }
 }

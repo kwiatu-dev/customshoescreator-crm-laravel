@@ -40,16 +40,23 @@ class DatabaseSeeder extends Seeder
             'by_user_id' => 2,
         ]);
 
-        \App\Models\Client::factory(20)->create([
-            'created_by_user_id' => 1,
-        ]);
-
         \App\Models\User::factory(10)->create();
 
-        \App\Models\Expenses::factory(10)->create([
-            'created_by_user_id' => 1,
-        ]);
+        \App\Models\Client::factory(20)->create();
 
-        \App\Models\Project::factory(20)->create();
+        \App\Models\Expenses::factory(10)->create();
+
+        \App\Models\Project::factory(100)->create();
+
+        $projects = \App\Models\Project::where('status_id', 3)->get();
+
+        foreach ($projects as $project) {
+            \App\Models\Income::factory()->create([
+                'project_id' => $project->id,
+                'created_by_user_id' => null,
+            ]);
+        }
+
+        \App\Models\Income::factory(10)->create();
     }
 }
