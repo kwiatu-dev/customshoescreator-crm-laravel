@@ -54,6 +54,8 @@ class DatabaseSeeder extends Seeder
             \App\Models\Income::factory()->create([
                 'project_id' => $project->id,
                 'created_by_user_id' => null,
+                'costs' => null,
+                'distribution' => null
             ]);
         }
 

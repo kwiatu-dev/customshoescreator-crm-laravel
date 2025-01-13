@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\RequestProcessor;
 use App\Models\Income;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class IncomeController extends Controller
 {
@@ -21,6 +24,8 @@ class IncomeController extends Controller
             'created_by_user_id',
             'project_id',
             'status_id',
+            'costs',
+            'distribution'
         ];
     }
 
@@ -64,7 +69,14 @@ class IncomeController extends Controller
      */
     public function create()
     {
-        //
+        $admins = User::query()->where('is_admin', true)->get();
+
+        return inertia(
+            'Income/Create',
+            [
+                'admins' => $admins,
+            ]
+        );
     }
 
     /**
@@ -72,7 +84,16 @@ class IncomeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $fields = RequestProcessor::validation($request, $this->fields, null, [
+            'distribution' => ['nullable']
+        ]);
+
+        $fields['status_id'] = 2;
+
+        Auth::user()->incomes()->save(new Income($fields));
+
+        return redirect()->route('incomes.index')
+            ->with('success', 'Przychód został dodany!');
     }
 
     /**

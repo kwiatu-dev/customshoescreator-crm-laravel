@@ -53,8 +53,8 @@ const columns = {
   
 const cards = {
   title: { title: true },
-  client: { columns: ['first_name', 'last_name'], link: {column: 'client', field: 'email', prefix: 'mailto:'} },
-  user: { columns: ['first_name', 'last_name'], link: {column: 'user', field: 'email', prefix: 'mailto:'} },
+  client: { label: 'Klient', columns: ['first_name', 'last_name'], link: {column: 'client', field: 'id', prefix: route('client.show', { client: '' }) + '/'} },
+  user: { label: 'Użytkownik', columns: ['first_name', 'last_name'], link: {column: 'user', field: 'id', prefix: route('user.show', { user: '' }) + '/'}},
   price: { suffix: ' zł', concat: ['visualization'], separator: ' + ' },
   status: { columns: ['name'] },
   start: { },

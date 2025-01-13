@@ -92,8 +92,8 @@ class RequestProcessor{
 
         $sum = array_sum($value);
 
-        if ($sum > 100) {
-            $fail('Suma wartości w polach nie może przekraczać 100% aktualna wartość wynosi: ' . $sum);
+        if ($sum != 100) {
+            $fail('Suma wartości w polach musi wynosić równo 100%, aktualna wartość wynosi: ' . $sum . '%');
         }
     }
 
@@ -115,11 +115,12 @@ class RequestProcessor{
             }
         }
 
+        $validate = array_merge($validate, $custom_validation ?? []);
+
         $validate['distribution'][] = function($attribute, $value, $fail){
             self::validateDistribution($attribute, $value, $fail);
         };
 
-        return $request->validate(
-            array_merge($validate, $custom_validation ?? []));
+        return $request->validate($validate);
     }
 }

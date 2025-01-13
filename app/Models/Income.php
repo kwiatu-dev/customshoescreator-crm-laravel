@@ -21,6 +21,8 @@ class Income extends Model
         'remarks',
         'price',
         'date',
+        'costs',
+        'distribution',
         'created_by_user_id',
         'project_id',
         'status_id',
@@ -63,6 +65,10 @@ class Income extends Model
 
     protected $footer = [
         'price' => 'sum'
+    ];
+
+    protected $casts = [
+        'distribution' => 'array'
     ];
 
     public function user(): BelongsTo{

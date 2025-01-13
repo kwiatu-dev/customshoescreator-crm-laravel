@@ -136,6 +136,10 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         return $this->hasMany(Project::class, 'created_by_user_id');
     }
 
+    public function incomes(): HasMany{
+        return $this->hasMany(Income::class, 'created_by_user_id');
+    }
+
     public function isVerified(): bool{
         if(isset($this->email_verified_at)){
             return true;

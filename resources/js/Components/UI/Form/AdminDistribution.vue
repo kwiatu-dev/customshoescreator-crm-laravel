@@ -6,14 +6,14 @@
       </div>
       <div class="line" />
       <div>
-        <input ref="percentage" type="number" class="input w-16" min="0" max="100" step="1" :value="distribution[admin.id]" :data-user-id="admin.id" @input="input" />
+        <input ref="percentage" type="number" class="input w-16" min="0" max="100" step="1" :value="distribution?.[admin.id] || parseInt(100 / admins.length)" :data-user-id="admin.id" @input="input" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const props = defineProps({
   users: {
@@ -22,28 +22,33 @@ const props = defineProps({
   },
   distribution: {
     required: true,
-    type: Object,
+    type: [Object, null],
   },
   modelValue: Object,
 })
 
 const percentage = ref(null)
-
 const admins = props.users.filter((user) => user.is_admin === 1 && user.deleted_at === null)
+const value = ref(null)
 
 const input = (event) => {
-  if (event.target.value > 100) {
+  if (event?.target?.value > 100) {
     event.target.value = 100
   }
 
-  const distribution = percentage.value.reduce(
+  value.value = percentage.value.reduce(
     (acc, el) => { 
       acc[parseInt(el.getAttribute('data-user-id'))] = el.value 
       return acc 
     }, {})
 
-  emit('update:modelValue', distribution)
+  emit('update:modelValue', value)
 }
+
+onMounted(() => {
+  input(null)
+  emit('update:modelValue', value)
+})
 
 const emit = defineEmits(['update:modelValue'])
 </script>

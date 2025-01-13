@@ -28,18 +28,20 @@ class IncomeFactory extends Factory
             'status_id' => $status_id,
             'remarks' => $this->generate_remarks(),
             'project_id' => null,
-            'created_by_user_id' => $this->random_user_id()
+            'created_by_user_id' => $this->random_user_id(),
+            'costs' => 50,
+            'distribution' => json_encode(['1' => 50, '2' => 50])
         ];
     }
 
     public function random_status_id()
     {
-        return IncomeStatus::all()->random();
+        return IncomeStatus::all()->random()->id;
     }
 
     public function random_user_id()
     {
-        return User::all()->random();
+        return User::all()->random()->id;
     }
 
     private function generate_remarks()
