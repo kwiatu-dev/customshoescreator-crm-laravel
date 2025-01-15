@@ -43,10 +43,8 @@ class RequestProcessor{
             if(in_array($key, $sortable)){
                 $sort[$key] = $value;
             }
-
-            if (array_key_exists($key, $sortable)) {
-                $sortable[$key]['direction'] = $value;
-                $sort[$key] = $sortable[$key];
+            else if (array_key_exists($key, $sortable)) {
+                $sort[$key] = $value;
             }
         }
 

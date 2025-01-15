@@ -10,7 +10,7 @@ trait HasFooter
 
         foreach($this->footer as $field => $action){
             if($action === 'sum'){
-                $footer[$field] = $query->sum($field);
+                $footer[$field] = $query->sum($this->table_name .'.'. $field);
             }
         }
 

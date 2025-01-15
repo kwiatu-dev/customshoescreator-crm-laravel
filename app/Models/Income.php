@@ -16,6 +16,8 @@ class Income extends Model
 {
     use HasFactory, HasFilters, HasSorting, HasFooter, HasPagination, SoftDeletes;
 
+    protected $table_name = 'incomes';
+
     protected $fillable = [
         'title',
         'remarks',
@@ -54,15 +56,15 @@ class Income extends Model
         'date',
         'price',
         'remarks',
-        'status' => ['columns' => ['name']]
+        'status' => ['name']
     ];
 
     protected $searchable = [
         'title',
         'date',
         'price',
-        'remarks'
-
+        'remarks',
+        'status' => ['name']
     ];
 
     protected $footer = [

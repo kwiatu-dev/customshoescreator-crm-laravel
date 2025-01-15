@@ -15,20 +15,26 @@ trait HasSorting
         $query->when(
             $sort ?? false,
             function ($query, $value) {
-                foreach ($value as $column => $data){
-                    if (is_array($data)) {
-                        //todo: 1. dodać sortowanie po wybranych kolumnach
-                        //$query->
+                foreach ($value as $field => $data){
+                    if (array_key_exists($field, $this->sortable)){
+                        $columns = $this->sortable[$field];
 
+                        $columns = array_map(function ($column) use ($field) {
+                            return $field .'.'. $column;
+                        }, $columns);
+                        
+                        if ($columns) {
+                            if (in_array($data, ['asc', 'desc'])) {
+                                $query->orderByRaw('CONCAT('. implode(', " ", ', $columns) .') ' . $data);
+                            } 
+                        }
                     }
                     else if(in_array($data, ['asc', 'desc'])){
-                        $query->orderBy($column, $data);
+                        $query->orderBy($this->table_name .'.'. $field, $data);
                     }
                 }
             }
         );
-
-        //dd($query->toSql(), $query->getBindings());
 
         return $query;
     }

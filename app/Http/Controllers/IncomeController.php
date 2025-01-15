@@ -34,7 +34,7 @@ class IncomeController extends Controller
      */
     public function index(Request $request)
     {
-        $incomes = Income::query()
+        $query = Income::query()
         ->with([
             'status',
             'user' => function ($query) {
@@ -44,22 +44,24 @@ class IncomeController extends Controller
                 $query->withTrashed();
             }
         ])
-        ->leftJoinRelation('status')
-        ->leftJoinRelation('user', function ($join) {
+        ->leftJoinRelation('status as status')
+        ->leftJoinRelation('user as user', function ($join) {
             $join->withTrashed();
         })
-        ->leftJoinRelation('project', function ($join) {
+        ->leftJoinRelation('project as project', function ($join) {
             $join->withTrashed();
         })
         ->addSelect([
             'incomes.*',
-        ])
-        ->filter($request)
-        ->sort($request)
-        ->latest()
-        ->pagination();
+        ]);
 
-        $footer = Income::query()
+        $incomes = $query
+            ->filter($request)
+            ->sort($request)
+            ->latest()
+            ->pagination();
+
+        $footer = $query
             ->filter($request)
             ->footer();
 

@@ -17,8 +17,17 @@ trait HasFilters
             $filters['search'] ?? false,
             function ($query, $value){
                 $query->where(function ($query) use ($value){
-                    foreach($this->searchable as $field){
-                        $query->orWhere($field, 'like', "%$value%");
+                    foreach($this->searchable as $field => $columns){
+                        if (is_array($columns)) {
+                            $columns = array_map(function ($column) use ($field) {
+                                return $field .'.'. $column;
+                            }, $columns);
+
+                            $query->orWhereRaw('CONCAT('. implode(', " ", ', $columns) .') like ' . "'%$value%'");
+                        }
+                        else {
+                            $query->orWhere($this->table_name .'.'. $columns, 'like', "%$value%");
+                        }
                     }
                 });
             }
@@ -38,10 +47,10 @@ trait HasFilters
                     }
                     
                     if(strstr($field, "_start")){
-                        $query->where(str_replace("_start", '', $field), '>=', $filters[$field]);
+                        $query->where($this->table_name .'.'. str_replace("_start", '', $field), '>=', $filters[$field]);
                     }
                     else if(strstr($field, "_end")){
-                        $query->where(str_replace("_end", '', $field), '<=', $filters[$field]);
+                        $query->where($this->table_name .'.'. str_replace("_end", '', $field), '<=', $filters[$field]);
                     }
                 }
             }
@@ -57,10 +66,10 @@ trait HasFilters
                         }
                         
                         if(strstr($field, "_start")){
-                            $query->where(str_replace("_start", '', $field), '>=', $filters[$field]);
+                            $query->where($this->table_name .'.'. str_replace("_start", '', $field), '>=', $filters[$field]);
                         }
                         else if(strstr($field, "_end")){
-                            $query->where(str_replace("_end", '', $field), '<=', $filters[$field]);
+                            $query->where($this->table_name .'.'. str_replace("_end", '', $field), '<=', $filters[$field]);
                         }
                     }
                 }
@@ -76,10 +85,10 @@ trait HasFilters
                     }
                     
                     if(strstr($field, "_start")){
-                        $query->where(str_replace("_start", '', $field), '>=', $filters[$field]);
+                        $query->where($this->table_name .'.'. str_replace("_start", '', $field), '>=', $filters[$field]);
                     }
                     else if(strstr($field, "_end")){
-                        $query->where(str_replace("_end", '', $field), '<=', $filters[$field]);
+                        $query->where($this->table_name .'.'. str_replace("_end", '', $field), '<=', $filters[$field]);
                     }
                 }
             }
@@ -95,10 +104,10 @@ trait HasFilters
                         }
                         
                         if(strstr($field, "_start")){
-                            $query->where(str_replace("_start", '', $field), '>=', $filters[$field]);
+                            $query->where($this->table_name .'.'. str_replace("_start", '', $field), '>=', $filters[$field]);
                         }
                         else if(strstr($field, "_end")){
-                            $query->where(str_replace("_end", '', $field), '<=', $filters[$field]);
+                            $query->where($this->table_name .'.'. str_replace("_end", '', $field), '<=', $filters[$field]);
                         }
                     }
                 }
@@ -114,7 +123,7 @@ trait HasFilters
                             continue;
                         }
                         
-                        $query->where($field, $filters[$field]);
+                        $query->where($this->table_name .'.'. $field, $filters[$field]);
                     }
                 }
             }
@@ -123,7 +132,7 @@ trait HasFilters
         $query->when(
             $filters['created_by_user'] ?? false,
             function ($query, $value){
-                $query->where('created_by_user_id', Auth::user()->id);
+                $query->where($this->table_name .'.'. 'created_by_user_id', Auth::user()->id);
             }
         );
         
