@@ -1,0 +1,3 @@
+<template>
+  Income Show
+</template>

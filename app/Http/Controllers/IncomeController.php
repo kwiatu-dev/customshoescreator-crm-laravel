@@ -44,6 +44,16 @@ class IncomeController extends Controller
                 $query->withTrashed();
             }
         ])
+        ->leftJoinRelation('status')
+        ->leftJoinRelation('user', function ($join) {
+            $join->withTrashed();
+        })
+        ->leftJoinRelation('project', function ($join) {
+            $join->withTrashed();
+        })
+        ->addSelect([
+            'incomes.*',
+        ])
         ->filter($request)
         ->sort($request)
         ->latest()
@@ -101,7 +111,7 @@ class IncomeController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return inertia('Income/Show');
     }
 
     /**
@@ -109,7 +119,7 @@ class IncomeController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return inertia('Income/Edit');
     }
 
     /**

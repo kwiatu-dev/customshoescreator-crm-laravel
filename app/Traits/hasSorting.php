@@ -15,13 +15,20 @@ trait HasSorting
         $query->when(
             $sort ?? false,
             function ($query, $value) {
-                foreach ($value as $column => $direction){
-                    if(in_array($direction, ['asc', 'desc'])){
-                        $query->orderBy($column, $direction);
+                foreach ($value as $column => $data){
+                    if (is_array($data)) {
+                        //todo: 1. dodać sortowanie po wybranych kolumnach
+                        //$query->
+
+                    }
+                    else if(in_array($data, ['asc', 'desc'])){
+                        $query->orderBy($column, $data);
                     }
                 }
             }
         );
+
+        //dd($query->toSql(), $query->getBindings());
 
         return $query;
     }

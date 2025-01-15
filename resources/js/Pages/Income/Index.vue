@@ -40,8 +40,6 @@ defineProps({
 const columns = {
   title: { label: 'Tytuł'},
   price: { label: 'Kwota', suffix: ' zł' },
-  user: { label: 'Użytkownik', columns: ['first_name', 'last_name'], link: {column: 'user', field: 'id', prefix: route('user.show', { user: '' }) + '/'}},
-  project: { label: 'Projekt', columns: ['title'], link: { column: 'project', field: 'id', prefix: route('projects.show', { project: '' }) + '/'}},
   date: { label: 'Data' },
   status: { label: 'Status', columns: ['name'] },
   remarks: { label: 'Uwagi' },
@@ -49,10 +47,6 @@ const columns = {
 
 const cards = {
   title: { title: true },
-  blank1: { blank: true },
-  user: { label: 'Użytkownik', columns: ['first_name', 'last_name'], link: {column: 'user', field: 'id', prefix: route('user.show', { user: '' }) + '/'}},
-  blank2: { blank: true },
-  project: { label: 'Projekt', columns: ['title'], link: { column: 'project', field: 'id', prefix: route('projects.show', { project: '' }) + '/'}},
   price: { suffix: ' zł' },
   status: { columns: ['name']},
   date: { },
@@ -75,6 +69,7 @@ const sortable = {
   price: true,
   date: true,
   remarks: true,
+  status: true,
 }
   
 //todo 1. wyczyścić niepotrzebne tabelki i kod z projektu, 2. utworzyć widoki show, create, edit, 3. uwzględnić, że edycja oraz usuwanie będzie dostępne tylko dla przychodów dodanych przed użytkownika, resztę uznajemy, że są powiązane z projektami

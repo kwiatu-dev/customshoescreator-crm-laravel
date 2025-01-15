@@ -1,0 +1,3 @@
+<template>
+  Income Edit
+</template>

@@ -53,7 +53,8 @@ class Income extends Model
         'title',
         'date',
         'price',
-        'remarks'
+        'remarks',
+        'status' => ['columns' => ['name']]
     ];
 
     protected $searchable = [
@@ -61,6 +62,7 @@ class Income extends Model
         'date',
         'price',
         'remarks'
+
     ];
 
     protected $footer = [
@@ -85,16 +87,16 @@ class Income extends Model
 
     public function getEditableAttribute()
     {
-        return $this->deleted_at == null && $this->created_by_user_id === Auth::user()->id;
+        return $this->deleted_at == null && $this->status_id != 2 && $this->project_id == null;
     }
 
     public function getDeletableAttribute()
     {
-        return $this->deleted_at === null && $this->created_by_user_id === Auth::user()->id;
+        return $this->deleted_at === null && $this->status_id != 2 && $this->project_id == null;
     }
     
     public function getRestorableAttribute()
     {
-        return $this->deleted_at !== null && $this->created_by_user_id === Auth::user()->id;
+        return $this->deleted_at !== null && $this->project_id == null;
     }
 }

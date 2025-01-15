@@ -115,8 +115,18 @@ class Project extends Model
     }
 
     public function getEditableAttribute()
-    {
-        return $this->status_id != 3 && $this->deleted_at == null;
+    {   
+        $income = $this->getRelatedIncome();
+
+        if ($this->deleted_at != null) {
+            return false;
+        }
+
+        if ($income && $income->status_id == 2) {
+            return false;
+        }
+
+        return true;
     }
 
     public function addImages($images, $type_id)
@@ -160,5 +170,73 @@ class Project extends Model
         $current_images = $this->images()->where('type_id', $type_id)->pluck('file')->toArray();
         $images_to_delete = array_diff($current_images, $images);
         $this->removeImages($images_to_delete);
+    }
+
+    public function getRelatedIncome($withThrashed = false)
+    {
+        if ($withThrashed) {
+            return Income::withTrashed()->where('project_id', $this->id)->first();
+        }
+        
+        return $this->hasOne(Income::class, 'project_id', 'id')->first();
+    }
+
+    public function createRelatedIncome() {
+        $income = $this->getRelatedIncome(true);
+
+        if ($income != null) {
+            throw new \Exception('Cannot create income: a related income already exists.');
+        }
+
+        if ($this->status_id != 1) {
+            $income = new Income();
+            $income->title = $this->title;
+            $income->price = $this->price;
+            $income->project_id = $this->id;
+            $income->status_id = 1;
+            $income->save();
+
+            return $income;
+        }
+
+        throw new \Exception('Cannot create income: the project status is not valid.');
+    }
+
+    public function editRelatedIncome() {
+        $income = $this->getRelatedIncome();
+
+        if ($income) {
+            $income->price = $this->price;
+            $income->title = $this->title;
+            $income->save();
+
+            return $income;
+        }
+
+        throw new \Exception('Income does not belong to the given project or is not editable');
+    }
+
+    public function deleteRelatedIncome() {
+        $income = $this->getRelatedIncome();
+
+        if ($income) {
+            $income->delete();
+
+            return $income;
+        }
+
+        throw new \Exception('Income does not belong to the given project or is not deletable');
+    }
+
+    public function restoreRelatedIncome() {
+        $income = $this->getRelatedIncome(true);
+
+        if ($income && $income->trashed()) {
+            $income->restore();
+
+            return $income;
+        }
+    
+        throw new \Exception('Income does not belong to the given project or is not trashed or is not restorable');
     }
 }

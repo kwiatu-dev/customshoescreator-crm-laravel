@@ -94,13 +94,10 @@
 import FormError from '@/Components/UI/Form/FormError.vue'
 import DropdownList from '@/Components/UI/Form/DropdownList.vue'
 import { useForm } from '@inertiajs/vue3'
+import { onMounted, ref } from 'vue'
+import axios from 'axios'
 
-defineProps({
-  conversionSources: {
-    type: Array,
-    required: true,
-  },
-})
+const conversionSources = ref([])
 
 const form = useForm({
   first_name: null,
@@ -116,6 +113,16 @@ const form = useForm({
   username: null,
   social_link: null,
   conversion_source_id: null,
+})
+
+onMounted(() => {
+  axios.get(route('dictionary.index', {table: 'ConversionSource'}))
+    .then(response => {
+      conversionSources.value = response.data
+    })
+    .catch(error => {
+      console.error(error)
+    })
 })
 
 const emit = defineEmits(['created'])

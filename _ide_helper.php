@@ -19483,6 +19483,95 @@
      
 }
 
+    namespace Illuminate\Database\Query { 
+            /**
+     * 
+     *
+     */ 
+        class Builder {
+                    /**
+         * Merges an array of join clauses and bindings.
+         *
+         * @see \Reedware\LaravelRelationJoins\Mixins\MergeJoins::mergeJoins()
+         * @param array $joins
+         * @param array $bindings
+         * @return void 
+         * @static 
+         */ 
+        public static function mergeJoins($joins, $bindings)
+        {
+                        \Illuminate\Database\Query\Builder::mergeJoins($joins, $bindings);
+        }
+                    /**
+         * Replaces the query builders in nested "where" clauses with join builders.
+         *
+         * @see \Reedware\LaravelRelationJoins\Mixins\MergeJoins::replaceWhereNestedQueryBuildersWithJoinBuilders()
+         * @param \Illuminate\Database\Query\Builder $query
+         * @return void 
+         * @static 
+         */ 
+        public static function replaceWhereNestedQueryBuildersWithJoinBuilders($query)
+        {
+                        \Illuminate\Database\Query\Builder::replaceWhereNestedQueryBuildersWithJoinBuilders($query);
+        }
+                    /**
+         * Add an "on" clause to the join.
+         *
+         * @see \Reedware\LaravelRelationJoins\Mixins\JoinOperations::on()
+         * @param \Closure|string $first
+         * @param string|null $operator
+         * @param string|null $second
+         * @param string $boolean
+         * @return \Illuminate\Database\Query\Builder 
+         * @static 
+         */ 
+        public static function on($first, $operator = null, $second = null, $boolean = 'and')
+        {
+                        return \Illuminate\Database\Query\Builder::on($first, $operator, $second, $boolean);
+        }
+                    /**
+         * Add an "or on" clause to the join.
+         *
+         * @see \Reedware\LaravelRelationJoins\Mixins\JoinOperations::orOn()
+         * @param \Closure|string $first
+         * @param string|null $operator
+         * @param string|null $second
+         * @return \Illuminate\Database\Query\Builder 
+         * @static 
+         */ 
+        public static function orOn($first, $operator = null, $second = null)
+        {
+                        return \Illuminate\Database\Query\Builder::orOn($first, $operator, $second);
+        }
+         
+    }
+     
+}
+
+    namespace Illuminate\Database\Eloquent\Relations { 
+            /**
+     * 
+     *
+     */ 
+        class Relation {
+                    /**
+         * Adds the constraints for a relationship join.
+         *
+         * @param \Builder<TRelatedModel> $query
+         * @param \Builder<TDeclaringModel> $parentQuery
+         * @return \Builder<TRelatedModel> 
+         * @see \Reedware\LaravelRelationJoins\Mixins\RelationJoinQueries::getRelationJoinQuery()
+         * @static 
+         */ 
+        public static function getRelationJoinQuery($query, $parentQuery, $type = 'inner', $alias = null)
+        {
+                        return \Illuminate\Database\Eloquent\Relations\Relation::getRelationJoinQuery($query, $parentQuery, $type, $alias);
+        }
+         
+    }
+     
+}
+
 
 namespace  { 
             class App extends \Illuminate\Support\Facades\App {}
@@ -21105,6 +21194,302 @@ namespace  {
             {
                                 /** @var \Illuminate\Database\Eloquent\Builder $instance */
                                 return $instance->mergeConstraintsFrom($from);
+            }
+             
+                /**
+             * Add a relationship join condition to the query.
+             *
+             * @param \Relation|string|array<Relation|string> $relation
+             * @param \Closure|array<string,\Closure>|null $callback
+             * @param \MorphTypes|array<class-string<Model>>|\class-string<Model>|true $morphTypes
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::joinRelation()
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function joinRelation($relation, $callback = null, $type = 'inner', $through = false, $relatedQuery = null, $morphTypes = true)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::joinRelation($relation, $callback, $type, $through, $relatedQuery, $morphTypes);
+            }
+             
+                /**
+             * Add nested relationship join conditions to the query.
+             *
+             * @param \Closure|array<string,\Closure>|null $callbacks
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::joinNestedRelation()
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function joinNestedRelation($relations, $callbacks, $type, $through, $morphTypes)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::joinNestedRelation($relations, $callbacks, $type, $through, $morphTypes);
+            }
+             
+                /**
+             * Applies the eloquent scopes to the specified query.
+             *
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::applyJoinScopes()
+             * @param \Illuminate\Database\Eloquent\Builder $joinQuery
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function applyJoinScopes($joinQuery)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::applyJoinScopes($joinQuery);
+            }
+             
+                /**
+             * Calls the provided callback on the join query.
+             *
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::callJoinScope()
+             * @param \Illuminate\Database\Eloquent\Builder $joinQuery
+             * @param \Closure $callback
+             * @return void 
+             * @static 
+             */ 
+            public static function callJoinScope($joinQuery, $callback)
+            {
+                                \Illuminate\Database\Eloquent\Builder::callJoinScope($joinQuery, $callback);
+            }
+             
+                /**
+             * Add the "join relation" condition where clause to the query.
+             *
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::addJoinRelationWhere()
+             * @param \Illuminate\Database\Eloquent\Builder $joinQuery
+             * @param \Illuminate\Database\Eloquent\Relations\Relation $relation
+             * @param string $type
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function addJoinRelationWhere($joinQuery, $relation, $type)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::addJoinRelationWhere($joinQuery, $relation, $type);
+            }
+             
+                /**
+             * Returns the belongs to relation for the next morph.
+             *
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::getBelongsToJoinRelation()
+             * @param \Illuminate\Database\Eloquent\Relations\MorphTo $relation
+             * @param \Reedware\LaravelRelationJoins\MorphTypes $morphTypes
+             * @param \Illuminate\Database\Eloquent\Builder $relatedQuery
+             * @return \Illuminate\Database\Eloquent\Relations\BelongsTo 
+             * @static 
+             */ 
+            public static function getBelongsToJoinRelation($relation, $morphTypes, $relatedQuery)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::getBelongsToJoinRelation($relation, $morphTypes, $relatedQuery);
+            }
+             
+                /**
+             * Add a relationship left join condition to the query.
+             *
+             * @param \Closure|array<string,\Closure>|null $callback
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::leftJoinRelation()
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function leftJoinRelation($relation, $callback = null, $through = false)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::leftJoinRelation($relation, $callback, $through);
+            }
+             
+                /**
+             * Add a relationship right join condition to the query.
+             *
+             * @param \Closure|array<string,\Closure>|null $callback
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::rightJoinRelation()
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function rightJoinRelation($relation, $callback = null, $through = false)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::rightJoinRelation($relation, $callback, $through);
+            }
+             
+                /**
+             * Add a relationship cross join condition to the query.
+             *
+             * @param \Closure|array<string,\Closure>|null $callback
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::crossJoinRelation()
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function crossJoinRelation($relation, $callback = null, $through = false)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::crossJoinRelation($relation, $callback, $through);
+            }
+             
+                /**
+             * Add a relationship join condition through a related model to the query.
+             *
+             * @param \Closure|array<string,\Closure>|null $callback
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::joinThroughRelation()
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function joinThroughRelation($relation, $callback = null, $type = 'inner')
+            {
+                                return \Illuminate\Database\Eloquent\Builder::joinThroughRelation($relation, $callback, $type);
+            }
+             
+                /**
+             * Add a relationship left join condition through a related model to the query.
+             *
+             * @param \Closure|array<string,\Closure>|null $callback
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::leftJoinThroughRelation()
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function leftJoinThroughRelation($relation, $callback = null)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::leftJoinThroughRelation($relation, $callback);
+            }
+             
+                /**
+             * Add a relationship right join condition through a related model to the query.
+             *
+             * @param \Closure|array<string,\Closure>|null $callback
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::rightJoinThroughRelation()
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function rightJoinThroughRelation($relation, $callback = null)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::rightJoinThroughRelation($relation, $callback);
+            }
+             
+                /**
+             * Add a relationship cross join condition through a related model to the query.
+             *
+             * @param \Closure|array<string,\Closure>|null $callback
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::crossJoinThroughRelation()
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function crossJoinThroughRelation($relation, $callback = null)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::crossJoinThroughRelation($relation, $callback);
+            }
+             
+                /**
+             * Add a morph to relationship join condition to the query.
+             *
+             * @param string|array<Relation|string> $relation
+             * @param array<class-string<Model>>|\class-string<Model>|true $morphTypes
+             * @param \Closure|array<\Closure>|null $callback
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::joinMorphRelation()
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function joinMorphRelation($relation, $morphTypes = true, $callback = null, $type = 'inner', $through = false, $relatedQuery = null)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::joinMorphRelation($relation, $morphTypes, $callback, $type, $through, $relatedQuery);
+            }
+             
+                /**
+             * Add a morph to relationship left join condition to the query.
+             *
+             * @param string|array<Relation|string> $relation
+             * @param array<string>|string $morphTypes
+             * @param \Closure|array<\Closure>|null $callback
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::leftJoinMorphRelation()
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function leftJoinMorphRelation($relation, $morphTypes = [], $callback = null, $through = false)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::leftJoinMorphRelation($relation, $morphTypes, $callback, $through);
+            }
+             
+                /**
+             * Add a morph to relationship right join condition to the query.
+             *
+             * @param string|array<Relation|string> $relation
+             * @param array<string>|string $morphTypes
+             * @param \Closure|array<\Closure>|null $callback
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::rightJoinMorphRelation()
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function rightJoinMorphRelation($relation, $morphTypes = [], $callback = null, $through = false)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::rightJoinMorphRelation($relation, $morphTypes, $callback, $through);
+            }
+             
+                /**
+             * Add a morph to relationship cross join condition to the query.
+             *
+             * @param string|array<Relation|string> $relation
+             * @param array<string>|string $morphTypes
+             * @param \Closure|array<\Closure>|null $callback
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::crossJoinMorphRelation()
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function crossJoinMorphRelation($relation, $morphTypes = [], $callback = null, $through = false)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::crossJoinMorphRelation($relation, $morphTypes, $callback, $through);
+            }
+             
+                /**
+             * Add a morph to relationship join condition through a related model to the query.
+             *
+             * @param string|array<Relation|string> $relation
+             * @param array<string>|string $morphTypes
+             * @param \Closure|array<\Closure>|null $callback
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::joinThroughMorphRelation()
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function joinThroughMorphRelation($relation, $morphTypes = [], $callback = null, $type = 'inner')
+            {
+                                return \Illuminate\Database\Eloquent\Builder::joinThroughMorphRelation($relation, $morphTypes, $callback, $type);
+            }
+             
+                /**
+             * Add a morph to relationship left join condition through a related model to the query.
+             *
+             * @param string|array<Relation|string> $relation
+             * @param array<string>|string $morphTypes
+             * @param \Closure|array<\Closure>|null $callback
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::leftJoinThroughMorphRelation()
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function leftJoinThroughMorphRelation($relation, $morphTypes = [], $callback = null)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::leftJoinThroughMorphRelation($relation, $morphTypes, $callback);
+            }
+             
+                /**
+             * Add a morph to relationship right join condition through a related model to the query.
+             *
+             * @param string|array<Relation|string> $relation
+             * @param array<string>|string $morphTypes
+             * @param \Closure|array<\Closure>|null $callback
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::rightJoinThroughMorphRelation()
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function rightJoinThroughMorphRelation($relation, $morphTypes = [], $callback = null)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::rightJoinThroughMorphRelation($relation, $morphTypes, $callback);
+            }
+             
+                /**
+             * Add a morph to relationship cross join condition through a related model to the query.
+             *
+             * @param string|array<Relation|string> $relation
+             * @param array<string>|string $morphTypes
+             * @param \Closure|array<\Closure>|null $callback
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinsRelationships::crossJoinThroughMorphRelation()
+             * @return \Illuminate\Database\Eloquent\Builder|static 
+             * @static 
+             */ 
+            public static function crossJoinThroughMorphRelation($relation, $morphTypes = [], $callback = null)
+            {
+                                return \Illuminate\Database\Eloquent\Builder::crossJoinThroughMorphRelation($relation, $morphTypes, $callback);
             }
              
                 /**
@@ -23381,6 +23766,48 @@ namespace  {
             {
                                 /** @var \Illuminate\Database\Query\Builder $instance */
                                 return $instance->macroCall($method, $parameters);
+            }
+             
+                /**
+             * Merges an array of join clauses and bindings.
+             *
+             * @see \Reedware\LaravelRelationJoins\Mixins\MergeJoins::mergeJoins()
+             * @param array $joins
+             * @param array $bindings
+             * @return void 
+             * @static 
+             */ 
+            public static function mergeJoins($joins, $bindings)
+            {
+                                \Illuminate\Database\Query\Builder::mergeJoins($joins, $bindings);
+            }
+             
+                /**
+             * Replaces the query builders in nested "where" clauses with join builders.
+             *
+             * @see \Reedware\LaravelRelationJoins\Mixins\MergeJoins::replaceWhereNestedQueryBuildersWithJoinBuilders()
+             * @param \Illuminate\Database\Query\Builder $query
+             * @return void 
+             * @static 
+             */ 
+            public static function replaceWhereNestedQueryBuildersWithJoinBuilders($query)
+            {
+                                \Illuminate\Database\Query\Builder::replaceWhereNestedQueryBuildersWithJoinBuilders($query);
+            }
+             
+                /**
+             * Add an "or on" clause to the join.
+             *
+             * @see \Reedware\LaravelRelationJoins\Mixins\JoinOperations::orOn()
+             * @param \Closure|string $first
+             * @param string|null $operator
+             * @param string|null $second
+             * @return \Illuminate\Database\Query\Builder 
+             * @static 
+             */ 
+            public static function orOn($first, $operator = null, $second = null)
+            {
+                                return \Illuminate\Database\Query\Builder::orOn($first, $operator, $second);
             }
                     }
             class Event extends \Illuminate\Support\Facades\Event {}

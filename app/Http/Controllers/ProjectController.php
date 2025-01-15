@@ -10,6 +10,7 @@ use App\Models\Project;
 use App\Models\ProjectImage;
 use Illuminate\Http\Request;
 use App\Helpers\RequestProcessor;
+use App\Models\ConversionSource;
 use App\Models\ProjectStatus;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -101,7 +102,7 @@ class ProjectController extends Controller
             [
                 'users' => $users,
                 'clients' => $clients,
-                'types' => $types
+                'types' => $types,
             ]
         );
     }
@@ -111,11 +112,11 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        $fields = RequestProcessor::validation($request, $this->fields, null, [
+        $fields = RequestProcessor::validation($request, $this->fields, new Project(), [
             'type_id' => 'required|exists:project_types,id',
             'commission' => 'nullable',
             'costs' => 'nullable',
-            'distribution' => 'nullable'
+            'distribution' => ['nullable']
         ]);
 
         $user = User::find($fields['created_by_user_id'] ?? Auth::id());
@@ -213,7 +214,7 @@ class ProjectController extends Controller
                 'users' => $users,
                 'clients' => $clients,
                 'types' => $types,
-                'statuses' => $statuses
+                'statuses' => $statuses,
             ]
         );
     }
@@ -225,7 +226,9 @@ class ProjectController extends Controller
     {
         $this->authorize('update', $project);
 
-        $fields = RequestProcessor::validation($request, $this->fields, null, [
+        $before_update_status_id = $project->id;
+
+        $fields = RequestProcessor::validation($request, $this->fields, new Project(), [
             'type_id' => 'required|exists:project_types,id',
             'start' => 'required|date|date_format:Y-m-d',
             'deadline' => 'required|date|date_format:Y-m-d',
@@ -248,8 +251,25 @@ class ProjectController extends Controller
             'remarks' => $fields['remarks'] ?? '',
         ]);
 
+        $after_update_status_id = $project->status_id;
         $images = $request->input('inspiration_images');
         $project->replaceImages($images, 0);
+
+        $income = $project->getRelatedIncome();
+
+        if ($income) {
+            if ($after_update_status_id == 1) {
+                $income->forceDelete();
+            }
+            else {
+                $project->editRelatedIncome();
+            }
+        }
+        else {
+            if ($after_update_status_id != 1) {
+                $project->createRelatedIncome();
+            }
+        }
 
         return redirect()->route('restore.state', ['url' => route('projects.index')])->with('success', 'Projekt został edytowany!');
     }
@@ -296,6 +316,14 @@ class ProjectController extends Controller
         $project->status_id = $status_id;
         $project->save();
 
+        $income = $project->getRelatedIncome();
+
+        if (!$income) {
+            if ($status_id == 2) {
+                $project->createRelatedIncome();
+            }
+        }
+
         return redirect()->back()
             ->with('success', 'Status projektu został zaktualizowany!');
     }
@@ -327,6 +355,12 @@ class ProjectController extends Controller
 
         $project->deleteOrFail();
 
+        $income = $project->getRelatedIncome();
+
+        if ($income) {
+            $project->deleteRelatedIncome();
+        }
+
         return redirect()->back()->with('success', 'Projekt został usunięty!');
     }
 
@@ -334,6 +368,12 @@ class ProjectController extends Controller
         $this->authorize('restore', $project);
 
         $project->restore();
+
+        $income = $project->getRelatedIncome(true);
+
+        if ($income) {
+            $project->restoreRelatedIncome();
+        }
 
         return redirect()->back()->with('success', 'Projekt został przywrócony!');
     }
