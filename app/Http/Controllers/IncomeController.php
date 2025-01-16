@@ -45,12 +45,6 @@ class IncomeController extends Controller
             }
         ])
         ->leftJoinRelation('status as status')
-        ->leftJoinRelation('user as user', function ($join) {
-            $join->withTrashed();
-        })
-        ->leftJoinRelation('project as project', function ($join) {
-            $join->withTrashed();
-        })
         ->addSelect([
             'incomes.*',
         ]);
@@ -81,12 +75,12 @@ class IncomeController extends Controller
      */
     public function create()
     {
-        $admins = User::query()->where('is_admin', true)->get();
+        $users = User::query()->withTrashed()->get();
 
         return inertia(
             'Income/Create',
             [
-                'admins' => $admins,
+                'users' => $users,
             ]
         );
     }
@@ -97,10 +91,16 @@ class IncomeController extends Controller
     public function store(Request $request)
     {
         $fields = RequestProcessor::validation($request, $this->fields, null, [
-            'distribution' => ['nullable']
+            'distribution' => ['nullable'],
+            'date' => 'nullable|date|date_format:Y-m-d',
         ]);
 
-        $fields['status_id'] = 2;
+        if (array_key_exists('date', $fields) && $fields['date']) {
+            $fields['status_id'] = 2;
+        }
+        else {
+            $fields['status_id'] = 1;
+        }
 
         Auth::user()->incomes()->save(new Income($fields));
 
@@ -119,24 +119,63 @@ class IncomeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Income $income)
     {
-        return inertia('Income/Edit');
+        $users = User::query()->withTrashed()->get();
+
+        return inertia(
+            'Income/Edit',
+            [
+                'income' => $income,
+                'users' => $users
+            ]
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Income $income)
     {
-        //
+        $fields = RequestProcessor::validation($request, $this->fields, null, [
+            'distribution' => ['nullable'],
+            'date' => 'nullable|date|date_format:Y-m-d',
+        ]);
+
+        if (array_key_exists('date', $fields) && $fields['date']) {
+            $fields['status_id'] = 2;
+        }
+        else {
+            $fields['status_id'] = 1;
+        }
+
+        $income->update($fields);
+
+        return redirect()->route('restore.state', ['url' => route('incomes.index')])->with('success', 'Przychód został edytowany!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Income $income)
     {
-        //
+        if ($income->deletable) {
+            $income->deleteOrFail();
+    
+            return redirect()->back()->with('success', 'Przychód został usunięty!');
+        }
+
+        return redirect()->back()->with('fail', 'Przychód nie może zostać usunięty');
+    }
+
+    public function restore(Income $income)
+    {
+        if ($income->restorable) {
+            $income->restore();
+
+            return redirect()->back()->with('success', 'Przychód został przywrócony!');
+        }
+
+        return redirect()->back()->with('fail', 'Przychód nie może zostać przywrócony');
     }
 }

@@ -159,3 +159,7 @@ Route::get('/restore-state', [RestoreStateController::class, 'index'])
     ->name('restore.state');
 
 Route::resource('incomes', IncomeController::class);
+
+Route::put('incomes/{income}/restore', [IncomeController::class, 'restore'])
+    ->name('incomes.restore')
+    ->withTrashed();

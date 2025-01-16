@@ -1,28 +1,7 @@
 <template>
   <form class="container mx-auto p-4" @submit.prevent="create">
     <h1 class="title">Dodaj przychód</h1>
-    <section class="mt-8 bg-gray-800 p-2 rounded-sm grid grid-cols-1 gap-2">
-      <div>
-        <span>Przychód: </span> <span class="font-medium">{{ form.price ? `${form.price} zł` : 'BRAK' }}</span>
-      </div>
-      <div>
-        <span>Dochód: </span> <span class="font-medium">{{ form.price ? `${form.price * form.costs / 100 } zł` : 'BRAK' }}</span>
-      </div>
-      <div>
-        <span>Koszty stałe: </span> <span class="font-medium">{{ form.costs ? `${form.costs}%` : 'BRAK' }}</span>
-      </div>
-      <div v-if="form.costs < 100 && typeof form.costs === 'number' && typeof form.price === 'number'">
-        <div>Podział: </div>
-        <ol class="!list-disc ml-4" style="list-style-type: disc;">
-          <li v-for="([key, value], index) in Object.entries(form.distribution)" :key="key">
-            <span>{{ admins.find(admin => admin.id == key).first_name }}:</span> <span class="font-medium">{{ ((form.price - (form.price * form.costs / 100) || 0) * value / 100).toFixed(2) }} zł</span>
-          </li>
-        </ol>
-      </div>
-      <div v-else>
-        <span>Zarząd: </span> <span class="font-medium">BRAK</span>
-      </div>
-    </section>
+    <SummerizeIncomeSection :form="form" :users="users" />
     <section class="mt-8 flex flex-col justify-center md:grid md:grid-cols-6 gap-4">
       <div class="col-span-6">
         <label for="title" class="label">Tytuł</label>
@@ -50,8 +29,9 @@
 
       <div v-if="form.costs < 100 && typeof form.costs === 'number'" class="col-span-6">
         <label for="distribution" class="label">Podział</label>
-        <AdminDistribution v-model="form.distribution" :distribution="form.distribution" :users="admins" />
+        <UserDistribution v-model="form.distribution" :distribution="form.distribution" :users="usersIncluded" />
         <FormError :error="form.errors.distribution" />
+        <FormPopup :form="AddUserToDistribution" label="Dodaj osobę do podziału" @form-action-created="onUserAddToDistribution" />
       </div>
 
       <div class="col-span-6">
@@ -60,21 +40,24 @@
         <FormError :error="form.errors.remarks" />
       </div>
   
-      <button type="submit" class="w-full btn-primary col-span-6 mt-4">Dodaj wydatek</button>
+      <button type="submit" class="w-full btn-primary col-span-6 mt-4">Dodaj przychód</button>
     </section>
   </form>
 </template>
   
 <script setup>
 import FormError from '@/Components/UI/Form/FormError.vue'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, computed, provide } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import Datepicker from 'flowbite-datepicker/Datepicker'
 import language from 'flowbite-datepicker/locales/pl'
-import AdminDistribution from '@/Components/UI/Form/AdminDistribution.vue'
+import SummerizeIncomeSection from '@/Pages/Income/Global/Components/SummerizeIncomeSection.vue'
+import UserDistribution from '@/Pages/Income/Global/Components/UserDistribution.vue'
+import FormPopup from '@/Components/UI/Popup/FormPopup.vue'
+import AddUserToDistribution from '@/Pages/Income/Global/Components/AddUserToDistribution.vue'
 
 const props = defineProps({
-  admins: {
+  users: {
     type: Array,
     required: true,
   },
@@ -90,6 +73,13 @@ const form = useForm({
 })
   
 const date = ref(null)
+const usersIncluded = ref(props.users.filter(user => user.is_admin == true))
+
+const filteredUsers = computed(() =>
+  props.users.filter(user => !usersIncluded.value.includes(user)),
+)
+
+provide('users', filteredUsers)
   
 onMounted(() => {
   Datepicker.locales.pl = language.pl
@@ -113,6 +103,10 @@ watch(() => form.costs, () => {
     form.distribution = null
   }
 })
+
+const onUserAddToDistribution = (user) => {
+  usersIncluded.value.push(user)
+}
   
 const create = () => form.post(route('incomes.store'))
 </script>

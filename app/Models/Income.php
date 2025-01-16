@@ -64,7 +64,6 @@ class Income extends Model
         'date',
         'price',
         'remarks',
-        'status' => ['name']
     ];
 
     protected $footer = [

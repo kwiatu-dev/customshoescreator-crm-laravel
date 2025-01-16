@@ -33,11 +33,14 @@ const open = () => {
   show.value = true
 }
 
-const created = () => {
+const created = (data) => {
   show.value = false
-  
-  if(page.props.inertia){
+
+  if(page.props.inertia?.length){
     emit('form-action-created', page.props.inertia)
+  }
+  else {
+    emit('form-action-created', data)
   }
 }
 </script>
