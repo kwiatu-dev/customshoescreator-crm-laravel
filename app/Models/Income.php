@@ -6,6 +6,7 @@ use App\Traits\HasFilters;
 use App\Traits\HasFooter;
 use App\Traits\HasPagination;
 use App\Traits\HasSorting;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

@@ -163,3 +163,6 @@ Route::resource('incomes', IncomeController::class);
 Route::put('incomes/{income}/restore', [IncomeController::class, 'restore'])
     ->name('incomes.restore')
     ->withTrashed();
+
+Route::put('incomes/{income}/settle', [IncomeController::class, 'settle'])
+    ->name('incomes.settle');

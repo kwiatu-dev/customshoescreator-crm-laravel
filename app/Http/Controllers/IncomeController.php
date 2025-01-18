@@ -6,6 +6,7 @@ use App\Helpers\RequestProcessor;
 use App\Models\Income;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class IncomeController extends Controller
@@ -59,6 +60,8 @@ class IncomeController extends Controller
             ->filter($request)
             ->footer();
 
+        $users = User::query()->get();
+
         return inertia(
             'Income/Index',
             [
@@ -66,6 +69,7 @@ class IncomeController extends Controller
                 'filters' => $request->session()->pull('filters'),
                 'sort' => $request->session()->pull('sort'),
                 'footer' => $footer,
+                'users' => $users
             ]
         );
     }
@@ -177,5 +181,13 @@ class IncomeController extends Controller
         }
 
         return redirect()->back()->with('fail', 'Przychód nie może zostać przywrócony');
+    }
+
+    public function settle(Income $income) {
+        $income->date = Carbon::now();
+        $income->status_id = 2;
+        $income->save();
+
+        return redirect()->back()->with('success', 'Przychód został rozliczony');
     }
 }

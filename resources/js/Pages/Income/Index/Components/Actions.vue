@@ -1,5 +1,6 @@
 <template>
   <Link v-if="object.project_id" :href="route('projects.show', { project: object.project_id })" class="btn-action" preserve-scroll preserve-state>Projekt</Link>
+  <SettleIncomeAction :income="object" />
   <Link v-if="!disableShowButton" :href="route('incomes.show', { income: object.id })" class="btn-action" preserve-scroll preserve-state>Zobacz</Link>
   <RememberStateButton v-if="object.editable" label="Edytuj" :url="route('incomes.edit', { income: object.id })" />
   <Link v-if="object.deletable" :href="route('incomes.destroy', { income: object.id })" method="delete" as="button" class="btn-action" preserve-scroll preserve-state>Usuń</Link>
@@ -10,6 +11,7 @@
 import { inject } from 'vue'
 import { Link } from '@inertiajs/vue3'
 import RememberStateButton from '@/Components/UI/Buttons/RememberStateButton.vue'
+import SettleIncomeAction from '@/Pages/Income/Index/Components/SettleIncomeAction.vue'
 
 defineProps({
   object: Object,

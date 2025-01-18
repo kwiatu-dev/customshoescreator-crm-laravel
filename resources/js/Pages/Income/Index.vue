@@ -29,12 +29,14 @@
 import { Link } from '@inertiajs/vue3'
 import ListLayout from '@/Components/UI/List/Layout.vue'
 import Actions from '@/Pages/Income/Index/Components/Actions.vue'
+import { provide } from 'vue'
   
-defineProps({
+const props = defineProps({
   incomes: Object,
   filters: Object,
   sort: Object,
   footer: Object,
+  users: Array,
 })
     
 const columns = {
@@ -71,6 +73,8 @@ const sortable = {
   remarks: true,
   status: true,
 }
+
+provide('users', props.users)
   
 //todo 1. wyczyścić niepotrzebne tabelki i kod z projektu, 2. utworzyć widoki show, create, edit, 3. uwzględnić, że edycja oraz usuwanie będzie dostępne tylko dla przychodów dodanych przed użytkownika, resztę uznajemy, że są powiązane z projektami
 </script>

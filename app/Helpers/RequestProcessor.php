@@ -1,6 +1,7 @@
 <?php
 namespace App\Helpers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Database\Eloquent\Model;
@@ -87,19 +88,6 @@ class RequestProcessor{
         return $filters;
     }
 
-    public static function validateDistribution($attribute, $value, $fail){
-        if (!is_array($value)) {
-            $fail('Pole ' . $attribute . ' musi zawierać poprawną strukturę JSON.');
-            return;
-        }
-
-        $sum = array_sum($value);
-
-        if ($sum != 100) {
-            $fail('Suma wartości w polach musi wynosić równo 100%, aktualna wartość wynosi: ' . $sum . '%');
-        }
-    }
-
     public static function validation(Request $request, array $fields, Model $model = null, array $custom_validation = null): array{
         $validate = [];
 
@@ -124,6 +112,51 @@ class RequestProcessor{
             self::validateDistribution($attribute, $value, $fail);
         };
 
+        if ($value = $request->input('distribution')) {
+            $request->merge(['distribution' => self::processDistributionValue($value)]); 
+        }
+
         return $request->validate($validate);
+    }
+
+    private static function processDistributionValue($value)
+    {
+        if (is_string($value)) {
+            $value = json_decode($value, true);
+        }
+
+        if (is_array($value)) {
+            $value = array_filter($value, function ($item) {
+                return $item != 0;
+            });
+        }
+
+        return $value;
+    }
+
+    private static function validateDistribution($attribute, $value, $fail){
+        if (!is_array($value)) {
+            $fail('Pole ' . $attribute . ' musi zawierać poprawną strukturę JSON.');
+            return;
+        }
+
+        $sum = array_sum($value);
+
+        if ($sum != 100) {
+            $fail('Suma wartości w polach musi wynosić równo 100%, aktualna wartość wynosi: ' . $sum . '%');
+        }
+
+        foreach ($value as $userId => $percentage) {
+            $user = User::where('id', $userId)->withTrashed()->first();
+
+            if (!$user) {
+                $fail('Użytkownik o ID ' . $userId . ' nie istnieje lub został usunięty.');
+                return;
+            }
+
+            if ($user->trashed()) {
+                $fail('Użytkownik ' . $user->first_name . ' ' . $user->last_name . ' jest usunięty.');
+            }
+        }
     }
 }
