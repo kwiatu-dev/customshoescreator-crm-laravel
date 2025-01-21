@@ -15,6 +15,7 @@ import BackButton from '@/Components/UI/Buttons/BackButton.vue'
 import Cards from '@/Components/UI/List/Cards.vue'
 import Actions from '@/Pages/Income/Index/Components/Actions.vue'
 import UserDistribution from '@/Components/UI/List/UserDistribution.vue'
+import AdminDistribution from '@/Components/UI/List/AdminDistribution.vue'
 
 const props = defineProps({
   income: {
@@ -30,7 +31,7 @@ const props = defineProps({
 const forIncomeCard = { 
   title: { title: true },
   date: { },
-  status: { columns: ['name']},
+  status: { columns: ['name'] },
   price: { suffix: ' zł' },
   costs: { prefix: 'Koszty stałe: ', suffix: '%' },
   distribution: { admin: true, component: UserDistribution, fullWidth: true },
@@ -38,16 +39,18 @@ const forIncomeCard = {
 }
 
 const forIncomeWithRelatedProject = {
-  title: { title: true },
-  price: { suffix: ' zł' },
-  status: { columns: ['name']},
-  date: { },
-  //project: { columns: ['costs'], prefix: 'Koszty stałe: ', suffix: '%' },
-  project: { columns: ['distribution'], admin: true, fullWidth: true },
-  remarks: { fullWidth: true, remarks: true },
+  title: { title: true, order: 1 },
+  price: { suffix: ' zł', order: 2 },
+  status: { columns: ['name'], order: 3 },
+  date: { order: 4 },
+  project: { columns: {
+    costs: { prefix: 'Koszty stałe ', suffix: '%', order: 5 },
+    distribution: { admin: true, fullWidth: true, component: AdminDistribution, order: 6 },
+  }},
+  remarks: { fullWidth: true, remarks: true, order: 7 },
 }
 
-//todo: umożliwić wprowadzanie pól elementów relacyjnych więcej niż jednego, jeżeli wybieramy element relacyjny to przekazujmy ten obiekt do komponentu
+//todo: zrobić to samo dla tabelki
 
 const card = props.income?.project ? forIncomeWithRelatedProject : forIncomeCard
 
