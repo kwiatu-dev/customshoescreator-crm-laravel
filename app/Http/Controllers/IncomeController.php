@@ -169,7 +169,7 @@ class IncomeController extends Controller
             return redirect()->back()->with('success', 'Przychód został usunięty!');
         }
 
-        return redirect()->back()->with('fail', 'Przychód nie może zostać usunięty');
+        return redirect()->back()->with('failed', 'Przychód nie może zostać usunięty');
     }
 
     public function restore(Income $income)
@@ -180,14 +180,24 @@ class IncomeController extends Controller
             return redirect()->back()->with('success', 'Przychód został przywrócony!');
         }
 
-        return redirect()->back()->with('fail', 'Przychód nie może zostać przywrócony');
+        return redirect()->back()->with('failed', 'Przychód nie może zostać przywrócony');
     }
 
-    public function settle(Income $income) {
-        $income->date = Carbon::now();
-        $income->status_id = 2;
-        $income->save();
+    public function settle(Income $income, Request $request) {
+        $parsedUrl = parse_url(url()->previous());
+        parse_str($parsedUrl['query'] ?? '', $queryParams);
+        unset($queryParams['settle']);
+        $newQueryString = http_build_query($queryParams);
+        $redirectUrl = $parsedUrl['path'] . ($newQueryString ? '?' . $newQueryString : '');
 
-        return redirect()->back()->with('success', 'Przychód został rozliczony');
+        if ($income->status_id == 1) {
+            $income->date = Carbon::now();
+            $income->status_id = 2;
+            $income->save();
+
+            return redirect()->to($redirectUrl)->with('success', 'Przychód został rozliczony');
+        }
+
+        return redirect()->to($redirectUrl)->with('failed', 'Przychód nie może zostać rozliczony');
     }
 }

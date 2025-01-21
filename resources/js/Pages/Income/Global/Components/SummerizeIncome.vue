@@ -69,14 +69,14 @@
       <div class="line m-0" />
       <div>
         <span>Koszty stałe: </span>
-        <span class="font-medium">{{ income.costs }}%</span>
+        <span class="font-medium">{{ income.costs }}% to {{ incomeCosts.organizationProfit }} zł</span>
       </div>
       <div class="line m-0" />
       <div v-if="incomeDistribution">
         <div v-for="[userId, percentage] in Object.entries(incomeDistribution)" :key="userId">
           <div>
             <span>{{ name(userId, users) + ': ' }}</span>
-            <span class="font-medium">{{ percentage }}%</span>
+            <span class="font-medium">{{ percentage }}% to {{ incomeCosts.usersDistribution.value[userId] }} zł</span>
           </div>
           <div class="line m-0 my-2" />
         </div>
@@ -87,6 +87,7 @@
 
 <script setup>
 import { useProjectCosts } from '@/Composables/useProjectCosts'
+import { useIncomeCosts } from '@/Composables/useIncomeCosts'
 import { Link } from '@inertiajs/vue3'
 import dayjs from 'dayjs'
 import { inject, ref } from 'vue'
@@ -99,10 +100,9 @@ const props = defineProps({
 })
 
 const incomeDistribution = ref(typeof props.income.distribution === 'string' ? JSON.parse(props.income.distribution) : props.income.distribution)
+const incomeCosts = useIncomeCosts(props.income)
 const projectDistribution = ref(typeof props.income?.project?.distribution === 'string' ? JSON.parse(props.income.project.distribution) : props.income?.project?.distribution)
 const projectCosts = props.income?.project ? useProjectCosts(props.income.project) : ref(null)
-
-//todo 1. zrobić use dla IncomeCosts i wyświetlić odpowiednie dane
 
 const name = (userId, users) => {
   const u = users.find(user => user.id == userId)

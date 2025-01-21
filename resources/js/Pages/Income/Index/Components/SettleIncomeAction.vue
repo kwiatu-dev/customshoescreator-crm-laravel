@@ -12,7 +12,7 @@
   >
     <div class="p-4">
       <h1 class="title">Podsumowanie przychodu</h1>
-      <p class="text-sm text-gray-400">Zapoznaj się z podsumowaniem przychodu przed rozliczeniem.</p>
+      <p class="text-sm text-gray-400">Zapoznaj się z podsumowaniem przychodu przed podjęciem decyzji o rozliczeniu.</p>
       <SummerizeIncome :income="income" class="mt-4" />
       <button type="button" class="w-full btn-primary col-span-6 mt-4" @click="settle">Rozlicz przychód</button>
     </div>
@@ -33,6 +33,15 @@ const props = defineProps({
 })
 
 const show = ref(false)
+
+onMounted(() => {
+  const urlParams = new URLSearchParams(window.location.search)
+  const id = urlParams.get('settle')
+
+  if (id && id == props.income.id) {
+    show.value = true
+  }
+})
 
 const open = () => {
   const currentParams = new URLSearchParams(window.location.search)
@@ -60,12 +69,12 @@ const close = () => {
   show.value = false
 }
 
-onMounted(() => {
-  const urlParams = new URLSearchParams(window.location.search)
-  const id = urlParams.get('settle')
+const settle = () => {
+  router.put(route('incomes.settle', { income: props.income.id }), 
+    {},
+    {
+      onFinish: () => show.value = false,
+    })
+}
 
-  if (id && id == props.income.id) {
-    show.value = true
-  }
-})
 </script>
