@@ -46,9 +46,10 @@ onMounted(() => {
 const open = () => {
   const currentParams = new URLSearchParams(window.location.search)
   currentParams.set('settle', props.income.id) 
+  const newUrl = `${window.location.origin}${window.location.pathname}?${currentParams.toString()}`
 
   router.get(
-    route(route().current(), Object.fromEntries(currentParams.entries())), 
+    newUrl, 
     {},
     { replace: true, preserveScroll: true }, 
   )
@@ -59,9 +60,10 @@ const open = () => {
 const close = () => {
   const currentParams = new URLSearchParams(window.location.search)
   currentParams.delete('settle')
+  const newUrl = `${window.location.origin}${window.location.pathname}?${currentParams.toString()}`
 
   router.get(
-    route(route().current(), Object.fromEntries(currentParams.entries())),
+    newUrl,
     {},
     { replace: true, preserveScroll: true },
   )

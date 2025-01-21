@@ -158,7 +158,12 @@ Route::post('/remember-state', [RememberStateController::class, 'store'])
 Route::get('/restore-state', [RestoreStateController::class, 'index'])
     ->name('restore.state');
 
-Route::resource('incomes', IncomeController::class);
+Route::resource('incomes', IncomeController::class)
+    ->except(['show']); 
+
+Route::get('incomes/{income}', [IncomeController::class, 'show'])
+    ->name('incomes.show')
+    ->withTrashed();
 
 Route::put('incomes/{income}/restore', [IncomeController::class, 'restore'])
     ->name('incomes.restore')

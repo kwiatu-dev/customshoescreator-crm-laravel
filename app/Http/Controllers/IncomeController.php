@@ -115,9 +115,27 @@ class IncomeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Income $income)
     {
-        return inertia('Income/Show');
+        $income->load([
+            'status',
+            'user' => function ($query) {
+                $query->withTrashed();
+            },
+            'project' => function ($query) {
+                $query->withTrashed();
+            }
+        ]);
+
+        $users = User::query()->withTrashed()->get();
+
+        return inertia(
+            'Income/Show',
+            [
+                'income' => $income,
+                'users' => $users
+            ]
+        );
     }
 
     /**

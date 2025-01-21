@@ -31,7 +31,7 @@ class Income extends Model
         'status_id',
     ];
 
-    protected $appends = ['editable', 'deletable', 'restorable'];
+    protected $appends = ['editable', 'deletable', 'restorable', 'settleable'];
 
     protected $filterable = [
         'search' => 'string',
@@ -100,5 +100,9 @@ class Income extends Model
     public function getRestorableAttribute()
     {
         return $this->deleted_at !== null && $this->project_id == null;
+    }
+
+    public function getSettleableAttribute() {
+        return $this->deleted_at == null && $this->status_id == 1;
     }
 }
