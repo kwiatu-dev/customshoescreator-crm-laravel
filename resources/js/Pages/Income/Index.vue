@@ -30,6 +30,7 @@ import { Link } from '@inertiajs/vue3'
 import ListLayout from '@/Components/UI/List/Layout.vue'
 import Actions from '@/Pages/Income/Index/Components/Actions.vue'
 import { provide } from 'vue'
+import Box from '@/Components/UI/List/Box.vue'
   
 const props = defineProps({
   incomes: Object,
@@ -45,6 +46,12 @@ const columns = {
   date: { label: 'Data' },
   status: { label: 'Status', columns: ['name'] },
   remarks: { label: 'Uwagi' },
+  // project: { columns: {
+  //   costs: { prefix: 'Koszty stałe ', suffix: '%', label: 'Koszty' },
+  //   //distribution: { admin: true, fullWidth: true, component: Box, label: 'Podział' },
+  // }},
+  ['project.costs']: { prefix: 'Koszty stałe ', suffix: '%', label: 'Koszty' },
+  ['project.distribution']: { admin: true, fullWidth: true, component: Box, label: 'Podział' },
 }
 
 const cards = {
@@ -72,6 +79,7 @@ const sortable = {
   date: true,
   remarks: true,
   status: true,
+  ['project.costs']: true,
 }
 
 provide('users', props.users)

@@ -18,7 +18,7 @@
         :style="{ order: element.order || 'unset' }"
       />
       <CardData
-        v-for="([table, column, data], index) in withMultipleColumns" 
+        v-for="([table, column, data], index) in [...withMultipleColumns, ...withMultipleDimensions]" 
         :key="`${table}.${column}`" 
         :element="data" 
         :object="object[table]" 
@@ -43,7 +43,7 @@
 import Box from '@/Components/UI/List/Box.vue'
 import Badge from '@/Components/UI/List/Badge.vue'
 import CardData from '@/Components/UI/List/CardData.vue'
-import { computed } from 'vue'
+import { useListColumns } from '@/Composables/useListColumns'
 
 const props = defineProps({
   objects: Array,
@@ -51,15 +51,5 @@ const props = defineProps({
   actions: Object,
 })
 
-const withMultipleColumns = computed(() =>
-  Object.entries(props.cards)
-    .filter(([_, element]) => typeof element.columns === 'object' && !Array.isArray(element.columns))
-    .flatMap(([table, element]) =>
-      Object.entries(element.columns).map(([column, data]) => [table, column, data]),
-    ),
-)
-
-const withoutMultipleColumns = computed(() => Object.fromEntries(Object.entries(props.cards).filter(([field, element], index) => {
-  return element.columns === undefined || Array.isArray(element.columns)
-})))
+const { withMultipleColumns, withoutMultipleColumns, withMultipleDimensions } = useListColumns(props.cards)
 </script>

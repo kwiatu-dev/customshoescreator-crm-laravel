@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 trait HasFilters
 {
+    //aktualnie nie można filtrować danych relacyjnych typu (date, number, dictionary)
     public function scopeFilter($query, Request $request)
     {
         $filters = RequestProcessor::getFilterFields($request, $this->filterable);
@@ -24,6 +25,9 @@ trait HasFilters
                             }, $columns);
 
                             $query->orWhereRaw('CONCAT('. implode(', " ", ', $columns) .') like ' . "'%$value%'");
+                        }
+                        else if (str_contains('.', $columns)) {
+                            $query->orWhere($columns, 'like', "%$value%");
                         }
                         else {
                             $query->orWhere($this->table_name .'.'. $columns, 'like', "%$value%");

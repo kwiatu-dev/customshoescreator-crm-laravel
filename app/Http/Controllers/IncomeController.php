@@ -46,6 +46,7 @@ class IncomeController extends Controller
             }
         ])
         ->leftJoinRelation('status as status')
+        ->leftJoinRelation('project as project')
         ->addSelect([
             'incomes.*',
         ]);

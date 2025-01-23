@@ -29,6 +29,9 @@ trait HasSorting
                             } 
                         }
                     }
+                    else if (str_contains($field, '.')) {
+                        $query->orderBy($field, $data);
+                    }
                     else if(in_array($data, ['asc', 'desc'])){
                         $query->orderBy($this->table_name .'.'. $field, $data);
                     }

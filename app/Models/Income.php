@@ -57,7 +57,8 @@ class Income extends Model
         'date',
         'price',
         'remarks',
-        'status' => ['name']
+        'status' => ['name'],
+        'project.costs'
     ];
 
     protected $searchable = [
@@ -65,6 +66,7 @@ class Income extends Model
         'date',
         'price',
         'remarks',
+        'status' => ['name'],
     ];
 
     protected $footer = [

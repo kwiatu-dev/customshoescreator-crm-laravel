@@ -44,6 +44,9 @@ class RequestProcessor{
             if(in_array($key, $sortable)){
                 $sort[$key] = $value;
             }
+            else if (in_array(str_replace('_', '.', $key), $sortable)) {
+                $sort[str_replace('_', '.', $key)] = $value;
+            }
             else if (array_key_exists($key, $sortable)) {
                 $sort[$key] = $value;
             }

@@ -11,7 +11,7 @@
     >
       <template #item="{ element, index }">
         <div class="py-2 px-4 text-sm border rounded-md border-gray-300 cursor-grab bg-gray-800">
-          <span>{{ columns[element].label }}</span>
+          <span>{{ label(element) }}</span>
           <span class="ml-3 font-bold cursor-pointer p-1" @click="remove(element, index)">x</span>
         </div>
       </template>
@@ -43,6 +43,21 @@ const sortTable = (field) => {
 const form = reactive({
   ...props.sort ?? null,
 })
+
+const label = (element) => {
+  let value = null
+
+  if (props.columns?.[element]?.label) {
+    value = props.columns?.[element]?.label
+  }
+  else if (element.includes('.')) {
+    const structure = element.split('.') 
+
+    value = props.columns?.[structure[0]]?.columns?.[structure[1]]?.label 
+  }
+
+  return value || 'BRAK NAZWY'
+}
 
 const remove = (field) => {
   delete form[field]
