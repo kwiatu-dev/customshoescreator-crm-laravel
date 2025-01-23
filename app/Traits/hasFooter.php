@@ -4,6 +4,7 @@ namespace App\Traits;
 
 trait HasFooter
 {
+    //nie sprawdzone dla relacyjnych kolumn
     public function scopeFooter($query)
     {
         $footer = [];

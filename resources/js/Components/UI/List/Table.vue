@@ -11,16 +11,10 @@
   <table class="w-full">
     <thead>
       <tr>
-        <td v-for="(element, field, index) in withoutMultipleColumns" :key="field">
-          {{ element.label }}
-          <button v-if="sortable[field]" class="ml-4" @click="sortTable({field})">
-            {{ symbols[sorting[field]] ?? '↓' }}
-          </button>
-        </td>
-        <td v-for="([table, column, data], index) in [...withMultipleColumns, ...withMultipleDimensions]" :key="`${table}.${column}`">
+        <td v-for="([table, column, data], index) in d" :key="table ? `${table}.${column}` : column">
           {{ data.label }}
-          <button v-if="sortable[`${table}.${column}`]" class="ml-4" @click="sortTable({field: `${table}.${column}`})">
-            {{ symbols[sorting[`${table}.${column}`]] ?? '↓' }}
+          <button v-if="sortable[table ? `${table}.${column}` : column]" class="ml-4" @click="sortTable({field: table ? `${table}.${column}` : column})">
+            {{ symbols[sorting[table ? `${table}.${column}` : column]] ?? '↓' }}
           </button>
         </td>
         <td>Akcje</td>
@@ -31,11 +25,8 @@
         v-for="object in objects" :key="object.id" 
         :class="{'bg-red-300 dark:bg-red-950': object.deleted_at}"
       >
-        <td v-for="(element, field) in withoutMultipleColumns" :key="field">
-          <TableCell :element="element" :field="field" :object="object" />
-        </td>
-        <td v-for="([table, column, data], index) in [...withMultipleColumns, ...withMultipleDimensions]" :key="`${table}.${column}`">
-          <TableCell :element="data" :field="column" :object="object[table]" />
+        <td v-for="([table, column, data], index) in d" :key="table ? `${table}.${column}` : column">
+          <TableCell :element="data" :field="column" :object="table ? object[table] : object" />
         </td>
         <td>
           <div class="flex flex-col items-start">
@@ -46,11 +37,8 @@
     </tbody>
     <tfoot v-if="footer">
       <tr>
-        <td v-for="(element, field) in withoutMultipleColumns" :key="field" class="font-bold">
-          {{ footer[field] ? footer[field] + ' ' + element.suffix: '-' }}
-        </td>
-        <td v-for="([table, column, data], index) in [...withMultipleColumns, ...withMultipleDimensions]" :key="`${table}.${column}`" class="font-bold">
-          {{ footer?.[table]?.[column] ? footer[table][column] + ' ' + element.suffix: '-' }}
+        <td v-for="([table, column, data], index) in d" :key="table ? `${table}.${column}` : column" class="font-bold">
+          {{ footer[table ? `${table}.${column}` : column] ? footer[table ? `${table}.${column}` : column] + ' ' + data.suffix: '-' }}
         </td>
       </tr>
     </tfoot>
@@ -85,5 +73,4 @@ const orderBy = ref({})
 const sortTable = (field) => orderBy.value = field
 
 const d = useListColumns(props.columns)
-console.log(d.value)
 </script>

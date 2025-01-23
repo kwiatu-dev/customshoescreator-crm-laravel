@@ -50,8 +50,6 @@ const forIncomeWithRelatedProject = {
   remarks: { fullWidth: true, remarks: true, order: 7 },
 }
 
-//todo: zrobić to samo dla tabelki
-
 const card = props.income?.project ? forIncomeWithRelatedProject : forIncomeCard
 
 provide('users', props.users)

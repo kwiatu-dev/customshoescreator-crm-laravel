@@ -3,25 +3,10 @@
     <Badge :object="object" />
     <div class="flex flex-row flex-wrap">
       <CardData
-        v-for="(element, field, index) in withoutMultipleColumns" 
-        :key="field" 
-        :element="element" 
-        :object="object" 
-        :field="field"
-        class="w-1/2"
-        :class="{
-          'w-full mt-4': element.remarks,
-          'w-full text-lg font-bold mb-4': element.title,
-          'w-full': element.fullWidth,
-          'text-right': (element.order || index + 1) % 2 !== 0
-        }"
-        :style="{ order: element.order || 'unset' }"
-      />
-      <CardData
-        v-for="([table, column, data], index) in [...withMultipleColumns, ...withMultipleDimensions]" 
-        :key="`${table}.${column}`" 
+        v-for="([table, column, data], index) in d" 
+        :key="table ? `${table}.${column}` : column" 
         :element="data" 
-        :object="object[table]" 
+        :object="table ? object[table] : object" 
         :field="column"
         class="w-1/2"
         :class="{
@@ -31,7 +16,7 @@
           'text-right': (data.order || index + 1) % 2 !== 0
         }"
         :style="{ order: data.order || 'unset' }"
-      />
+      /> 
     </div>
     <div class="flex flex-row flex-nowrap gap-2 mb-1 mt-4">
       <component :is="actions" :object="object" />
@@ -51,5 +36,5 @@ const props = defineProps({
   actions: Object,
 })
 
-const { withMultipleColumns, withoutMultipleColumns, withMultipleDimensions } = useListColumns(props.cards)
+const d = useListColumns(props.cards)
 </script>

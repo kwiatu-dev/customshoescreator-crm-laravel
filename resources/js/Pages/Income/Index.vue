@@ -41,17 +41,11 @@ const props = defineProps({
 })
     
 const columns = {
-  title: { label: 'Tytuł'},
-  price: { label: 'Kwota', suffix: ' zł' },
-  date: { label: 'Data' },
-  status: { label: 'Status', columns: ['name'] },
-  remarks: { label: 'Uwagi' },
-  // project: { columns: {
-  //   costs: { prefix: 'Koszty stałe ', suffix: '%', label: 'Koszty' },
-  //   //distribution: { admin: true, fullWidth: true, component: Box, label: 'Podział' },
-  // }},
-  ['project.costs']: { prefix: 'Koszty stałe ', suffix: '%', label: 'Koszty' },
-  ['project.distribution']: { admin: true, fullWidth: true, component: Box, label: 'Podział' },
+  title: { label: 'Tytuł', order: 1 },
+  price: { label: 'Kwota', suffix: ' zł', order: 2 },
+  date: { label: 'Data', order: 3 },
+  status: { label: 'Status', columns: ['name'], order: 4 },
+  remarks: { label: 'Uwagi', order: 5 },
 }
 
 const cards = {

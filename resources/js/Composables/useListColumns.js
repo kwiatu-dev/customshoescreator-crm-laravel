@@ -27,5 +27,12 @@ export const useListColumns = (columns) => {
       })
       .map(([column, data]) => [null, column, data]))
 
-  return computed(() => [...withMultipleColumns, ...withoutMultipleColumns, ...withMultipleDimensions ])
+  return computed(() => 
+    [...withMultipleColumns.value, ...withoutMultipleColumns.value, ...withMultipleDimensions.value]
+      .sort(([table1, column1, data1], [table2, column2, data2]) => {
+        const orderA = data1.order ?? Infinity 
+        const orderB = data2.order ?? Infinity 
+        return orderA - orderB 
+      }),
+  )
 }
