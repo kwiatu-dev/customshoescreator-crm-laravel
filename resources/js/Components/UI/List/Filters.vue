@@ -7,7 +7,7 @@
     >
       {{ toggle ? 'Filtry' : 'Ukryj' }}
     </button>
-    <div id="dropdown" class="w-80 bg-gray-300 dark:bg-gray-800 p-4 rounded-lg absolute mt-2" :class="{'hidden': toggle}">
+    <div id="dropdown" ref="filterDropdownBox" class="w-80 bg-gray-300 dark:bg-gray-800 p-4 rounded-lg absolute mt-2" :class="{'hidden': toggle}">
       <div class="flex flex-row flex-nowrap justify-between">
         <h6 class="dark:text-gray-200 font-medium">Filtry</h6>
         <div class="flex flex-row flex-nowrap gap-4">
@@ -62,7 +62,7 @@ import Price from '@/Components/UI/List/Filters/Price.vue'
 import Date from '@/Components/UI/List/Filters/Date.vue'
 import Pagination from '@/Components/UI/List/Filters/Pagination.vue'
 import Dictionary from '@/Components/UI/List/Filters/Dictionary.vue'
-import { ref, reactive, watch, computed } from 'vue'
+import { ref, reactive, watch, computed, onMounted, onBeforeUnmount } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { debounce } from 'lodash'
 import { usePage } from '@inertiajs/vue3'
@@ -149,4 +149,24 @@ const filter = () => {
 }
 
 watch(form, debounce(filter, 1000))
+
+const filterDropdownBox = ref(null)
+
+const handleClickOutsideFilterBox = (event) => {
+  if (event.button === 0) {
+    if (filterDropdownBox.value && !filterDropdownBox.value.contains(event.target)) {
+      if (!toggle.value) {
+        toggle.value = true
+      }
+    }
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('mousedown', handleClickOutsideFilterBox)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('mousedown', handleClickOutsideFilterBox)
+})
 </script>
