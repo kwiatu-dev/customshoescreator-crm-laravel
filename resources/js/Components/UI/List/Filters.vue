@@ -1,6 +1,7 @@
 <template>
   <div v-if="filterable" class="relative">
     <button 
+      ref="filterShowButton"
       class="btn-outline text-black bg-gray-300 border-0 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 px-4 py-2" 
       :class="{'!bg-gray-200 hover:!bg-gray-300 dark:!bg-gray-700 dark:hover:!bg-gray-800': !toggle}" 
       @click="open"
@@ -150,11 +151,15 @@ const filter = () => {
 
 watch(form, debounce(filter, 1000))
 
+const filterShowButton = ref(null)
 const filterDropdownBox = ref(null)
 
 const handleClickOutsideFilterBox = (event) => {
   if (event.button === 0) {
-    if (filterDropdownBox.value && !filterDropdownBox.value.contains(event.target)) {
+    const isClickedOutsideFilterBox = filterDropdownBox.value && !filterDropdownBox.value.contains(event.target)
+    const isClickedOutsideFilterShowButton = filterShowButton.value && !filterShowButton.value.contains(event.target)
+    
+    if (isClickedOutsideFilterBox && isClickedOutsideFilterShowButton) {
       if (!toggle.value) {
         toggle.value = true
       }
