@@ -3,11 +3,11 @@
   <main class="p-4 mx-auto w-full">
     <div v-if="flashSuccess" class="flash flash-success">
       <div>{{ flashSuccess }}</div>
-      <span class="cursor-pointer p-2 text-xl" @click="hideFlashMessage">✖</span>
+      <span class="cursor-pointer p-2 text-xl" @click="hideFlashMessage"><font-awesome-icon :icon="['fas', 'eye-slash']" /></span>
     </div>
     <div v-if="flashFailed" class="flash flash-failed">
       <div>{{ flashFailed }}</div>
-      <div class="cursor-pointer p-2 text-xl" @click="hideFlashMessage">✖</div>
+      <div class="cursor-pointer p-2 text-xl" @click="hideFlashMessage"><font-awesome-icon :icon="['fas', 'eye-slash']" /></div>
     </div>
     <slot />
   </main>

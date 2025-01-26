@@ -6,7 +6,8 @@
       :class="{'!bg-gray-200 hover:!bg-gray-300 dark:!bg-gray-700 dark:hover:!bg-gray-800': !toggle}" 
       @click="open"
     >
-      {{ toggle ? 'Filtry' : 'Ukryj' }}
+      <font-awesome-icon v-if="toggle" :icon="['fas', 'filter']" />
+      <font-awesome-icon v-if="!toggle" :icon="['fas', 'filter-circle-xmark']" />
     </button>
     <div id="dropdown" ref="filterDropdownBox" class="w-80 bg-gray-300 dark:bg-gray-800 p-4 rounded-lg absolute mt-2 z-10" :class="{'hidden': toggle}">
       <div class="flex flex-row flex-nowrap justify-between">

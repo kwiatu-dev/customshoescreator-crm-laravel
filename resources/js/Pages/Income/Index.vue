@@ -17,9 +17,9 @@
     <template #create>
       <Link
         :href="route('incomes.create')" 
-        class="btn-primary"
+        class="btn-primary px-4"
       >
-        + Dodaj przychód
+        <font-awesome-icon :icon="['fas', 'plus']" />
       </Link>
     </template>
   </ListLayout>

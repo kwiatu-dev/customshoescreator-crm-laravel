@@ -16,9 +16,9 @@
     <template #create>
       <Link
         :href="route('client.create')" 
-        class="btn-primary"
+        class="btn-primary px-4"
       >
-        + Dodaj klienta
+        <font-awesome-icon :icon="['fas', 'plus']" />
       </Link>
     </template>
   </ListLayout>

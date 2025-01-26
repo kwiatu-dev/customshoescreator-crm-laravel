@@ -124,16 +124,16 @@ class Client extends Model
 
     public function getEditableAttribute()
     {
-        return $this->deleted_at == null && $this->created_by_user_id === Auth::user()->id;
+        return $this->deleted_at == null && ($this->created_by_user_id === Auth::user()->id || Auth::user()->is_admin);
     }
 
     public function getDeletableAttribute()
     {
-        return $this->deleted_at === null && $this->created_by_user_id === Auth::user()->id;
+        return $this->deleted_at === null && ($this->created_by_user_id === Auth::user()->id || Auth::user()->is_admin);
     }
     
     public function getRestorableAttribute()
     {
-        return $this->deleted_at !== null && $this->created_by_user_id === Auth::user()->id;
+        return $this->deleted_at !== null && ($this->created_by_user_id === Auth::user()->id || Auth::user()->is_admin);
     }
 }

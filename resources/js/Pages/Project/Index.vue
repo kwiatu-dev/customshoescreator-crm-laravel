@@ -18,9 +18,9 @@
     <template #create>
       <Link
         :href="route('projects.create')" 
-        class="btn-primary"
+        class="btn-primary px-4" 
       >
-        + Dodaj projekt
+        <font-awesome-icon :icon="['fas', 'plus']" />
       </Link>
     </template>
   </ListLayout>
