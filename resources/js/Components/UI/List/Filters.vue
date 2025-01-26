@@ -8,7 +8,7 @@
     >
       {{ toggle ? 'Filtry' : 'Ukryj' }}
     </button>
-    <div id="dropdown" ref="filterDropdownBox" class="w-80 bg-gray-300 dark:bg-gray-800 p-4 rounded-lg absolute mt-2" :class="{'hidden': toggle}">
+    <div id="dropdown" ref="filterDropdownBox" class="w-80 bg-gray-300 dark:bg-gray-800 p-4 rounded-lg absolute mt-2 z-10" :class="{'hidden': toggle}">
       <div class="flex flex-row flex-nowrap justify-between">
         <h6 class="dark:text-gray-200 font-medium">Filtry</h6>
         <div class="flex flex-row flex-nowrap gap-4">

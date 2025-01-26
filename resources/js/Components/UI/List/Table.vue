@@ -23,9 +23,13 @@
     <tbody>
       <tr 
         v-for="object in objects" :key="object.id" 
-        :class="{'bg-red-300 dark:bg-red-950': object.deleted_at}"
+        :style="styles?.row ? styles.row(object) : null"
       >
-        <td v-for="([table, column, data], index) in d" :key="table ? `${table}.${column}` : column">
+        <td 
+          v-for="([table, column, data], index) in d" 
+          :key="table ? `${table}.${column}` : column"
+          :class="{'line-through': object.deleted_at}"
+        >
           <TableCell :element="data" :field="column" :object="table ? object[table] : object" />
         </td>
         <td>
@@ -52,6 +56,7 @@ import TableCell from '@/Components/UI/List/TableCell.vue'
 import { useListColumns } from '@/Composables/useListColumns'
 
 const props = defineProps({
+  styles: Object,
   objects: Array,
   filters: Object,
   sort: Object,

@@ -2,7 +2,7 @@
   <Link 
     v-if="link" 
     :href="link"  
-    class="text-indigo-600 hover:text-indigo-500"
+    class="text-indigo-400 hover:text-indigo-500"
   >
     <component :is="props.element.component" v-if="hasComponent" :object="object" />
     <span v-else>{{ cell }}</span>

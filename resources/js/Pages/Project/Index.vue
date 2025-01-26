@@ -1,5 +1,6 @@
 <template>
   <ListLayout 
+    :styles="styles"
     :objects="projects" 
     :filters="filters"
     :filterable="filterable" 
@@ -29,6 +30,7 @@
 import { Link } from '@inertiajs/vue3'
 import ListLayout from '@/Components/UI/List/Layout.vue'
 import Actions from '@/Pages/Project/Index/Components/Actions/AllActions.vue'
+import dayjs from 'dayjs'
 
 defineProps({
   projects: Object,
@@ -85,5 +87,50 @@ const sortable = {
   end: true,
 }
 
+const styles = {
+  row: (object) => {
+    const now = dayjs()
+    const deadline = dayjs(object.deadline)
+    const daysUntilDeadline = deadline.diff(now, 'day')
 
+    if (object.deleted_at !== null) {
+      return {}
+    }
+
+    if (object.status_id === 3) {
+      return { backgroundColor: 'rgba(34, 139, 34, .2)' } 
+    }
+
+    if (daysUntilDeadline <= 14) {
+      return {
+        backgroundColor: 'rgba(250, 20, 0, .2)', 
+        animation: 'pulse-row 1.5s ease-in-out infinite',
+      }
+    }
+
+    if (daysUntilDeadline <= 62) {
+      const colorIntensity = Math.floor((62 - daysUntilDeadline) / 48 * 255)
+
+      return {
+        backgroundColor: `rgba(255, ${Math.max(255 - colorIntensity, 0)}, 0, .2)`, 
+      }
+    }
+
+    return {}
+  },
+}
 </script>
+
+<style>
+@keyframes pulse-row {
+  0% {
+    background-color: rgba(250, 20, 0, 0.2); 
+  }
+  50% {
+    background-color: rgba(250, 20, 0, 0.3); 
+  }
+  100% {
+    background-color: rgba(250, 20, 0, 0.2);
+  }
+}
+</style>

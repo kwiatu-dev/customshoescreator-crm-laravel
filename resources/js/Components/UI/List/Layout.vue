@@ -16,6 +16,7 @@
     <div v-if="objects.data.length">
       <section v-if="isLargeScreen" class="overflow-auto my-4 table-element" scroll-region>
         <Table 
+          :styles="styles"
           :columns="columns" 
           :footer="footer"
           :objects="objects.data" 
@@ -59,6 +60,7 @@ import { nextTick, onMounted } from 'vue'
 const isLargeScreen = useMediaQuery('(min-width: 768px)')
 
 defineProps({
+  styles: Object,
   objects: Object,
   sort: Object,
   sortable: Object,
