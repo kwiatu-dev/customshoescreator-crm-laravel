@@ -5,6 +5,13 @@ import { ZiggyVue } from 'ziggy'
 import '../css/app.css'
 import { fullscreenImagePlugin } from 'vue-3-fullscreen-image-directive-plugin'
 import 'vue-3-fullscreen-image-directive-plugin/style.css'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { far } from '@fortawesome/free-regular-svg-icons'
+import { fab } from '@fortawesome/free-brands-svg-icons'
+
+library.add(fas, far, fab)
 
 createInertiaApp({
   progress: { 
@@ -24,6 +31,7 @@ createInertiaApp({
       .use(plugin)
       .use(ZiggyVue)
       .use(fullscreenImagePlugin)
+      .component('font-awesome-icon', FontAwesomeIcon)
       .mount(el)
   },
 })
