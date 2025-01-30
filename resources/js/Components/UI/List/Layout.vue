@@ -35,11 +35,9 @@
           :actions="actions"
         />
       </section>
-      <section class="flex flex-col-reverse md:flex-row justify-between items-center">
+      <section class="flex flex-col-reverse md:flex-row justify-between items-center px-2 bg-gray-800 lg:-mt-4 py-4 rounded-md lg:rounded-none">
         <div>Wyświetlanie rekordów od {{ objects.from }} do {{ objects.to }} z {{ objects.total }} </div>
-        <div>
-          <Pagination :links="objects.links" />
-        </div>
+        <Pagination :links="objects.links" />
       </section>
     </div>
     <div v-else>
