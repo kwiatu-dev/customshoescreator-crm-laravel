@@ -10,7 +10,7 @@ class ProjectStatus extends Model
 {
     use HasFactory;
 
-    public function projects(): HasMany{
+    public function projects(): HasMany {
         return $this->hasMany(Project::class, 'status_id');
     }
 }
