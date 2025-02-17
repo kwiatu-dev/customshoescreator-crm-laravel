@@ -15,6 +15,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PageSpeedController;
 use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\IncomeController;
+use App\Http\Controllers\InvestmentController;
 use App\Http\Controllers\ListingOfferController;
 use App\Http\Controllers\PrivateFilesController;
 use App\Http\Controllers\RestoreStateController;
@@ -171,3 +172,6 @@ Route::put('incomes/{income}/restore', [IncomeController::class, 'restore'])
 
 Route::put('incomes/{income}/settle', [IncomeController::class, 'settle'])
     ->name('incomes.settle');
+
+Route::resource('investment', InvestmentController::class)
+    ->except(['show']); 

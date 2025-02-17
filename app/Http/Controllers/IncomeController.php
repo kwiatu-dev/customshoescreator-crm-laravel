@@ -57,7 +57,7 @@ class IncomeController extends Controller
             ->latest()
             ->pagination();
 
-        $footer = $query
+        $footer = Income::query()
             ->filter($request)
             ->footer();
 

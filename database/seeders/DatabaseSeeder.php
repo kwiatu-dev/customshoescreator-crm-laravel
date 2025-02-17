@@ -61,7 +61,7 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\Income::factory(10)->create();
 
-        \App\Models\Investment::factory(20)->create();
+        \App\Models\Investment::factory(40)->create();
 
         $investments = \App\Models\Investment::all();
 

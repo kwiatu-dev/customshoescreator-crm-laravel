@@ -30,7 +30,6 @@ import { Link } from '@inertiajs/vue3'
 import ListLayout from '@/Components/UI/List/Layout.vue'
 import Actions from '@/Pages/Income/Index/Components/Actions.vue'
 import { provide } from 'vue'
-import Box from '@/Components/UI/List/Box.vue'
   
 const props = defineProps({
   incomes: Object,
@@ -73,7 +72,6 @@ const sortable = {
   date: true,
   remarks: true,
   status: true,
-  ['project.costs']: true,
 }
 
 provide('users', props.users)

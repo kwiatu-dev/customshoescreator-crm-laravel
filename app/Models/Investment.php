@@ -16,6 +16,8 @@ class Investment extends Model
 {
     use HasFactory, HasFilters, HasSorting, HasFooter, HasPagination, SoftDeletes;
 
+    protected $table_name = 'investments';
+
     protected $fillable = [
         'title',
         'amount',
@@ -29,6 +31,52 @@ class Investment extends Model
     ];
 
     protected $appends = ['editable', 'deletable', 'restorable'];
+
+    protected $filterable = [
+        'search' => 'string',
+        'numbers' => [
+            ['amount_start' => 'numeric', 'amount_end' => 'numeric']
+        ],
+        'dates' => [
+            ['date_start' => 'date', 'date_end' => 'date']
+        ],
+        'dictionary' => [
+            ['status_id' => 'string'],
+            ['user_id' => 'string'],
+        ],
+        'others' => [
+            ['deleted' => 'boolean'],
+            ['created_by_user' => 'boolean']
+        ],
+        'pagination' => 'string',
+    ];
+
+    protected $sortable = [
+        'title',
+        'amount',
+        'date',
+        'total_repayment',
+        'remarks',
+        'investor' => ['first_name', 'last_name'],
+        'status' => ['name'],
+    ];
+
+    protected $searchable = [
+        'title',
+        'remarks',
+    ];
+
+    protected $footer = [
+        'total_repayment' => 'sum'
+    ];
+
+    private function setFooterDynamicFields() {
+        $this->footer += [
+            'amount' => function($investment) {
+                return round($investment->amount + $investment->amount * ($investment->interest_rate / 100), 2);
+            }
+        ];
+    }
 
     public function getEditableAttribute()
     {

@@ -22,12 +22,13 @@ class InvestmentFactory extends Factory
         $interest_rate = fake()->boolean(90) ? 0 : fake()->numberBetween(0, 20);
         $status_id = $this->random_status_id();
         $total_repayment = 0;
+        $total_amount = round($amount + ($amount * ($interest_rate / 100)), 2);
 
         if ($status_id == 2) {
-            $total_repayment = $amount + ($amount * ($interest_rate / 100));
+            $total_repayment = $total_amount;
         }
         else {
-            $total_repayment = fake()->boolean(90) ? 0 : fake()->randomFloat(2, 0, $amount + ($amount * ($interest_rate / 100)));
+            $total_repayment = fake()->boolean() ? 0 : fake()->randomFloat(2, round($total_amount * 0.1, 2), $total_amount);
         }
 
         return [
@@ -39,7 +40,8 @@ class InvestmentFactory extends Factory
             'remarks' => $this->generate_remarks(),
             'user_id' => $this->random_user_id(),
             'status_id' => $status_id,
-            'created_by_user_id' => $this->random_admin_id()
+            'created_by_user_id' => $this->random_admin_id(),
+            'created_at' => fake()->dateTime()
         ];
     }
 

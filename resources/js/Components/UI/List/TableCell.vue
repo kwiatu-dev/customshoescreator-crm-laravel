@@ -39,6 +39,10 @@ const cell = computed(() => {
     }
   }
 
+  if (!value) {
+    return ''
+  }
+
   return `${props.element.prefix || ''}${value}${props.element.suffix || ''}`
 })
 
@@ -59,6 +63,10 @@ const link = computed(() => {
 
     if(field)
       value = column ? props.object[column][field] : props.object[field]
+  }
+
+  if (!value) {
+    return ''
   }
 
   return `${props.element.link?.prefix || ''}${value}${props.element.link?.suffix || ''}`
