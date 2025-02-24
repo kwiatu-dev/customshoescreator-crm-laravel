@@ -68,6 +68,7 @@ import { ref, reactive, watch, computed, onMounted, onBeforeUnmount } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { debounce } from 'lodash'
 import { usePage } from '@inertiajs/vue3'
+import { useQueryParams } from '@/Composables/useQueryParams'
 
 const page = usePage()
 
@@ -130,19 +131,33 @@ const update = (data) => {
   }
 }
 
-const clean = () => {
-  return Object.keys(form).reduce((acc, key) => {
-    if (form[key] && form[key] !== 'null') {
-      acc[key] = form[key]
+const query = () => {
+  const params = useQueryParams()
+
+  for (const [key, value] of Object.entries(form)) {
+    if (!params.hasOwnProperty(key)) {
+      params[key] = value
+    }
+  }
+
+  return Object.keys(params).reduce((acc, key) => {
+    if (form.hasOwnProperty(key)) {
+      if (form[key] && form[key] !== 'null') {
+        acc[key] = params[key]
+      }
+    } 
+    else {
+      acc[key] = params[key]
     }
     return acc
   }, {})
 }
   
 const filter = () => {
+
   router.get(
     route(props.get),
-    {...clean(), ...props.sort},
+    query(),
     {
       preserveState: true,
       preserveScroll: true,

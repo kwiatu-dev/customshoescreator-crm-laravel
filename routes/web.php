@@ -16,6 +16,7 @@ use App\Http\Controllers\PageSpeedController;
 use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\InvestmentController;
+use App\Http\Controllers\InvestmentRepaymentController;
 use App\Http\Controllers\ListingOfferController;
 use App\Http\Controllers\PrivateFilesController;
 use App\Http\Controllers\RestoreStateController;
@@ -173,5 +174,24 @@ Route::put('incomes/{income}/restore', [IncomeController::class, 'restore'])
 Route::put('incomes/{income}/settle', [IncomeController::class, 'settle'])
     ->name('incomes.settle');
 
-Route::resource('investment', InvestmentController::class)
+Route::resource('investments', InvestmentController::class)
     ->except(['show']); 
+
+Route::get('investments/{investment}', [InvestmentController::class, 'show'])
+    ->name('investments.show')
+    ->withTrashed();
+
+Route::put('investments/{investment}/restore', [InvestmentController::class, 'restore'])
+    ->name('investments.restore')
+    ->withTrashed();
+
+Route::resource('repayments', InvestmentRepaymentController::class)
+    ->except(['show']); 
+
+Route::get('repayments/{repayment}', [InvestmentRepaymentController::class, 'show'])
+    ->name('repayments.show')
+    ->withTrashed();
+
+Route::put('repayments/{repayment}/restore', [InvestmentRepaymentController::class, 'restore'])
+    ->name('repayments.restore')
+    ->withTrashed();

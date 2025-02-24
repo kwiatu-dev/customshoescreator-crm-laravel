@@ -9,11 +9,11 @@
     />
   </div>
   <div v-else class="flex flex-row flex-nowrap justify-center w-full mb-2">
-    <Link :href="prev.url" as="button" class="w-8 h-8 bg-indigo-600 rounded-l-md">
+    <Link :href="prev.url ?? '#'" as="button" class="w-8 h-8 bg-indigo-600 rounded-l-md">
       <font-awesome-icon :icon="['fas', 'angles-left']" />
     </Link>
     <div class="bg-gray-500 font-medium px-4 pt-1">{{ page.label }}</div>
-    <Link :href="next.url" as="button" class="w-8 h-8 bg-indigo-600 rounded-r-md">
+    <Link :href="next.url ?? '#'" as="button" class="w-8 h-8 bg-indigo-600 rounded-r-md">
       <font-awesome-icon :icon="['fas', 'angles-right']" />
     </Link>
   </div>
@@ -24,12 +24,12 @@ import { useMediaQuery } from '@vueuse/core'
 import { Link } from '@inertiajs/vue3'
 import { computed } from 'vue'
 
+const props = defineProps({
+  links: Array,
+})
+
 const isLargeScreen = useMediaQuery('(min-width: 768px)')
 const prev = computed(() => props.links[0])
 const next = computed(() => props.links[props.links.length - 1])
 const page = computed(() => props.links.filter(link => link.active)[0])
-
-const props = defineProps({
-  links: Array,
-})
 </script>

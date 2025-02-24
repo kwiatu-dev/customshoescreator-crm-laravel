@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\RequestProcessor;
 use App\Models\Investment;
+use App\Models\User;
+use Auth;
 use Illuminate\Http\Request;
 
 class InvestmentController extends Controller
@@ -73,7 +76,14 @@ class InvestmentController extends Controller
      */
     public function create()
     {
-        //
+        $users = User::query()->get();
+
+        return inertia(
+            'Investment/Create',
+            [
+                'users' => $users,
+            ]
+        );
     }
 
     /**
@@ -81,15 +91,41 @@ class InvestmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $fields = RequestProcessor::validation($request, $this->fields, new Investment(), [
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $user = User::find($fields['created_by_user_id'] ?? Auth::id());
+
+        $investment = Investment::create([
+            ...$fields,
+            'created_by_user_id' => $user->id,
+            'status_id' => 1,
+            'remarks' => $fields['remarks'] ?? '',
+        ]);
+
+        return redirect()->route('investments.index')
+            ->with('success', 'Inwestycja została dodana!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Investment $investment)
     {
-        //
+        $investment->load([
+            'status',
+            'investor' => function ($query) {
+                $query->withTrashed();
+            },
+            'user' => function ($query) {
+                $query->withTrashed();
+            }
+        ]);
+
+        return inertia('Investment/Show', [
+            'investment' => $investment
+        ]);
     }
 
     /**
@@ -111,8 +147,24 @@ class InvestmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Investment $investment)
     {
-        //
+        if (!$investment->deletable) {
+            return redirect()->back()->with('failed', 'Nie można usunać tej inwestycji!');
+        }
+
+        $investment->deleteOrFail();
+
+        return redirect()->back()->with('success', 'Inwestycja została usunięta!');
+    }
+
+    public function restore(Investment $investment){
+        if (!$investment->restorable) {
+            return redirect()->back()->with('failed', 'Nie można usunać tej inwestycji!');
+        }
+
+        $investment->restore();
+
+        return redirect()->back()->with('success', 'Inwestycja została przywrócona!');
     }
 }

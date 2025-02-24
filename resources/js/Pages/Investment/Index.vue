@@ -8,7 +8,7 @@
     :columns="columns" 
     :footer="footer"
     :cards="cards"
-    :get="'investment.index'"
+    :get="'investments.index'"
     :actions="Actions"
   >
     <template #title>
@@ -16,7 +16,7 @@
     </template>
     <template #create>
       <Link
-        :href="route('investment.create')" 
+        :href="route('investments.create')" 
         class="btn-primary px-4"
       >
         <font-awesome-icon :icon="['fas', 'plus']" />
@@ -41,7 +41,6 @@ const props = defineProps({
 const columns = {
   investor: { label: 'Użytkownik (inwestor)', columns: ['first_name', 'last_name'], link: {column: 'investor', field: 'id', prefix: route('user.show', { user: '' }) + '/'}, order: 1},
   title: { label: 'Tytuł', order: 2 },
-  total_repayment: { label: 'Spłata', suffix: ' zł', order: 3 },
   amount: { label: 'Kwota', component: Amount, suffix: 'zł', order: 4 },
   date: { label: 'Data', order: 6 },
   status: { label: 'Status', columns: ['name'], order: 7 },
@@ -50,7 +49,7 @@ const columns = {
 
 const cards = {
   title: { title: true },
-  amount: { suffix: ' zł' },
+  amount: { suffix: ' zł', component: Amount },
   status: { columns: ['name']},
   investor: { label: 'Użytkownik (inwestor)', columns: ['first_name', 'last_name'], link: {column: 'investor', field: 'id', prefix: route('user.show', { user: '' }) + '/'}},
   date: { },
@@ -72,7 +71,6 @@ const sortable = {
   title: true,
   amount: true,
   date: true,
-  total_repayment: true,
   remarks: true,
   status: true,
   investor: true,

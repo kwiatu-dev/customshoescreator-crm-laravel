@@ -24,6 +24,7 @@ class RequestProcessor{
         'title' => 'required|string|min:3|max:50',
         'shop_name' => 'required|string|min:3|max:50',
         'price' => 'required|decimal:0,2|min:0',
+        'amount' => 'required|decimal:0,2|min:0',
         'visualization' => 'required|decimal:0,2|min:0',
         'date' => 'required|date|date_format:Y-m-d',
         'file' => 'nullable|mimes:jpg,png,jpeg,pdf|max:5000',
@@ -34,7 +35,8 @@ class RequestProcessor{
         'client_id' => 'required|exists:clients,id',
         'username' => 'nullable|string|min:3|max:30',
         'conversion_source_id' => 'required|exists:conversion_sources,id',
-        'social_link' => 'nullable|url:http,https|max:255'
+        'social_link' => 'nullable|url:http,https|max:255',
+        'interest_rate' => 'required|integer|min:0'
     ];
 
     public static function getSortFields(Request $request, array $sortable): array{

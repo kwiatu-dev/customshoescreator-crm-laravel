@@ -26,6 +26,7 @@ import { router } from '@inertiajs/vue3'
 import { reactive, watch, ref } from 'vue'
 import { _, debounce } from 'lodash'
 import draggable from 'vuedraggable'
+import { useQueryParams } from '@/Composables/useQueryParams'
 
 const props = defineProps({
   columns: Object,
@@ -88,15 +89,26 @@ const withOrder = () => {
   })
 }
 
-const sort = () => {
-  const query = {...withOrder(), ...props.filters}
+const query = () => {
+  const params = useQueryParams()
+  const sort = withOrder()
 
+  for (const [key, value] of Object.entries(params)) {
+    if (props.sort.hasOwnProperty(key)) {
+      delete params[key]
+    }
+  }
+
+  return { ...params, ...sort }
+}
+
+const sort = () => {
   if(props.page > 1) 
     query['page'] = props.page
 
   router.get(
     route(props.get),
-    query,
+    query(),
     {
       preserveState: true,
       preserveScroll: true,

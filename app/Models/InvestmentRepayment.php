@@ -25,6 +25,29 @@ class InvestmentRepayment extends Model
 
     protected $appends = ['editable', 'deletable', 'restorable'];
 
+    protected $filterable = [
+        'search' => 'string',
+        'others' => [
+            ['deleted' => 'boolean'],
+            ['created_by_user' => 'boolean']
+        ],
+        'pagination' => 'string',
+    ];
+
+    protected $sortable = [
+        'repayment',
+        'date',
+        'remarks'
+    ];
+
+    protected $searchable = [
+
+    ];
+
+    protected $footer = [
+        
+    ];
+
     public function getEditableAttribute()
     {
         return $this->deleted_at == null && $this->investment->editable;
