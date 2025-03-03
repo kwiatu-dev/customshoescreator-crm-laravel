@@ -47,6 +47,7 @@ class InvestmentRepaymentController extends Controller
         ]);
 
         $query = $investment->repayments();
+        $repayment_count = $query->count(); 
 
         $repayments = $query
             ->filter($request)
@@ -54,7 +55,8 @@ class InvestmentRepaymentController extends Controller
             ->latest()
             ->pagination();
 
-        $footer = Investment::query()
+        $footer = InvestmentRepayment::query()
+            ->where('investment_id', $investment->id)
             ->filter($request)
             ->footer();
 
@@ -64,6 +66,7 @@ class InvestmentRepaymentController extends Controller
             'filters' => $request->session()->pull('filters'),
             'sort' => $request->session()->pull('sort'),
             'footer' => $footer,
+            'repaymentCount' => $repayment_count
         ]);
     }
 

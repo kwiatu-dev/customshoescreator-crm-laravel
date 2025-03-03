@@ -36,7 +36,7 @@
         </div>
         <div v-for="(column) in filterable?.date?.columns" :key="column">
           <Heading :title="columns[column].label" :class="{'active': !sections[column]}" @click="expand(column)" />
-          <Date :form="form" :class="{'hidden': sections[column]}" :column="column" @filters-update="update" /> 
+          <Date ref="filterDate" :form="form" :class="{'hidden': sections[column]}" :column="column" @filters-update="update" /> 
         </div>
         <div v-for="(object, index) in filterable?.dictionary" :key="index">
           <Heading v-if="admin(object.admin)" :title="object.label" :class="{'active': !sections[object.column]}" @click="expand(object.column)" />
@@ -154,7 +154,6 @@ const query = () => {
 }
   
 const filter = () => {
-
   router.get(
     route(props.get),
     query(),
@@ -169,13 +168,25 @@ watch(form, debounce(filter, 1000))
 
 const filterShowButton = ref(null)
 const filterDropdownBox = ref(null)
+const filterDate = ref([])
+let doubleClickRequired = false
 
 const handleClickOutsideFilterBox = (event) => {
   if (event.button === 0) {
     const isClickedOutsideFilterBox = filterDropdownBox.value && !filterDropdownBox.value.contains(event.target)
     const isClickedOutsideFilterShowButton = filterShowButton.value && !filterShowButton.value.contains(event.target)
+    const isFilterDateOpen = filterDate.value && filterDate.value.some(dateElement => dateElement.pickerStart.active === true || dateElement.pickerEnd.active === true)
     
-    if (isClickedOutsideFilterBox && isClickedOutsideFilterShowButton) {
+    if (isFilterDateOpen) {
+      doubleClickRequired = true
+    }
+
+    if (isClickedOutsideFilterBox && isClickedOutsideFilterShowButton && !isFilterDateOpen) {
+      if (doubleClickRequired) {
+        doubleClickRequired = false
+        return
+      }
+      
       if (!toggle.value) {
         toggle.value = true
       }
@@ -184,7 +195,11 @@ const handleClickOutsideFilterBox = (event) => {
 }
 
 onMounted(() => {
-  document.addEventListener('mousedown', handleClickOutsideFilterBox)
+  document.addEventListener('mousedown', (event) => {
+    setTimeout(() => {
+      handleClickOutsideFilterBox(event)
+    }, 0)
+  })
 })
 
 onBeforeUnmount(() => {

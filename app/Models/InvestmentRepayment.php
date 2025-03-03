@@ -27,6 +27,12 @@ class InvestmentRepayment extends Model
 
     protected $filterable = [
         'search' => 'string',
+        'numbers' => [
+            ['repayment_start' => 'numeric', 'repayment_end' => 'numeric']
+        ],
+        'dates' => [
+            ['date_start' => 'date', 'date_end' => 'date']
+        ],
         'others' => [
             ['deleted' => 'boolean'],
             ['created_by_user' => 'boolean']
@@ -41,11 +47,13 @@ class InvestmentRepayment extends Model
     ];
 
     protected $searchable = [
-
+        'repayment',
+        'date',
+        'remarks'
     ];
 
     protected $footer = [
-        
+        'repayment' => 'sum'
     ];
 
     public function getEditableAttribute()

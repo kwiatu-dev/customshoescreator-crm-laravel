@@ -1,7 +1,7 @@
 <template>
   <Show :investment="investment" />
   <ListLayout 
-    v-if="repayments?.data?.length"
+    v-if="repaymentCount > 0"
     :objects="repayments" 
     :filters="filters"
     :filterable="filterable" 
@@ -47,6 +47,7 @@ const props = defineProps({
   filters: Object,
   sort: Object,
   footer: Object,
+  repaymentCount: Number,
 })
   
 const columns = {
@@ -64,6 +65,7 @@ const cards = {
   
 const filterable = {
   search: {},
+  numeric: { columns: ['repayment'] },
   date: { columns: ['date'] },
   pagination: {},
   others: [ { name: 'deleted', label: 'Pokaż usunięte' }, { name: 'created_by_user', label: 'Pokaż moje', admin: true } ],

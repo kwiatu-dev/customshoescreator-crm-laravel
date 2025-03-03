@@ -54,8 +54,6 @@ const clicked = () => {
     },
   }
 
-  console.log(data)
-
   if (!disableRememberState) {
     router.post(route('remember.state'), data) 
   } 

@@ -29,8 +29,8 @@ import language from 'flowbite-datepicker/locales/pl'
 
 const start = ref(null)
 const end = ref(null)
-let pickerStart = null
-let pickerEnd = null
+let pickerStart = ref(null)
+let pickerEnd = ref(null)
 
 const props = defineProps({
   form: Object,
@@ -48,7 +48,7 @@ const form = reactive({
 onMounted(() => {
   Datepicker.locales.pl = language.pl
 
-  pickerStart = new Datepicker(start.value, {
+  pickerStart.value = new Datepicker(start.value, {
     todayBtn: true,
     clearBtn: true,
     todayHighlight: true,
@@ -58,14 +58,14 @@ onMounted(() => {
   })
 
   start.value.value = form[date_start] ?? null
-  pickerStart.update()
+  pickerStart.value.update()
   
   start.value.addEventListener('changeDate', (event) => {
     form[date_start] = event.target.value 
     emit('filters-update', form)
   })
 
-  pickerEnd = new Datepicker(end.value, {
+  pickerEnd.value = new Datepicker(end.value, {
     todayBtn: true,
     clearBtn: true,
     todayHighlight: true,
@@ -75,7 +75,7 @@ onMounted(() => {
   })
 
   end.value.value = form[date_end] ?? null
-  pickerEnd.update()
+  pickerEnd.value.update()
 
   end.value.addEventListener('changeDate', (event) => {
     form[date_end] = event.target.value 
@@ -90,7 +90,12 @@ watch(props.form, () => {
   form[date_end] = props.form[date_end] ?? null
   start.value.value = props.form[date_start] ?? null
   end.value.value = props.form[date_end] ?? null
-  pickerStart.update()
-  pickerEnd.update()
+  pickerStart.value.update()
+  pickerEnd.value.update()
+})
+
+defineExpose({
+  pickerStart,
+  pickerEnd,
 })
 </script>
