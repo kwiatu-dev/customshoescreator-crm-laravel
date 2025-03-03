@@ -7,6 +7,7 @@ use App\Models\Investment;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class InvestmentController extends Controller
 {
@@ -131,17 +132,44 @@ class InvestmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Investment $investment)
     {
-        //
+        $users = User::query()->get();
+
+        return inertia('Investment/Edit', [
+            'investment' => $investment,
+            'users' => $users,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Investment $investment)
     {
-        //
+        if (!$investment->editable) {
+            return redirect()->back()->with('failed', 'Nie można edytować tej inwestycji!');
+        }
+
+        $fields = RequestProcessor::validation($request, $this->fields, new Investment(), [
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $total = round(($fields['amount'] * $fields['interest_rate'] / 100) + $fields['amount'], 2);
+
+        if ($investment->total_repayment > $total) {
+            throw ValidationException::withMessages([
+                'amount' => "Kwota inwestycji powiększona o odestki nie może być mniejsza od całkowitej sumy spłat tej inwestycji. Podana kwota inwestycji wynosi: $total zł. Aktualny zwrot z inwestycji wynosi: $investment->total_repayment zł.", 
+            ]);
+        }
+
+        if ($investment->total_repayment == $total) {
+            $fields['status_id'] = 2;
+        }
+
+        $investment->update($fields);
+
+        return redirect()->route('restore.state', ['url' => route('investments.index')])->with('success', 'Inwestycja został edytowana!');
     }
 
     /**

@@ -2,8 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\RequestProcessor;
 use App\Models\Investment;
+use App\Models\InvestmentRepayment;
+use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class InvestmentRepaymentController extends Controller
 {
@@ -29,6 +35,7 @@ class InvestmentRepaymentController extends Controller
     {
         $investmentId = $request->query('investmentId');
         $investment = Investment::withTrashed()->findOrFail($investmentId);
+
         $investment->load([
             'status',
             'user' => function ($query) {
@@ -63,9 +70,24 @@ class InvestmentRepaymentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $investmentId = $request->query('investmentId');
+        $investment = Investment::withTrashed()->findOrFail($investmentId);
+
+        $investment->load([
+            'status',
+            'user' => function ($query) {
+                $query->withTrashed();
+            },
+            'investor' => function ($query) {
+                $query->withTrashed();
+            }
+        ]);
+
+        return inertia('InvestmentRepayment/Create', [
+            'investment' => $investment,
+        ]);
     }
 
     /**
@@ -73,7 +95,39 @@ class InvestmentRepaymentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $investmentId = $request->query('investmentId');
+        $investment = Investment::withTrashed()->findOrFail($investmentId);
+
+        $investment->load([
+            'status',
+            'user' => function ($query) {
+                $query->withTrashed();
+            },
+            'investor' => function ($query) {
+                $query->withTrashed();
+            }
+        ]);
+
+        $fields = RequestProcessor::validation($request, $this->fields, new InvestmentRepayment(), [
+            'date' => [
+                'required',
+                'date',
+                'date_format:Y-m-d',
+                'after_or_equal:' . $investment->date,
+            ],
+        ]);
+
+        $investment->addRepaymentValue($fields['repayment']);
+        $user = User::find($fields['created_by_user_id'] ?? Auth::id());
+
+        $repayment = InvestmentRepayment::create([
+            ...$fields,
+            'investment_id' => $investment->id,
+            'created_by_user_id' => $user->id,
+        ]);
+
+        return redirect()->route('repayments.index', ['investmentId' => $investment->id])
+            ->with('success', 'Zwrot z inwestycji został dodany!');
     }
 
     /**

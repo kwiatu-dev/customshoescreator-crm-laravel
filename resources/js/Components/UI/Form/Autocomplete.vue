@@ -51,7 +51,7 @@ const props = defineProps({
     default: 'input',
   },
   searchQuery: String,
-  objectId: String,
+  objectId: [String, Number],
 })
 
 const emit = defineEmits(['update:objectId', 'update:searchQuery'])

@@ -25,6 +25,7 @@ class RequestProcessor{
         'shop_name' => 'required|string|min:3|max:50',
         'price' => 'required|decimal:0,2|min:0',
         'amount' => 'required|decimal:0,2|min:0',
+        'repayment' => 'required|decimal:0,2|min:0',
         'visualization' => 'required|decimal:0,2|min:0',
         'date' => 'required|date|date_format:Y-m-d',
         'file' => 'nullable|mimes:jpg,png,jpeg,pdf|max:5000',

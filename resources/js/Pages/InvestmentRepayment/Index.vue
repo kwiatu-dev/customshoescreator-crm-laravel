@@ -15,13 +15,23 @@
   >
     <template #create>
       <Link
-        :href="route('repayments.create')" 
+        v-if="investment.status_id != 2"
+        :href="route('repayments.create', { investmentId: props.investment.id })" 
         class="btn-primary px-4"
       >
         <font-awesome-icon :icon="['fas', 'plus']" />
       </Link>
     </template>
   </ListLayout>
+  <div v-else>
+    Aktualnie lista spłat jest pusta. Aby dodać pierwszą spłate, kliknij przycisk       
+    <Link
+      :href="route('repayments.create', { investmentId: props.investment.id })" 
+      class="btn-primary px-4 ml-4"
+    >
+      <font-awesome-icon :icon="['fas', 'plus']" />
+    </Link>
+  </div>
 </template>
   
 <script setup>
@@ -31,7 +41,7 @@ import ListLayout from '@/Components/UI/List/Layout.vue'
 import Actions from '@/Pages/InvestmentRepayment/Index/Components/Actions.vue'
 import Show from '@/Pages/Investment/Show.vue'
   
-defineProps({
+const props = defineProps({
   investment: Object,
   repayments: Object,
   filters: Object,
@@ -40,12 +50,13 @@ defineProps({
 })
   
 const columns = {
-  repayment: { label: 'Spłata' },
+  repayment: { label: 'Spłata', suffix: ' zł' },
   date: { label: 'Data' },
   remarks: { label: 'Uwagi' },
 }
   
 const cards = {
+  blank: { blank: true, title: true },
   repayment: { label: 'Spłata', prefix: 'Spłata: ', suffix: 'zł' },
   date: { label: 'Data', prefix: 'Data: ' },
   remarks: { label: 'Uwagi' },
@@ -65,4 +76,5 @@ const sortable = {
 }
 
 provide('disable_show_button', true)
+provide('disable_remember_state', true)
 </script>

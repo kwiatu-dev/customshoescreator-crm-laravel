@@ -6,11 +6,13 @@ use App\Traits\HasFooter;
 use App\Traits\HasFilters;
 use App\Traits\HasSorting;
 use App\Traits\HasPagination;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Validation\ValidationException;
 
 class Investment extends Model
 {
@@ -30,7 +32,7 @@ class Investment extends Model
         'created_by_user_id'
     ];
 
-    protected $appends = ['editable', 'deletable', 'restorable'];
+    protected $appends = ['editable', 'deletable', 'restorable', 'total'];
 
     protected $filterable = [
         'search' => 'string',
@@ -107,5 +109,40 @@ class Investment extends Model
 
     public function repayments(): HasMany {
         return $this->hasMany(InvestmentRepayment::class, 'investment_id');
+    }
+
+    public function total() {
+        return round(($this->amount * $this->interest_rate / 100) + $this->amount, 2);
+    }
+
+    public function getTotalAttribute() 
+    {
+        return $this->total();
+    }
+
+    public function addRepaymentValue($repayment_value) {
+        if (!$this->editable) {
+            throw new Exception('Nie można edytować tej inwestycji!');
+        }
+
+        $left = round((float) $repayment_value, 2);
+        $right = round((float) $this->total - (float) $this->total_repayment, 2);
+
+        if ($left > $right) {
+            throw ValidationException::withMessages([
+                'repayment' => "Kwota spłaty przekroczyła wartość inwestycji.", 
+            ]);
+        }
+
+        $status_id = 1;
+
+        if ($this->total == $this->total_repayment + $repayment_value) {
+            $status_id = 2;
+        }
+
+        $this->update([
+            'total_repayment' => $this->total_repayment + $repayment_value,
+            'status_id' => $status_id
+        ]);
     }
 }
