@@ -7,14 +7,50 @@
       Nie znaleziono danych spełniających podane kryteria
     </h2>
     <div class="line mt-4 mb-4" />
-    <div v-for="(value, field) in filters" :key="field">
-      {{ field }} => {{ value }}
+    <div v-for="(filterValue, filterKey) in filters" :key="filterKey" class="text-center">
+      {{ formatFilterName(filterKey) }} 
+      <font-awesome-icon :icon="['fas', 'arrow-right']" /> 
+      {{ filterValue }}
+    </div>
+    <div class="line mt-4 mb-4" />
+    <div class="text-center">
+      <button class="btn-primary" @click="resetFilters">Resetuj filtry</button>
     </div>
   </div>
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
   filters: Object,
+  columns: Object,
 })
+
+const emit = defineEmits(['reset-filters'])
+
+const formatFilterName = (filterKey) => {
+  const [columnName, rangeType] = filterKey.split('_')
+  const columnLabel = props.columns?.[columnName]?.label
+  let value = ''
+  
+  if (columnLabel) {
+    value += columnLabel
+  }
+
+  if (rangeType === 'start') {
+    value += ' od'
+  }
+  else if(rangeType === 'end') {
+    value += ' do'
+  }
+
+  if (!value) {
+    value = filterKey
+  }
+
+  return value
+}
+
+const resetFilters = () => {
+  emit('reset-filters')
+}
 </script>

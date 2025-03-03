@@ -205,4 +205,8 @@ onMounted(() => {
 onBeforeUnmount(() => {
   document.removeEventListener('mousedown', handleClickOutsideFilterBox)
 })
+
+defineExpose({
+  clear,
+})
 </script>

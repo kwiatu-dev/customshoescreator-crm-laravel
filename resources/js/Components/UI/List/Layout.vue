@@ -5,6 +5,7 @@
     </h1>
     <section class="flex flex-row justify-between md:items-center mt-8">
       <Filters 
+        ref="filtersElement"
         :filters="filters" 
         :filterable="filterable" 
         :sort="sort" 
@@ -41,7 +42,7 @@
       </section>
     </div>
     <div v-else>
-      <DataNotFound :filters="filters" />
+      <DataNotFound :filters="filters" :columns="columns" @reset-filters="resetFilters" />
     </div>
   </div>
 </template>
@@ -53,7 +54,7 @@ import Table from '@/Components/UI/List/Table.vue'
 import Cards from '@/Components/UI/List/Cards.vue'
 import Pagination from '@/Components/UI/List/Pagination.vue'
 import DataNotFound from '@/Components/UI/List/DataNotFound.vue'
-import { nextTick, onMounted } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 
 const isLargeScreen = useMediaQuery('(min-width: 768px)')
 
@@ -72,6 +73,8 @@ defineProps({
   actions: Object,
 })
 
+const filtersElement = ref(null)
+
 onMounted(() => {
   nextTick(() => {
     const params = new URLSearchParams(window.location.search)
@@ -87,4 +90,8 @@ onMounted(() => {
       element.scrollTo({ left: scrollX })
   })
 })
+
+const resetFilters = () => {
+  filtersElement.value.clear()
+}
 </script>
