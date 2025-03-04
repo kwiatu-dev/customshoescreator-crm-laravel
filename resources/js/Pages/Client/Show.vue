@@ -1,5 +1,4 @@
 <template>
-  <BackButton />
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
     <Box>
       <template #header>Podsumowanie</template>
@@ -42,7 +41,6 @@
 import dayjs from 'dayjs'
 import Box from '@/Components/UI/List/Box.vue'
 import Cards from '@/Components/UI/List/Cards.vue'
-import BackButton from '@/Components/UI/Buttons/BackButton.vue'
 import Actions from '@/Pages/Client/Index/Components/Actions.vue'
 import { provide } from 'vue'
 

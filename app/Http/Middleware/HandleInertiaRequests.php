@@ -38,6 +38,7 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
+            'navigation' => ['history' => $request->session()->get('navigation_history')],
             'flash' => [
                 'success' => $request->session()->get('success'),
                 'failed' => $request->session()->get('failed'),

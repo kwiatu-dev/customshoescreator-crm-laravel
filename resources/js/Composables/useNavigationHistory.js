@@ -1,7 +1,8 @@
 import { usePage } from '@inertiajs/vue3'
+import { computed } from 'vue'
+
 
 export const useNavigationHistory = () => {
-  const { props } = usePage()
-  const navigationHistory = props.navigation_history || []
-  return navigationHistory
+  const page = usePage()
+  return computed(() => page.props.navigation.history)
 }

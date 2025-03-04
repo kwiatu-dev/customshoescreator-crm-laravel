@@ -18,6 +18,7 @@ use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\InvestmentController;
 use App\Http\Controllers\InvestmentRepaymentController;
 use App\Http\Controllers\ListingOfferController;
+use App\Http\Controllers\NavigationHistoryController;
 use App\Http\Controllers\PrivateFilesController;
 use App\Http\Controllers\RestoreStateController;
 use App\Http\Controllers\RememberStateController;
@@ -193,4 +194,9 @@ Route::prefix('investments/{investment}')->group(function () {
     Route::put('repayments/{repayment}/restore', [InvestmentRepaymentController::class, 'restore'])
         ->name('repayments.restore')
         ->withTrashed();
+});
+
+Route::prefix('api')->group(function () {
+    Route::put('/navigation-history/update', [NavigationHistoryController::class, 'update'])
+        ->name('navigation-history.update');
 });

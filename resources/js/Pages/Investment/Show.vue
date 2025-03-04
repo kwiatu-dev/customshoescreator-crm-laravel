@@ -1,5 +1,4 @@
 <template>
-  <BackButton />
   <div class="grid grid-cols-1 sm:grid-cols-1 gap-4 mb-4">
     <Cards 
       :cards="card"
@@ -10,7 +9,6 @@
 </template>
 
 <script setup>
-import BackButton from '@/Components/UI/Buttons/BackButton.vue'
 import Actions from '@/Pages/Investment/Index/Components/Actions.vue'
 import Cards from '@/Components/UI/List/Cards.vue'
 import Amount from '@/Pages/Investment/Index/Components/Amount.vue'

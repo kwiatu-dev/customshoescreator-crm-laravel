@@ -26,12 +26,11 @@ class NavigationHistory
             $history[] = $currentUrl;
         }
 
-        if (count($history) > 10) {
+        if (count($history) > 50) {
             array_shift($history);
         }
 
         Session::put('navigation_history', $history);
-        Inertia::share('navigation_history', $history);
 
         return $next($request);
     }

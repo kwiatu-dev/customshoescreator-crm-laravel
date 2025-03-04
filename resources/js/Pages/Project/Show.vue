@@ -1,5 +1,4 @@
 <template>
-  <BackButton />
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
     <Box>
       <div class="flex flex-col gap-4">
@@ -36,7 +35,6 @@ import Actions from '@/Pages/Project/Index/Components/Actions/AllActions.vue'
 import PhotoGrid from '@/Pages/Project/Show/Components/PhotoGrid.vue'
 import AdminDistribution from '@/Components/UI/List/AdminDistribution.vue'
 import { provide } from 'vue'
-import BackButton from '@/Components/UI/Buttons/BackButton.vue'
 
 const props = defineProps({
   project: Object,

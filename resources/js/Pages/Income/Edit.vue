@@ -1,5 +1,4 @@
 <template>
-  <BackButton />
   <form class="container mx-auto p-4" @submit.prevent="update">
     <h1 class="title">Edytuj przychód</h1>
     <SummerizeIncomeSection :form="form" :users="users" />
@@ -52,7 +51,6 @@ import { onMounted, ref, watch, provide, computed } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import Datepicker from 'flowbite-datepicker/Datepicker'
 import language from 'flowbite-datepicker/locales/pl'
-import BackButton from '@/Components/UI/Buttons/BackButton.vue'
 import SummerizeIncomeSection from '@/Pages/Income/Global/Components/SummerizeIncomeFormSection.vue'
 import AddUserToDistribution from '@/Pages/Income/Global/Components/AddUserToDistribution.vue'
 import FormPopup from '@/Components/UI/Popup/FormPopup.vue'
