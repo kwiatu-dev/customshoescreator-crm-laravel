@@ -16,7 +16,7 @@
     <template #create>
       <Link
         v-if="investment.status_id != 2"
-        :href="route('repayments.create', { investmentId: props.investment.id })" 
+        :href="route('repayments.create', { investment: props.investment.id })" 
         class="btn-primary px-4"
       >
         <font-awesome-icon :icon="['fas', 'plus']" />
@@ -26,7 +26,7 @@
   <div v-else>
     Aktualnie lista spłat jest pusta. Aby dodać pierwszą spłate, kliknij przycisk       
     <Link
-      :href="route('repayments.create', { investmentId: props.investment.id })" 
+      :href="route('repayments.create', { investment: props.investment.id })" 
       class="btn-primary px-4 ml-4"
     >
       <font-awesome-icon :icon="['fas', 'plus']" />

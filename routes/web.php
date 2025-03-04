@@ -185,13 +185,12 @@ Route::put('investments/{investment}/restore', [InvestmentController::class, 're
     ->name('investments.restore')
     ->withTrashed();
 
-Route::resource('repayments', InvestmentRepaymentController::class)
-    ->except(['show']); 
+Route::prefix('investments/{investment}')->group(function () {
+    Route::resource('repayments', InvestmentRepaymentController::class)
+        ->except(['show'])
+        ->shallow(); 
 
-Route::get('repayments/{repayment}', [InvestmentRepaymentController::class, 'show'])
-    ->name('repayments.show')
-    ->withTrashed();
-
-Route::put('repayments/{repayment}/restore', [InvestmentRepaymentController::class, 'restore'])
-    ->name('repayments.restore')
-    ->withTrashed();
+    Route::put('repayments/{repayment}/restore', [InvestmentRepaymentController::class, 'restore'])
+        ->name('repayments.restore')
+        ->withTrashed();
+});

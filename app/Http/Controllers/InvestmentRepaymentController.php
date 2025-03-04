@@ -31,20 +31,20 @@ class InvestmentRepaymentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Investment $investment, Request $request)
     {
-        $investmentId = $request->query('investmentId');
-        $investment = Investment::withTrashed()->findOrFail($investmentId);
+        // $investmentId = $request->query('investmentId');
+        // $investment = Investment::withTrashed()->findOrFail($investmentId);
 
-        $investment->load([
-            'status',
-            'user' => function ($query) {
-                $query->withTrashed();
-            },
-            'investor' => function ($query) {
-                $query->withTrashed();
-            }
-        ]);
+        // $investment->load([
+        //     'status',
+        //     'user' => function ($query) {
+        //         $query->withTrashed();
+        //     },
+        //     'investor' => function ($query) {
+        //         $query->withTrashed();
+        //     }
+        // ]);
 
         $query = $investment->repayments();
         $repayment_count = $query->count(); 
@@ -73,20 +73,20 @@ class InvestmentRepaymentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
+    public function create(Investment $investment)
     {
-        $investmentId = $request->query('investmentId');
-        $investment = Investment::withTrashed()->findOrFail($investmentId);
+        // $investmentId = $request->query('investmentId');
+        // $investment = Investment::withTrashed()->findOrFail($investmentId);
 
-        $investment->load([
-            'status',
-            'user' => function ($query) {
-                $query->withTrashed();
-            },
-            'investor' => function ($query) {
-                $query->withTrashed();
-            }
-        ]);
+        // $investment->load([
+        //     'status',
+        //     'user' => function ($query) {
+        //         $query->withTrashed();
+        //     },
+        //     'investor' => function ($query) {
+        //         $query->withTrashed();
+        //     }
+        // ]);
 
         return inertia('InvestmentRepayment/Create', [
             'investment' => $investment,
@@ -96,20 +96,20 @@ class InvestmentRepaymentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Investment $investment, Request $request)
     {
-        $investmentId = $request->query('investmentId');
-        $investment = Investment::withTrashed()->findOrFail($investmentId);
+        // $investmentId = $request->query('investmentId');
+        // $investment = Investment::withTrashed()->findOrFail($investmentId);
 
-        $investment->load([
-            'status',
-            'user' => function ($query) {
-                $query->withTrashed();
-            },
-            'investor' => function ($query) {
-                $query->withTrashed();
-            }
-        ]);
+        // $investment->load([
+        //     'status',
+        //     'user' => function ($query) {
+        //         $query->withTrashed();
+        //     },
+        //     'investor' => function ($query) {
+        //         $query->withTrashed();
+        //     }
+        // ]);
 
         $fields = RequestProcessor::validation($request, $this->fields, new InvestmentRepayment(), [
             'date' => [
@@ -129,30 +129,38 @@ class InvestmentRepaymentController extends Controller
             'created_by_user_id' => $user->id,
         ]);
 
-        return redirect()->route('repayments.index', ['investmentId' => $investment->id])
+        return redirect()->route('repayments.index', ['investment' => $investment->id])
             ->with('success', 'Zwrot z inwestycji został dodany!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Investment $investment, InvestmentRepayment $repayment)
     {
-        //
+        // $investmentId = $request->query('investmentId');
+        // $investment = Investment::withTrashed()->findOrFail($investmentId);
+
+        // $investment->load([
+        //     'status',
+        //     'user' => function ($query) {
+        //         $query->withTrashed();
+        //     },
+        //     'investor' => function ($query) {
+        //         $query->withTrashed();
+        //     }
+        // ]);
+
+        return inertia('InvestmentRepayment/Edit', [
+            'investment' => $investment,
+            'repayment' => $repayment,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Investment $investment, InvestmentRepayment $repayment)
     {
         //
     }
@@ -160,8 +168,12 @@ class InvestmentRepaymentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Investment $investment, InvestmentRepayment $repayment)
     {
-        //
+        dd($repayment);
+    }
+
+    public function restore(Investment $investment, InvestmentRepayment $repayment) {
+        dd($repayment);
     }
 }
