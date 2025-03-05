@@ -1,6 +1,6 @@
 <template>
-  <form class="container mx-auto p-4" @submit.prevent="create">
-    <h1 class="title">Dodaj zwrot inwestycji</h1>
+  <form class="container mx-auto p-4" @submit.prevent="edit">
+    <h1 class="title">Edytuj zwrot inwestycji</h1>
     <section class="mt-8 flex flex-col justify-center md:grid md:grid-cols-6 gap-4">
       <div class="col-span-3">
         <label for="date" class="label">Data</label>
@@ -21,7 +21,7 @@
         <FormError :error="form.errors.remarks" />
       </div>
   
-      <button type="submit" class="w-full btn-primary col-span-6 mt-4">Dodaj zwrot inwestycji</button>
+      <button type="submit" class="w-full btn-primary col-span-6 mt-4">Edytuj zwrot inwestycji</button>
     </section>
   </form>
 </template>
@@ -39,12 +39,16 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  repayment: {
+    type: Object,
+    required: true,
+  },
 })
       
 const form = useForm({
-  repayment: null,
-  date: null,
-  remarks: null,
+  repayment: props.repayment.repayment,
+  date: props.repayment.date,
+  remarks: props.repayment.remarks,
 })
       
 const date = ref(null)
@@ -66,5 +70,5 @@ onMounted(() => {
   })
 })
       
-const create = () => form.post(route('repayments.store', { investment: props.investment.id }))
+const edit = () => form.put(route('repayments.update', { investment: props.investment.id, repayment: props.repayment.id }))
 </script>

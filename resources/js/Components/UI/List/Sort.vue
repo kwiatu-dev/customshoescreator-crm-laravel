@@ -102,12 +102,23 @@ const query = () => {
   return { ...params, ...sort }
 }
 
+function isFullUrl(url) {
+  try {
+    new URL(url)
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
 const sort = () => {
+  const urlOrRoute = isFullUrl(props.get) ? props.get : route(props.get)
+
   if(props.page > 1) 
     query['page'] = props.page
 
   router.get(
-    route(props.get),
+    urlOrRoute,
     query(),
     {
       preserveState: true,

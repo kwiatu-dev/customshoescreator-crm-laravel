@@ -10,7 +10,7 @@
     :columns="columns" 
     :footer="footer"
     :cards="cards"
-    :get="'repayments.index'"
+    :get="route('repayments.index', { investment: investment.id })"
     :actions="Actions"
   >
     <template #create>

@@ -188,7 +188,7 @@ class InvestmentController extends Controller
 
     public function restore(Investment $investment){
         if (!$investment->restorable) {
-            return redirect()->back()->with('failed', 'Nie można usunać tej inwestycji!');
+            return redirect()->back()->with('failed', 'Nie można przywrócić tej inwestycji!');
         }
 
         $investment->restore();

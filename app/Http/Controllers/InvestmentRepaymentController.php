@@ -33,19 +33,6 @@ class InvestmentRepaymentController extends Controller
      */
     public function index(Investment $investment, Request $request)
     {
-        // $investmentId = $request->query('investmentId');
-        // $investment = Investment::withTrashed()->findOrFail($investmentId);
-
-        // $investment->load([
-        //     'status',
-        //     'user' => function ($query) {
-        //         $query->withTrashed();
-        //     },
-        //     'investor' => function ($query) {
-        //         $query->withTrashed();
-        //     }
-        // ]);
-
         $query = $investment->repayments();
         $repayment_count = $query->count(); 
 
@@ -75,19 +62,6 @@ class InvestmentRepaymentController extends Controller
      */
     public function create(Investment $investment)
     {
-        // $investmentId = $request->query('investmentId');
-        // $investment = Investment::withTrashed()->findOrFail($investmentId);
-
-        // $investment->load([
-        //     'status',
-        //     'user' => function ($query) {
-        //         $query->withTrashed();
-        //     },
-        //     'investor' => function ($query) {
-        //         $query->withTrashed();
-        //     }
-        // ]);
-
         return inertia('InvestmentRepayment/Create', [
             'investment' => $investment,
         ]);
@@ -98,19 +72,6 @@ class InvestmentRepaymentController extends Controller
      */
     public function store(Investment $investment, Request $request)
     {
-        // $investmentId = $request->query('investmentId');
-        // $investment = Investment::withTrashed()->findOrFail($investmentId);
-
-        // $investment->load([
-        //     'status',
-        //     'user' => function ($query) {
-        //         $query->withTrashed();
-        //     },
-        //     'investor' => function ($query) {
-        //         $query->withTrashed();
-        //     }
-        // ]);
-
         $fields = RequestProcessor::validation($request, $this->fields, new InvestmentRepayment(), [
             'date' => [
                 'required',
@@ -138,19 +99,6 @@ class InvestmentRepaymentController extends Controller
      */
     public function edit(Investment $investment, InvestmentRepayment $repayment)
     {
-        // $investmentId = $request->query('investmentId');
-        // $investment = Investment::withTrashed()->findOrFail($investmentId);
-
-        // $investment->load([
-        //     'status',
-        //     'user' => function ($query) {
-        //         $query->withTrashed();
-        //     },
-        //     'investor' => function ($query) {
-        //         $query->withTrashed();
-        //     }
-        // ]);
-
         return inertia('InvestmentRepayment/Edit', [
             'investment' => $investment,
             'repayment' => $repayment,
@@ -160,9 +108,28 @@ class InvestmentRepaymentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Investment $investment, InvestmentRepayment $repayment)
+    public function update(Investment $investment, InvestmentRepayment $repayment, Request $request)
     {
-        //
+        if (!$repayment->editable) {
+            return redirect()->back()->with('failed', 'Nie można edytować tego zwrotu inwestycji!');
+        }
+
+        $fields = RequestProcessor::validation($request, $this->fields, new InvestmentRepayment(), [
+            'date' => [
+                'required',
+                'date',
+                'date_format:Y-m-d',
+                'after_or_equal:' . $investment->date,
+            ],
+        ]);
+
+        $repayment_value = $repayment->repayment - $fields['repayment']; 
+        $investment->addRepaymentValue(-$repayment_value);
+        $repayment->update($fields);
+
+        return redirect()
+            ->route('restore.state', ['url' => route('repayments.index', ['investment' => $investment->id])])
+            ->with('success', 'Zwrot z inwestycji został edytowany!');
     }
 
     /**
@@ -170,10 +137,25 @@ class InvestmentRepaymentController extends Controller
      */
     public function destroy(Investment $investment, InvestmentRepayment $repayment)
     {
-        dd($repayment);
+        if (!$repayment->deletable) {
+            return redirect()->back()->with('failed', 'Nie można usunać tego zwrotu inwestycji!');
+        }
+
+        $investment->addRepaymentValue(-$repayment->repayment);
+        $repayment->deleteOrFail();
+
+
+        return redirect()->back()->with('success', 'Zwrot inwestycji został usunięty!');
     }
 
     public function restore(Investment $investment, InvestmentRepayment $repayment) {
-        dd($repayment);
+        if (!$repayment->restorable) {
+            return redirect()->back()->with('failed', 'Nie można przywrócić tego zwrotu inwestycji!');
+        }
+
+        $investment->addRepaymentValue($repayment->repayment);
+        $repayment->restore();
+
+        return redirect()->back()->with('success', 'Zwrot inwestycji został przywrócony!');
     }
 }

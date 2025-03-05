@@ -152,10 +152,21 @@ const query = () => {
     return acc
   }, {})
 }
+
+function isFullUrl(url) {
+  try {
+    new URL(url)
+    return true
+  } catch (e) {
+    return false
+  }
+}
   
 const filter = () => {
+  const urlOrRoute = isFullUrl(props.get) ? props.get : route(props.get)
+
   router.get(
-    route(props.get),
+    urlOrRoute,
     query(),
     {
       preserveState: true,
