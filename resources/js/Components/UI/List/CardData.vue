@@ -1,13 +1,23 @@
 <template>
   <div v-if="onlyAdmin" class="inline">
-    <Link 
-      v-if="link" 
-      :href="link" 
-      class="text-indigo-600 hover:text-indigo-500"
-    >
-      <component :is="props.element.component" v-if="hasComponent" :object="object" />
-      <span v-else>{{ data }}</span>
-    </Link>
+    <template v-if="link">
+      <a 
+        v-if="isExternalLink" 
+        :href="link"  
+        class="text-indigo-400 hover:text-indigo-500"
+      >
+        <component :is="props.element.component" v-if="hasComponent" :object="object" />
+        <span v-else>{{ data }}</span>
+      </a>
+      <Link 
+        v-else
+        :href="link"  
+        class="text-indigo-400 hover:text-indigo-500"
+      >
+        <component :is="props.element.component" v-if="hasComponent" :object="object" />
+        <span v-else>{{ data }}</span>
+      </Link>
+    </template>
     <div v-else class="inline">
       <component :is="props.element.component" v-if="hasComponent" :object="object" />
       <span v-else>{{ data }}</span>
@@ -102,4 +112,6 @@ const link = computed(() => {
 
   return `${props.element.link?.prefix || ''}${value}${props.element.link?.suffix || ''}`
 })
+
+const isExternalLink = computed(() => link.value.startsWith('mailto:') || link.value.startsWith('tel:'))
 </script>
