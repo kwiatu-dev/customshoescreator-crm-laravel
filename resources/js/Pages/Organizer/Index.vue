@@ -4,7 +4,10 @@
       Organizator pracy
     </h1>
     <FullCalendar ref="fullCalendar" :options="calendarOptions" />
-    <div v-if="currentUser?.is_admin" class="flex flex-row flex-nowrap items-center gap-4 mt-4">
+    <div 
+      v-if="currentUser?.is_admin" 
+      class="flex sm:flex-row sm:flex-nowrap sm:items-center sm:gap-4 mt-4 flex-col items-center"
+    >
       <span>Kalendarz użytkownika: </span>
       <DropdownList 
         v-model="userSelected" 
@@ -88,5 +91,13 @@ watch(userSelected, debounce((user) => handleUserSelect(user), 500))
 <style>
 .organizer td {
  overflow: unset !important;
+}
+
+.fc-next-button, .fc-prev-button {
+  @apply !bg-gray-800 !p-1 !border-0 hover:!bg-gray-700; 
+}
+
+.fc-header-toolbar {
+  @apply !mb-4;
 }
 </style>
