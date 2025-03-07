@@ -200,6 +200,10 @@ Route::prefix('investments/{investment}')->group(function () {
 Route::prefix('api')->group(function () {
     Route::put('/navigation-history/update', [NavigationHistoryController::class, 'update'])
         ->name('navigation-history.update');
+
+    Route::get('/users/{user}/projects', [ProjectController::class, 'getUserProjects'])
+        ->withTrashed()
+        ->name('user.projects');
 });
 
 Route::resource('organizer', OrganizerController::class);
