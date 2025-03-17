@@ -96,5 +96,7 @@ class DatabaseSeeder extends Seeder
                 $remaining_amount -= $repayment_amount;
             }
         }
+
+        \App\Models\UserEvents::factory(30)->create();
     }
 }

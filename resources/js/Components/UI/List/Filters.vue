@@ -42,6 +42,10 @@
           <Heading v-if="admin(object.admin)" :title="object.label" :class="{'active': !sections[object.column]}" @click="expand(object.column)" />
           <Dictionary v-if="admin(object.admin)" :form="form" :class="{'hidden': sections[object.column]}" :column="object.column" :table="object.table" @filters-update="update" /> 
         </div>
+        <div v-for="(object, index) in filterable?.list" :key="index">
+          <Heading v-if="admin(object.admin)" :title="object.label" :class="{'active': !sections[object.column]}" @click="expand(object.column)" />
+          <List v-if="admin(object.admin)" :form="form" :column="object.column" :data="object.data" :class="{'hidden': sections[object.column]}" @filters-update="update" />
+        </div>
         <div v-if="filterable?.pagination">
           <Heading :title="'Ilość'" :class="{'active': !sections['pagination']}" @click="expand('pagination')" />
           <Pagination :form="form" :class="{'hidden': sections['pagination']}" @filters-update="update" />
@@ -64,6 +68,7 @@ import Price from '@/Components/UI/List/Filters/Price.vue'
 import Date from '@/Components/UI/List/Filters/Date.vue'
 import Pagination from '@/Components/UI/List/Filters/Pagination.vue'
 import Dictionary from '@/Components/UI/List/Filters/Dictionary.vue'
+import List from '@/Components/UI/List/Filters/List.vue'
 import { ref, reactive, watch, computed, onMounted, onBeforeUnmount } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { debounce } from 'lodash'
@@ -106,6 +111,11 @@ const sections = reactive({
     acc[key] = true
     return acc
   }, {}),
+
+  ...props.filterable.list?.map(item => item.column).reduce((acc, key) => {
+    acc[key] = true
+    return acc
+  }, {}),
 })
 
 const toggle = ref(true)
@@ -136,6 +146,10 @@ const query = () => {
 
   for (const [key, value] of Object.entries(form)) {
     if (!params.hasOwnProperty(key)) {
+      params[key] = value
+    }
+
+    if (params.hasOwnProperty(key) && params[key] !== value) {
       params[key] = value
     }
   }

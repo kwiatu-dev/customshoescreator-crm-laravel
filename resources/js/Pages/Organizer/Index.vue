@@ -3,49 +3,47 @@
     <h1 class="title mb-8">
       Organizator pracy
     </h1>
-    <FullCalendar ref="fullCalendar" :options="calendarOptions" />
-    <div 
-      v-if="currentUser?.is_admin" 
-      class="flex sm:flex-row sm:flex-nowrap sm:items-center sm:gap-4 mt-4 flex-col items-center"
-    >
-      <span>Kalendarz użytkownika: </span>
-      <DropdownList 
-        v-model="userSelected" 
-        caption="Wybierz użytkownika z listy"
-        :label="(option) => `${option.first_name} ${option.last_name}`" 
-        :options="users"
-        position="top"
+    <div class="flex flex-row gap-4">
+      <Link
+        :href="route('organizer.create')" 
+        class="btn-primary px-4" 
+      >
+        <font-awesome-icon :icon="['fas', 'plus']" />
+      </Link>
+      <Filters 
+        ref="filtersElement"
+        :filters="filters" 
+        :filterable="filterable" 
+        :sort="[]" 
+        :get="route('organizer.index')" 
+        :columns="columns" 
       />
     </div>
+
+    <FullCalendar ref="fullCalendar" :options="calendarOptions" />
   </div>
 </template>
 
 <script setup> 
-import DropdownList from '@/Components/UI/Buttons/DropdownList.vue'
+import Filters from '@/Components/UI/List/Filters.vue'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import plLocale from '@fullcalendar/core/locales/pl'
-import axios from 'axios'
-import { ref, watch } from 'vue'
-import { debounce } from 'lodash'
-import NProgress from 'nprogress'
+import { ref } from 'vue'
+import { Link } from '@inertiajs/vue3'
  
 const props = defineProps({
-  currentUser: {
-    type: Object,
-    required: true,
-  },
-  users: {
-    type: Array,
-    required: true,
-  },
   projects: {
     type: Array,
     required: true,
   },
+  userEvents: {
+    type: Array,
+    required: true,
+  },
+  filters: Object,
 })
 
-const userSelected = ref(props.users.find(user => user.id == props.currentUser.id) ?? null)
 const projectEvents = ref(props.projects)
 const fullCalendar = ref(null)
 
@@ -63,29 +61,30 @@ const calendarOptions = ref({
   },
 })
 
-const handleUserSelect = (user) => {
-  if (user)
-    getUserProjects(user)
-  else 
-    projectEvents.value = []
+const filterable = {
+  search: {},
+  date: { columns: ['start', 'end'] },
+  dictionary: [ 
+    { table: 'User', column: 'user_id', label: 'Użytkownik', admin: true },
+    { table: 'UserEventType', column: 'type_id', label: 'Typ wydarzenia' }, 
+  ], 
+  list: [
+    { 
+      label: 'Typ danych', 
+      column: 'category',
+      data: [
+        { name: 'Projekty', value: 'projects' },
+        { name: 'Wydarzenia', value: 'events' },
+      ], 
+    },
+  ],
+  others: [ { name: 'deleted', label: 'Pokaż usunięte' }, { name: 'created_by_user', label: 'Pokaż moje', admin: true } ],
 }
 
-const getUserProjects = (user) => {
-  NProgress.start()
-
-  axios.get(route('user.projects', { user: user.id })) 
-    .then(response => {
-      projectEvents.value = response.data
-    })
-    .catch(error => {
-      console.error('Błąd przy pobieraniu projektów:', error)
-    })
-    .finally(() => {
-      NProgress.done()
-    })
+const columns = {
+  start: { label: 'Data rozpoczęcia' },
+  end: { label: 'Data zakończenia' },
 }
-
-watch(userSelected, debounce((user) => handleUserSelect(user), 500))
 </script>
 
 <style>
