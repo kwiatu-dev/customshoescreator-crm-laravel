@@ -35,7 +35,7 @@ class Project extends Model
         'type_id'
     ];
 
-    protected $appends = ['editable'];
+    //protected $appends = ['editable'];
 
     protected $filterable = [
         'search' => 'string',

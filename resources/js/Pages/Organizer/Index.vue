@@ -44,7 +44,6 @@ const props = defineProps({
   filters: Object,
 })
 
-const projectEvents = ref(props.projects)
 const fullCalendar = ref(null)
 
 const calendarOptions = ref({
@@ -52,7 +51,7 @@ const calendarOptions = ref({
   initialView: 'dayGridMonth',
   locale: plLocale,
   height: 700,
-  events: projectEvents,
+  events: [],
   timeZone: 'local',
   headerToolbar: {
     left: 'prev next',

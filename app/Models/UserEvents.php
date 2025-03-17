@@ -24,8 +24,7 @@ class UserEvents extends Model
         'type_id',
     ];
 
-    protected $appends = ['editable', 'deletable', 'restorable'];
-
+    //protected $appends = ['editable', 'deletable', 'restorable'];
 
     protected $filterable = [
         'search' => 'string',

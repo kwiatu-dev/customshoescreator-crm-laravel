@@ -32,7 +32,7 @@ class Investment extends Model
         'created_by_user_id'
     ];
 
-    protected $appends = ['editable', 'deletable', 'restorable', 'total'];
+    protected $appends = [/* 'editable', 'deletable', 'restorable', */ 'total'];
 
     protected $filterable = [
         'search' => 'string',

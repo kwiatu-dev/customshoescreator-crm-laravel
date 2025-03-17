@@ -60,7 +60,7 @@ class ProjectController extends Controller
             'user' => function ($query) {
                 $query->withTrashed();
             },
-            'images'
+            'images',
         ])
         ->filter($request)
         ->sort($request)

@@ -9,11 +9,14 @@ use Illuminate\Support\Facades\Auth;
 trait HasFilters
 {
     //aktualnie nie można filtrować danych relacyjnych typu (date, number, dictionary)
-    public function scopeFilter($query, Request $request)
+    public function scopeFilter($query, Request $request, bool $store_in_session = true)
     {
         $filters = RequestProcessor::getFilterFields($request, $this->filterable);
-        $request->session()->put('filters', $filters);
 
+        if ($store_in_session) {
+            $request->session()->put('filters', $filters);
+        }
+        
         $query->when(
             $filters['search'] ?? false,
             function ($query, $value){

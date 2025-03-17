@@ -35,7 +35,7 @@ class Client extends Model
         'social_link'
     ];
 
-    protected $appends = ['editable', 'deletable', 'restorable'];
+    //protected $appends = ['editable', 'deletable', 'restorable'];
 
     protected $filterable = [
         'search' => 'string',

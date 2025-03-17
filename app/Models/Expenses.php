@@ -24,7 +24,7 @@ class Expenses extends Model
         'file'
     ];
 
-    protected $appends = ['editable'];
+    //protected $appends = ['editable'];
 
     protected $filterable = [
         'search' => 'string',

@@ -42,7 +42,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'distribution'
     ];
 
-    protected $appends = ['editable'];
+    //protected $appends = ['editable'];
 
     protected $searchable = [
         'first_name', 

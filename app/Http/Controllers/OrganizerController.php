@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use App\Models\User;
 use App\Models\UserEvents;
 use Illuminate\Http\Request;
@@ -19,24 +20,45 @@ class OrganizerController extends Controller
      */
     public function index(Request $request)
     {
-        if(!Auth::user()?->is_admin){
-            $request->merge(['user_id' => Auth::user()->id]);
-        }
-
         $category = $request->query('category');
         $user_events = [];
         $projects = [];
 
         if ($category == null || $category == 'events') {
+            $request_events = $request->duplicate();
+
+            if(!Auth::user()?->is_admin){
+                $request_events->merge(['user_id' => Auth::user()->id]);
+            }
+
             $user_events = UserEvents::query()
-                ->with(['type'])
-                ->filter($request)
+                ->filter($request_events)
                 ->get();
         }
         
         if ($category == null || $category == 'projects') {
-            $project_controller = app(\App\Http\Controllers\ProjectController::class);
-            $projects = $project_controller->getUserProjects(Auth::user())->original;
+            $request_projects = clone $request;
+
+            if(!Auth::user()?->is_admin){
+                $request_projects->merge(['created_by_user' => true]);
+            }
+
+            $filtered_data = collect($request_projects->all())
+                ->except(['type_id'])
+                ->mapWithKeys(function ($value, $key) {
+                    return match ($key) {
+                        'user_id' => ['created_by_user_id' => $value],
+                        'end_start' => ['deadline_start' => $value],
+                        'end_end' => ['deadline_end' => $value],
+                        default => [$key => $value],
+                    };
+                })->toArray();
+
+            $request_projects->query->replace($filtered_data);
+
+            $projects = Project::query()
+                ->filter($request_projects, false)
+                ->get();
         }
 
         return inertia(

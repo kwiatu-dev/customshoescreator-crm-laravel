@@ -23,7 +23,7 @@ class InvestmentRepayment extends Model
         'created_by_user_id'
     ];
 
-    protected $appends = ['editable', 'deletable', 'restorable'];
+    //protected $appends = ['editable', 'deletable', 'restorable'];
 
     protected $filterable = [
         'search' => 'string',

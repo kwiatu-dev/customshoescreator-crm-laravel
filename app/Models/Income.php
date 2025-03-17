@@ -31,7 +31,7 @@ class Income extends Model
         'status_id',
     ];
 
-    protected $appends = ['editable', 'deletable', 'restorable', 'settleable'];
+    protected $appends = [/* 'editable', 'deletable', 'restorable', */ 'settleable'];
 
     protected $filterable = [
         'search' => 'string',
