@@ -45,11 +45,13 @@ import Filters from '@/Components/UI/List/Filters.vue'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import plLocale from '@fullcalendar/core/locales/pl'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { useProjectEvent } from '@/Composables/useProjectEvent'
 import { useUserEvent } from '@/Composables/useUserEvent'
 import FormPopup from '@/Components/UI/Popup/FormPopup.vue'
 import FormUserEventCreate from '@/Pages/UserEvents/Create.vue'
+import { provide } from 'vue'
+import { router } from '@inertiajs/vue3'
  
 const props = defineProps({
   projects: {
@@ -60,6 +62,14 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  users: {
+    type: Array,
+    required: true,
+  },
+  types: {
+    type: Array,
+    required: true,
+  },
   filters: Object,
 })
 
@@ -67,6 +77,24 @@ const fullCalendar = ref(null)
 const projectEvents = computed(() => props.projects.map(useProjectEvent))
 const userEvents = computed(() => props.userEvents.map(useUserEvent))
 const events = computed(() => [...projectEvents.value, ...userEvents.value])
+
+const reload = async () => {
+  if (fullCalendar.value) {
+    await nextTick()
+    const calendarApi = fullCalendar.value.getApi()
+    calendarApi.removeAllEvents()
+    calendarApi.addEventSource(events.value)
+  }
+}
+
+const onEventClick = (info) => { 
+  const event = info.event
+  const link = event.extendedProps.link
+
+  if (link) {
+    router.visit(link)
+  }
+}
 
 const calendarOptions = ref({
   plugins: [dayGridPlugin],
@@ -85,6 +113,7 @@ const calendarOptions = ref({
       return ['event-deleted']
     }
   },
+  eventClick: onEventClick,
 })
 
 const filterable = {
@@ -113,8 +142,13 @@ const columns = {
 }
 
 const onNewUserEventCreated = (userEvent) => {
-  console.log(userEvent)
+  
 }
+
+provide('users', props.users)
+provide('types', props.types)
+
+watch(events, (_) => reload())
 </script>
 
 <style>
@@ -152,5 +186,9 @@ const onNewUserEventCreated = (userEvent) => {
 
 .event-deleted .fc-event-title{
   text-decoration: line-through;
+}
+
+.fc-event {
+  @apply cursor-pointer;
 }
 </style>

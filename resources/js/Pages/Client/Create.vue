@@ -125,11 +125,16 @@ onMounted(() => {
     })
 })
 
+const clear = () => {
+  form.reset()
+}
+
 const emit = defineEmits(['created'])
 
 const create = () => form.post(route('client.store'), {
   preserveScroll: true,
   onSuccess: () => {
+    clear()
     emit('created')
   },
 })

@@ -66,11 +66,16 @@ class OrganizerController extends Controller
                 ->get();
         }
 
+        $users = User::query()->get();
+        $types = UserEventType::query()->get();
+
         return inertia(
             'Organizer/Index', 
             [
                 'projects' => $projects,
                 'userEvents' => $user_events,
+                'users' => $users,
+                'types' => $types,
                 'filters' => $request->session()->pull('filters'),
             ]);
     }

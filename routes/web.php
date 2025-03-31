@@ -202,7 +202,7 @@ Route::resource('organizer', OrganizerController::class)
     ->only('index');
 
 Route::resource('user-events', UserEventsController::class)
-    ->except(['index', 'show']);
+    ->except(['index', 'show', 'create']);
 
 Route::get('user-events/{user_event}', [UserEventsController::class, 'show'])
     ->name('user-events.show')

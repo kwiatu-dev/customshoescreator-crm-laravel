@@ -1,5 +1,5 @@
 import { createApp, h } from 'vue'
-import { createInertiaApp } from '@inertiajs/vue3'
+import { createInertiaApp, router } from '@inertiajs/vue3'
 import MainLayout from '@/Layouts/MainLayout.vue'
 import { ZiggyVue } from 'ziggy'
 import '../css/app.css'
@@ -34,4 +34,12 @@ createInertiaApp({
       .component('font-awesome-icon', FontAwesomeIcon)
       .mount(el)
   },
+})
+
+
+window.addEventListener('popstate', () => {
+  setTimeout(() => {
+    console.log('reload page after popstate')
+    router.reload()
+  }, 0)
 })

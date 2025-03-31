@@ -6,7 +6,7 @@ export const useProjectEvent = (project) => {
     title: project.title,
     start: project.start,
     end: dayjs(project.deadline).add(1, 'day').format('YYYY-MM-DD'),
-    url: route('projects.show', { project: project.id }),
+    link: route('projects.show', { project: project.id }),
     description: project.remarks,
     allDay: true,
     color: '#4f46e5',

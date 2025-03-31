@@ -15,7 +15,7 @@ export const useUserEvent = (userEvent) => {
     title: userEvent.title,
     start: userEvent.start,
     end: dayjs(userEvent.end).add(1, 'day').format('YYYY-MM-DD'),
-    url: route('user-events.show', { user_event: userEvent.id }),
+    link: route('user-events.show', { user_event: userEvent.id }),
     description: userEvent.remarks,
     allDay: true,
     color,

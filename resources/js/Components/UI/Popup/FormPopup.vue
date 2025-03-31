@@ -20,7 +20,6 @@ defineProps({
   },
   label: {
     type: String,
-    required: true,
   },
 })
 
@@ -39,7 +38,7 @@ const open = () => {
 const created = (data) => {
   show.value = false
 
-  if(page.props.inertia?.length){
+  if(page.props.inertia){
     emit('form-action-created', page.props.inertia)
   }
   else {

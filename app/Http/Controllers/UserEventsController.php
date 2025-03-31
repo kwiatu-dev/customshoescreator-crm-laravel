@@ -26,21 +26,6 @@ class UserEventsController extends Controller
             'type_id',
         ];
     }
-    
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $users = User::query()->get();
-        $types = UserEventType::query()->get();
-
-        return inertia('UserEvents/Create',
-        [
-            'users' => $users,
-            'types' => $types,
-        ]);
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -63,8 +48,11 @@ class UserEventsController extends Controller
             'created_by_user_id' => $user->id,
         ]);
 
-        return redirect()->route('organizer.index')
-            ->with('success', 'Wydarzenie zostało dodane!');
+        if(request()->route()->getName() == 'user-events.create'){
+            return redirect()->route('user-events.index')->with('success', 'Wydarzenie zostało dodane!');
+        }
+
+        return back()->with('inertia', $userEvent);
     }
 
     /**

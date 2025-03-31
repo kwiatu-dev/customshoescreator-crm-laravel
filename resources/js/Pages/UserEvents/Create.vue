@@ -64,17 +64,7 @@ import datepicker from '@/Helpers/datepicker'
 import { useAuthUser } from '@/Composables/useAuthUser'
 import Autocomplete from '@/Components/UI/Form/Autocomplete.vue'
 import DropdownList from '@/Components/UI/Form/DropdownList.vue'
-
-defineProps({
-  users: {
-    type: Array,
-    required: true,
-  },
-  types: {
-    type: Array,
-    required: true,
-  },
-})
+import { inject } from 'vue'
   
 const form = useForm({
   title: null,
@@ -95,5 +85,23 @@ onMounted(() => {
   datepicker.create(end, null, (event) => form.end = event.target.value)
 })
   
-const create = () => form.post(route('user-events.store'))
+const emit = defineEmits(['created'])
+
+const clear = () => {
+  form.reset()
+  userSearchQuery.value = ''
+  start.value.value = ''
+  end.value.value = ''
+}
+
+const create = () => form.post(route('user-events.store'), {
+  preserveScroll: true,
+  onSuccess: () => {
+    clear()
+    emit('created')
+  },
+})
+
+const users = inject('users', [])
+const types = inject('types', [])
 </script>
