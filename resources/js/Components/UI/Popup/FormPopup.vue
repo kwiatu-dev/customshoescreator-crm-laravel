@@ -1,5 +1,8 @@
 <template>
-  <span class="text-sm text-gray-400 underline cursor-pointer hover:text-gray-500" @click="open">{{ label }}</span>
+  <span v-if="label" class="text-sm text-gray-400 underline cursor-pointer hover:text-gray-500" @click="open">{{ label }}</span>
+  <div v-else @click="open">
+    <slot />
+  </div>
   <DialogWindow v-model:show="show" @close="close">
     <component :is="form" @created="created" />
   </DialogWindow>

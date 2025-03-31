@@ -38,6 +38,7 @@ class UserEvents extends Model
         ],
         'others' => [
             ['deleted' => 'boolean'],
+            ['created_by_user' => 'boolean']
         ],
     ];
 

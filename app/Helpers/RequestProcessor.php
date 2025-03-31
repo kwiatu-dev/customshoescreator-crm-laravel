@@ -31,13 +31,15 @@ class RequestProcessor{
         'file' => 'nullable|mimes:jpg,png,jpeg,pdf|max:5000',
         'remarks' => 'nullable|string|max:150',
         'start' => 'required|date|date_format:Y-m-d|after_or_equal:now',
+        'end' => 'required|date|date_format:Y-m-d|after_or_equal:start',
         'deadline' => 'required|date|date_format:Y-m-d|after_or_equal:now',
         'created_by_user_id' => 'nullable|exists:users,id',
         'client_id' => 'required|exists:clients,id',
         'username' => 'nullable|string|min:3|max:30',
         'conversion_source_id' => 'required|exists:conversion_sources,id',
         'social_link' => 'nullable|url:http,https|max:255',
-        'interest_rate' => 'required|integer|min:0'
+        'interest_rate' => 'required|integer|min:0',
+
     ];
 
     public static function getSortFields(Request $request, array $sortable): array{

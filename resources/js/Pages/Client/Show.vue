@@ -26,7 +26,7 @@
       :actions="Actions"
     />
   </div>
-  <div v-if="projects.length" class="mb-4">
+  <!-- <div v-if="projects.length" class="mb-4">
     <div class="text-gray-500 font-medium mb-1">Projekty</div>
     <div class="grid md:grid-cols-2 grid-cols-1 gap-2">
       <Cards 
@@ -34,7 +34,7 @@
         :objects="projects" 
       />
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script setup lang="ts">

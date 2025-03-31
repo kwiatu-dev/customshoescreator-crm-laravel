@@ -32,7 +32,7 @@
       :actions="Actions"
     />
   </div>
-  <div v-if="user.projects.length" class="mb-4">
+  <!-- <div v-if="user.projects.length" class="mb-4">
     <div class="text-gray-500 font-medium mb-1">Zlecenia</div>
     <div class="grid md:grid-cols-2 grid-cols-1 gap-2">
       <Cards 
@@ -40,21 +40,13 @@
         :objects="user.projects" 
       />
     </div>
-  </div>
-  <HiddenSection class="w-full" title="Dodatkowe statystyki">
-    <div class="col-span-6">
-      <Box>
-        <template #header>Statystyki</template>
-        <div class="grid grid-cols-12 gap-2">
-          <div class="col-span-12">
-            Wybierz rodzaj podsumowania z listy rozwijanej:
-            <DropdownList v-model="selectedChart" :options="charts.map(o => o.label)" caption="Wybierz opcję" />
-          </div>
-          <LineChart :data="data" title="Wykres - podsumowanie dochodu" class="col-span-12" />
-        </div>
-      </Box>
+  </div> -->
+  <Box>
+    <template #header>Statystyki</template>
+    <div class="grid grid-cols-12 gap-2">
+      <LineChart :data="data" title="Wykres - podsumowanie dochodu" class="col-span-12" />
     </div>
-  </HiddenSection>
+  </Box>
 </template>
 
 <script setup>
@@ -88,7 +80,7 @@ const userCard = {
 const projectCards = {
   title: { title: true },
   client: { label: 'Klient', columns: ['first_name', 'last_name'], link: {column: 'client', field: 'id', prefix: route('client.show', { client: '' }) + '/'} },
-  user: { label: 'Użytkownik', columns: ['first_name', 'last_name'], link: {column: 'user', field: 'id', prefix: route('user.show', { user: '' }) + '/'}},
+  user: { blank: true },
   price: { suffix: ' zł', concat: ['visualization'], separator: ' + ' },
   status: { columns: ['name'] },
   start: { },

@@ -18,13 +18,14 @@ use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\InvestmentController;
 use App\Http\Controllers\InvestmentRepaymentController;
 use App\Http\Controllers\ListingOfferController;
-use App\Http\Controllers\NavigationHistoryController;
 use App\Http\Controllers\OrganizerController;
 use App\Http\Controllers\PrivateFilesController;
 use App\Http\Controllers\RestoreStateController;
 use App\Http\Controllers\RememberStateController;
 use App\Http\Controllers\RealtorListingController;
 use App\Http\Controllers\RealtorListingImageController;
+use App\Http\Controllers\UserEventsController;
+use App\Models\UserEvents;
 
 /*
 |--------------------------------------------------------------------------
@@ -197,13 +198,17 @@ Route::prefix('investments/{investment}')->group(function () {
         ->withTrashed();
 });
 
-Route::prefix('api')->group(function () {
-    Route::put('/navigation-history/update', [NavigationHistoryController::class, 'update'])
-        ->name('navigation-history.update');
+Route::resource('organizer', OrganizerController::class)
+    ->only('index');
 
-    Route::get('/users/{user}/projects', [ProjectController::class, 'getUserProjects'])
-        ->withTrashed()
-        ->name('user.projects');
-});
+Route::resource('user-events', UserEventsController::class)
+    ->except(['index', 'show']);
 
-Route::resource('organizer', OrganizerController::class);
+Route::get('user-events/{user_event}', [UserEventsController::class, 'show'])
+    ->name('user-events.show')
+    ->withTrashed();
+
+Route::put('user-events/{user_event}/restore', [UserEventsController::class, 'restore'])
+    ->name('user-events.restore')
+    ->withTrashed();
+

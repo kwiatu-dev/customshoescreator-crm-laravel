@@ -377,23 +377,4 @@ class ProjectController extends Controller
 
         return redirect()->back()->with('success', 'Projekt został przywrócony!');
     }
-
-    public function getUserProjects(User $user) {
-        $projects = $user->projects;
-
-        $events = $projects->map(function ($project) {
-            return [
-                'id' => $project->id,
-                'title' => $project->title,
-                'start' => $project->start,
-                'end' => $project->deadline,
-                'url' => route('projects.show', ['project' => $project->id]),
-                'description' => $project->remarks,
-                'allDay' => true,
-                'color' => '#4f46e5',
-            ];
-        });
-
-        return response()->json($events);
-    }
 }

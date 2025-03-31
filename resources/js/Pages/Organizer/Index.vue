@@ -4,12 +4,13 @@
       Organizator pracy
     </h1>
     <div class="flex flex-row gap-4">
-      <Link
-        :href="route('organizer.create')" 
-        class="btn-primary px-4" 
-      >
-        <font-awesome-icon :icon="['fas', 'plus']" />
-      </Link>
+      <FormPopup :form="FormUserEventCreate" @form-action-created="onNewUserEventCreated">
+        <button
+          class="btn-primary px-4" 
+        >
+          <font-awesome-icon :icon="['fas', 'plus']" />
+        </button>
+      </FormPopup>
       <Filters 
         ref="filtersElement"
         :filters="filters" 
@@ -21,6 +22,21 @@
     </div>
 
     <FullCalendar ref="fullCalendar" :options="calendarOptions" />
+
+    <div class="flex flex-nowrap flex-row gap-4 items-center mt-4">
+      <div>
+        <span class="w-2 h-2 inline-block bg-indigo-500 rounded-full mr-2" />
+        <span>Projekt</span>
+      </div>
+      <div>
+        <span class="w-2 h-2 inline-block bg-lime-500 rounded-full mr-2" />
+        <span>Dni wolne</span>
+      </div>
+      <div>
+        <span class="w-2 h-2 inline-block bg-blue-500 rounded-full mr-2" />
+        <span>Inne wydarzenie</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -29,8 +45,11 @@ import Filters from '@/Components/UI/List/Filters.vue'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import plLocale from '@fullcalendar/core/locales/pl'
-import { ref } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import { ref, computed } from 'vue'
+import { useProjectEvent } from '@/Composables/useProjectEvent'
+import { useUserEvent } from '@/Composables/useUserEvent'
+import FormPopup from '@/Components/UI/Popup/FormPopup.vue'
+import FormUserEventCreate from '@/Pages/UserEvents/Create.vue'
  
 const props = defineProps({
   projects: {
@@ -45,18 +64,26 @@ const props = defineProps({
 })
 
 const fullCalendar = ref(null)
+const projectEvents = computed(() => props.projects.map(useProjectEvent))
+const userEvents = computed(() => props.userEvents.map(useUserEvent))
+const events = computed(() => [...projectEvents.value, ...userEvents.value])
 
 const calendarOptions = ref({
   plugins: [dayGridPlugin],
   initialView: 'dayGridMonth',
   locale: plLocale,
   height: 700,
-  events: [],
+  events: events,
   timeZone: 'local',
   headerToolbar: {
     left: 'prev next',
     center: '', 
     right: 'title',
+  },
+  eventClassNames: (object) => {
+    if (object.event.extendedProps.deleted) {
+      return ['event-deleted']
+    }
   },
 })
 
@@ -84,6 +111,10 @@ const columns = {
   start: { label: 'Data rozpoczęcia' },
   end: { label: 'Data zakończenia' },
 }
+
+const onNewUserEventCreated = (userEvent) => {
+  console.log(userEvent)
+}
 </script>
 
 <style>
@@ -91,11 +122,35 @@ const columns = {
  overflow: unset !important;
 }
 
+.fc-toolbar-chunk {
+  @apply flex flex-row flex-nowrap gap-4 mt-2;
+}
+
 .fc-next-button, .fc-prev-button {
-  @apply !bg-gray-800 !p-1 !border-0 hover:!bg-gray-700; 
+  @apply !bg-gray-800 !py-2 !px-4 !border-0 hover:!bg-gray-700 !m-0; 
+  width: 46px;
+  height: 40px;
+}
+
+.fc-prev-button {
+  width: 48px;
+}
+
+.fc-next-button .fc-icon, .fc-prev-button .fc-icon {
+  @apply flex flex-row justify-center items-center;
+  width: 13px;
+  height: 13px;
 }
 
 .fc-header-toolbar {
   @apply !mb-4;
+}
+
+.event-deleted {
+  @apply !border-2 !border-dashed !border-rose-600;
+}
+
+.event-deleted .fc-event-title{
+  text-decoration: line-through;
 }
 </style>
