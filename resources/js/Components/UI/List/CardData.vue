@@ -4,7 +4,7 @@
       <a 
         v-if="isExternalLink" 
         :href="link"  
-        class="text-indigo-400 hover:text-indigo-500"
+        class="text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-500 hover:text-indigo-600"
         :style="props.element.title ? '' : 'display: inline-block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'"
       >
         <component :is="props.element.component" v-if="hasComponent" :object="object" />
@@ -13,7 +13,7 @@
       <Link 
         v-else
         :href="link"  
-        class="text-indigo-400 hover:text-indigo-500"
+        class="text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-500 hover:text-indigo-600"
         :style="props.element.title ? '' : 'display: inline-block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'"
       >
         <component :is="props.element.component" v-if="hasComponent" :object="object" />

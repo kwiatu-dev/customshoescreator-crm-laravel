@@ -86,7 +86,7 @@ const d = useListColumns(props.columns)
   right: 0;
   z-index: 10;
 
-  @apply bg-indigo-900;
+  @apply dark:bg-indigo-900 bg-indigo-300;
 }
 
 table {

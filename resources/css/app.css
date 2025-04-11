@@ -8,7 +8,7 @@
     }
 
     .input{
-        @apply block w-full p-2 rounded-md shadow-sm border border-gray-300 dark:border-gray-300 text-gray-500 dark:bg-gray-500 dark:text-gray-50 placeholder:dark:text-gray-200;
+        @apply block w-full p-2 rounded-md shadow-sm border border-gray-400 dark:border-gray-300 text-gray-500 dark:bg-gray-500 dark:text-gray-50 placeholder:dark:text-gray-200;
     }
 
     .input-disabled {
@@ -16,7 +16,7 @@
     }
 
     .btn-primary{
-        @apply bg-indigo-600 hover:bg-indigo-500 text-white font-medium p-2 rounded-md disabled:opacity-20 disabled:cursor-not-allowed;
+        @apply bg-indigo-500 dark:bg-indigo-600 hover:bg-indigo-400 dark:hover:bg-indigo-500 text-white font-medium p-2 rounded-md disabled:opacity-20 disabled:cursor-not-allowed;
     }
 
     .input-error{
@@ -55,7 +55,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        @apply btn-outline md:underline md:hover:text-gray-500 md:border-0 md:bg-transparent md:p-0 md:hover:bg-transparent;
+        @apply btn-outline md:underline md:hover:text-gray-950 md:dark:hover:text-gray-500 md:border-0 md:bg-transparent md:p-0 md:hover:bg-transparent;
     }
 
     .btn-action[disabled="true"], 
@@ -74,40 +74,48 @@
         @apply btn-outline no-underline;
     }
 
-    .today-btn{
-        @apply mr-4 !bg-indigo-600 hover:!bg-indigo-500;
-    }
-
     .clear-btn{
-        @apply dark:hover:!bg-gray-500;
+        @apply hover:!bg-gray-200 dark:hover:!bg-gray-500;
     }
 
     .view-switch{
-        @apply dark:hover:!bg-gray-500 px-4 py-2;
+        @apply !bg-gray-300 dark:!bg-gray-700 dark:hover:!bg-gray-500 px-4 py-2 hover:bg-gray-200;
     }
 
     .prev-btn, .next-btn{
-        @apply dark:hover:!bg-gray-500;
+        @apply !bg-gray-300 dark:!bg-gray-700 dark:hover:!bg-gray-500 px-3 hover:bg-gray-200;
     }
 
     .datepicker-cell{
-        @apply dark:hover:!bg-gray-500;
+        @apply hover:!bg-gray-200 dark:hover:!bg-gray-500;
     }
 
-    .datepicker-dropdown{
+    .today-btn{
+        @apply mr-4 !bg-indigo-400 dark:!bg-indigo-600 hover:!bg-indigo-500;
+    }
+
+    .datepicker-picker.bg-white {
+        @apply !bg-gray-300 dark:!bg-gray-700;
+    }
+
+    .datepicker-dropdown {
         @apply mt-2;
     }
 
     .focused{
-        @apply bg-gray-200 !text-black dark:!text-white dark:!bg-gray-600;
+        @apply bg-gray-100 !text-black dark:!text-white dark:!bg-gray-600;
     }
 
     .today{
-        @apply !bg-indigo-600 !text-white;
+        @apply !bg-indigo-400 dark:!bg-indigo-600 !text-white hover:!bg-indigo-500 dark:hover:!bg-indigo-500;
+    }
+
+    .focused.today {
+        @apply !bg-indigo-500 dark:!bg-indigo-500 !text-white hover:!bg-indigo-400 dark:hover:!bg-indigo-600;
     }
 
     .filter-input{
-        @apply input-filter-r rounded-md w-full placeholder:text-black text-black dark:bg-gray-600 dark:border-gray-500 dark:placeholder:text-gray-400 dark:text-gray-400 font-normal text-sm;
+        @apply input-filter-r rounded-md w-full placeholder:text-gray-800 text-gray-800 bg-gray-50 dark:bg-gray-600 border-gray-300 dark:border-gray-500 dark:placeholder:text-gray-400 dark:text-gray-400 font-normal text-sm;
     }
 
     .filepond--credits{
@@ -156,7 +164,7 @@
 
     /* Global scrollbar styles */
     ::-webkit-scrollbar-track {
-        @apply bg-gray-500;
+        @apply dark:bg-gray-500 bg-gray-200;
     }
 
     ::-webkit-scrollbar {
@@ -166,12 +174,23 @@
 
     ::-webkit-scrollbar-thumb {
         background-image: -webkit-gradient(linear,
-                                        40% 0%,
-                                        75% 84%,
-                                        from(#4338CA),
-                                        to(#6366F1),
-                                        color-stop(.6, #818CF8));
+                                            40% 0%,
+                                            75% 84%,
+                                            from(#818CF8), 
+                                            to(#A5B4FC),
+                                            color-stop(.6, #C7D2FE));
+        @apply bg-indigo-300; 
+    }
 
-        @apply bg-indigo-500;
+    @media (prefers-color-scheme: dark) {
+        ::-webkit-scrollbar-thumb {
+            background-image: -webkit-gradient(linear,
+                                                40% 0%,
+                                                75% 84%,
+                                                from(#4338CA), 
+                                                to(#6366F1),
+                                                color-stop(.6, #818CF8));
+            @apply bg-indigo-500; 
+        }
     }
 }

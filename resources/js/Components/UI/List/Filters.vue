@@ -2,14 +2,19 @@
   <div v-if="filterable" class="relative">
     <button 
       ref="filterShowButton"
-      class="btn-outline text-black bg-gray-300 border-0 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 px-4 py-2" 
+      class="btn-outline text-gray-600 bg-gray-300 border-0 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 px-4 py-2" 
       :class="{'!bg-gray-200 hover:!bg-gray-300 dark:!bg-gray-700 dark:hover:!bg-gray-800': !toggle}" 
       @click="open"
     >
       <font-awesome-icon v-if="toggle" :icon="['fas', 'filter']" />
       <font-awesome-icon v-if="!toggle" :icon="['fas', 'filter-circle-xmark']" />
     </button>
-    <div id="dropdown" ref="filterDropdownBox" class="w-80 bg-gray-300 dark:bg-gray-800 p-4 rounded-lg absolute mt-2 z-10" :class="{'hidden': toggle}" style="max-height: 700px; overflow-y: auto;">
+    <div 
+      id="dropdown" 
+      ref="filterDropdownBox" 
+      class="w-80 bg-gray-200 dark:bg-gray-800 p-4 rounded-lg absolute mt-2 z-10 text-gray-600" 
+      :class="{'hidden': toggle}" style="max-height: 700px; overflow-y: auto;"
+    >
       <div class="flex flex-row flex-nowrap justify-between">
         <h6 class="dark:text-gray-200 font-medium">Filtry</h6>
         <div class="flex flex-row flex-nowrap gap-4">

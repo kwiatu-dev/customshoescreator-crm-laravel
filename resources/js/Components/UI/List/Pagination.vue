@@ -4,7 +4,7 @@
       v-for="(link, index) in links" 
       :key="index" class="py-2 px-4 rounded-md" 
       :href="link.url ? link.url : '#'" 
-      :class="{'bg-indigo-500 dark:bg-indigo-800 text-gray-100 dark:text-gray-300': link.active}"
+      :class="{'btn-primary': link.active, 'hover:text-gray-950 dark:hover:text-gray-400': true}"
       v-html="link.label"
     />
   </div>
