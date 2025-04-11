@@ -5,6 +5,7 @@
         v-if="isExternalLink" 
         :href="link"  
         class="text-indigo-400 hover:text-indigo-500"
+        :style="props.element.title ? '' : 'display: inline-block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'"
       >
         <component :is="props.element.component" v-if="hasComponent" :object="object" />
         <span v-else>{{ data }}</span>
@@ -13,12 +14,17 @@
         v-else
         :href="link"  
         class="text-indigo-400 hover:text-indigo-500"
+        :style="props.element.title ? '' : 'display: inline-block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'"
       >
         <component :is="props.element.component" v-if="hasComponent" :object="object" />
         <span v-else>{{ data }}</span>
       </Link>
     </template>
-    <div v-else class="inline">
+    <div 
+      v-else 
+      class="inline" 
+      :style="props.element.title ? '' : 'display: inline-block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'"
+    >
       <component :is="props.element.component" v-if="hasComponent" :object="object" />
       <span v-else>{{ data }}</span>
     </div>

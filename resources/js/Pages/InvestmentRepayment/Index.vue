@@ -23,7 +23,7 @@
       </Link>
     </template>
   </ListLayout>
-  <div v-else>
+  <div v-else class="flex flex-row justify-start items-center">
     Aktualnie lista spłat jest pusta. Aby dodać pierwszą spłate, kliknij przycisk       
     <Link
       :href="route('repayments.create', { investment: props.investment.id })" 

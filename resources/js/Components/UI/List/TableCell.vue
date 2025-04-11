@@ -2,7 +2,8 @@
   <template v-if="link">
     <a 
       v-if="isExternalLink" 
-      :href="link"  
+      :href="link"
+      :target="props.element.link?.target || null"  
       class="text-indigo-400 hover:text-indigo-500"
     >
       <component :is="props.element.component" v-if="hasComponent" :object="object" />
@@ -82,6 +83,6 @@ const link = computed(() => {
   return `${props.element.link?.prefix || ''}${value}${props.element.link?.suffix || ''}`
 })
 
-const isExternalLink = computed(() => link.value.startsWith('mailto:') || link.value.startsWith('tel:'))
+const isExternalLink = computed(() => link.value.startsWith('mailto:') || link.value.startsWith('tel:') || props.element.link?.external)
 const hasComponent = computed(() => typeof props.element.component === 'object')
 </script>

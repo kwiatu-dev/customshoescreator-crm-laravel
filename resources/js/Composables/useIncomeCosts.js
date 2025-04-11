@@ -5,8 +5,8 @@ export const useIncomeCosts = (income) => {
   const costs = parseInt(income.costs)
   const distribution = typeof income.distribution === 'string' ? JSON.parse(income.distribution) : income.distribution
   
-  const organizationProfit = computed(() => parseFloat((price * costs / 100).toFixed(2)))
-  const restForDistribution = computed(() => price - organizationProfit.value)
+  const organizationProfit = computed(() => parseFloat((price * costs / 100)).toFixed(2))
+  const restForDistribution = computed(() => (price - organizationProfit.value).toFixed(2))
 
   if (!distribution) {
     return { organizationProfit, restForDistribution, usersDistribution: null }
@@ -14,7 +14,7 @@ export const useIncomeCosts = (income) => {
 
   const usersDistribution = computed(() => {
     return Object.entries(distribution).reduce((acc, [userId, userPercentage]) => {
-      acc[userId] = parseFloat((restForDistribution.value * userPercentage / 100).toFixed(2))
+      acc[userId] = parseFloat((restForDistribution.value * userPercentage / 100)).toFixed(2)
       return acc
     }, {})
   })

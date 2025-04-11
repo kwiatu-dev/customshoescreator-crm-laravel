@@ -1,6 +1,6 @@
 <template>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-    <Box>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4 view-show">
+    <Box class="order-1 sm:order-none">
       <template #header>Podsumowanie</template>
       <div class="grid grid-cols-1 gap-2">
         <div>

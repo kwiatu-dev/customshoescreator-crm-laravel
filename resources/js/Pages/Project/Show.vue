@@ -1,6 +1,6 @@
 <template>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <Box>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 view-show view-show">
+    <Box class="order-1 sm:order-none">
       <div class="flex flex-col gap-4">
         <div>
           <div>Inspiracje</div>

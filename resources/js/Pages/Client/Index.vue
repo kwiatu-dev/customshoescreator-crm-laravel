@@ -36,11 +36,11 @@ defineProps({
 })
   
 const columns = {
-  username: { label: 'Nick', link: { field: 'social_link' }},
+  username: { label: 'Nick', link: { field: 'social_link', external: true, target: '_blank' }},
   first_name: { label: 'Imię' },
   last_name: { label: 'Naziwsko' },
-  email: { label: 'Email' },
-  phone: { label: 'Numer telefonu' },
+  email: { label: 'Email', link: { field: 'email', prefix: 'mailto:' }},
+  phone: { label: 'Telefon', link: { field: 'phone', prefix: 'tel:' }},
   street: { label: 'Ulica' },
   street_nr: { label: 'Numer ulicy' },
   apartment_nr: { label: 'Numer mieszkania' },

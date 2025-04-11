@@ -48,7 +48,7 @@ const cards = {
   title: { title: true },
   date: { },
   shop_name: { },
-  price: { suffix: 'zł' },
+  price: { suffix: ' zł' },
 }
 
 const filterable = {

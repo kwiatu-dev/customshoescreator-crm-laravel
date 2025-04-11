@@ -47,6 +47,13 @@ class InvestmentRepaymentController extends Controller
             ->filter($request)
             ->footer();
 
+        $investment->load([
+            'status',
+            'investor' => function ($query) {
+                $query->withTrashed();
+            },
+        ]);
+
         $investment->append([
             'editable',
             'deletable',

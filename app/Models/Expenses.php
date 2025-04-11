@@ -24,8 +24,6 @@ class Expenses extends Model
         'file'
     ];
 
-    //protected $appends = ['editable'];
-
     protected $filterable = [
         'search' => 'string',
         'dates' => [
@@ -72,5 +70,15 @@ class Expenses extends Model
     public function getEditableAttribute()
     {
         return $this->deleted_at == null;
+    }
+
+    public function getDeletableAttribute()
+    {
+        return $this->deleted_at === null;
+    }
+    
+    public function getRestorableAttribute()
+    {
+        return $this->deleted_at !== null;
     }
 }

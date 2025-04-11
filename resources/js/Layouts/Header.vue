@@ -11,28 +11,69 @@
         <div class="justify-between items-center w-full lg:flex lg:w-auto" :class="{'hidden': menu}">
           <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
             <li>
-              <Link :href="route('home')" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-300 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Kokpit</Link>
+              <Link
+                :href="route('home')" 
+                class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-300 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+              >
+                Kokpit
+              </Link>
             </li>
             <li>
-              <Link :href="route('client.index')" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-300 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Klienci</Link>
+              <Link 
+                :class="{'active': isActive('client.index')}"
+                :href="route('client.index')" 
+                class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-300 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+              >
+                Klienci
+              </Link>
             </li>
             <li v-if="user?.is_admin">
-              <Link :href="route('user.index')" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-300 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Użytkownicy</Link>
+              <Link 
+                :class="{'active': isActive('user.index')}"
+                :href="route('user.index')" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-300 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+              >
+                Użytkownicy
+              </Link>
             </li>
             <li v-if="user?.is_admin">
-              <Link :href="route('expenses.index')" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-300 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Wydatki</Link>
+              <Link 
+                :class="{'active': isActive('expenses.index')}"
+                :href="route('expenses.index')" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-300 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+              >
+                Wydatki
+              </Link>
             </li>
             <li v-if="user?.is_admin">
-              <Link :href="route('incomes.index')" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-300 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Przychód</Link>
+              <Link 
+                :class="{'active': isActive('incomes.index')}"
+                :href="route('incomes.index')" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-300 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+              >
+                Przychód
+              </Link>
             </li>
             <li v-if="user?.is_admin">
-              <Link :href="route('investments.index')" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-300 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Inwestycje</Link>
+              <Link 
+                :class="{'active': isActive('investments.index')}"
+                :href="route('investments.index')" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-300 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+              >
+                Inwestycje
+              </Link>
             </li>
             <li>
-              <Link :href="route('projects.index')" class="block py-2 pr-4 pl-3 text-gray-700 border-gray-300 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Projekty</Link>
+              <Link 
+                :class="{'active': isActive('projects.index')}"
+                :href="route('projects.index')" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-300 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+              >
+                Projekty
+              </Link>
             </li>
             <li>
-              <Link :href="route('organizer.index')" class="block py-2 pr-4 pl-3 text-gray-700 border-gray-300 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Organizator pracy</Link>
+              <Link 
+                :class="{'active': isActive('organizer.index')}"
+                :href="route('organizer.index')" class="block py-2 pr-4 pl-3 text-gray-700 border-gray-300 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+              >
+                Organizator pracy
+              </Link>
             </li>
           </ul>
         </div>
@@ -44,15 +85,24 @@
 <script setup>
 import UserMenu from '@/Components/UI/User/UserMenu.vue'
 import { useAuthUser } from '@/Composables/useAuthUser'
-import { Link } from '@inertiajs/vue3'
+import { Link, usePage } from '@inertiajs/vue3'
 import { ref} from 'vue'
 
 const user = useAuthUser()
 const menu = ref(true)
+const page = usePage()
 
 const toggle = () => {
   menu.value = !menu.value
 }
 
-
+const isActive = (name) => {
+  return page.props.ziggy.location.startsWith(route(name))
+}
 </script>
+
+<style scoped>
+a.active {
+  @apply text-gray-50;
+}
+</style>

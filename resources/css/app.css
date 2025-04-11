@@ -52,7 +52,26 @@
     }
 
     .btn-action{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         @apply btn-outline md:underline md:hover:text-gray-500 md:border-0 md:bg-transparent md:p-0 md:hover:bg-transparent;
+    }
+
+    .btn-action[disabled="true"], 
+    .btn-action[disabled]:not([disabled="false"]) {
+        @apply cursor-not-allowed opacity-50;
+    }
+
+    @media(min-width: 768px){
+        .btn-action[disabled] {
+            display: none;
+        }
+    }
+
+    .view-show .btn-action {
+        display: block;
+        @apply btn-outline no-underline;
     }
 
     .today-btn{
@@ -134,4 +153,25 @@
               width: calc(33% - 0.5rem);
           }
       }
+
+    /* Global scrollbar styles */
+    ::-webkit-scrollbar-track {
+        @apply bg-gray-500;
+    }
+
+    ::-webkit-scrollbar {
+        width: 6px; 
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-image: -webkit-gradient(linear,
+                                        40% 0%,
+                                        75% 84%,
+                                        from(#4338CA),
+                                        to(#6366F1),
+                                        color-stop(.6, #818CF8));
+
+        @apply bg-indigo-500;
+    }
 }
