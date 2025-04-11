@@ -17,7 +17,7 @@
             {{ symbols[sorting[table ? `${table}.${column}` : column]] ?? '↓' }}
           </button>
         </td>
-        <td>Akcje</td>
+        <td class="sticky-column">Akcje</td>
       </tr>
     </thead>
     <tbody>
@@ -32,7 +32,7 @@
         >
           <TableCell :element="data" :field="column" :object="table ? object[table] : object" />
         </td>
-        <td>
+        <td class="sticky-column">
           <div class="flex flex-col items-start">
             <component :is="actions" :object="object" />
           </div>
@@ -79,3 +79,30 @@ const sortTable = (field) => orderBy.value = field
 
 const d = useListColumns(props.columns)
 </script>
+
+<style scoped>
+.sticky-column {
+  position: sticky;
+  right: 0;
+  z-index: 10;
+
+  @apply bg-indigo-900;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0px;
+  border: none;
+  border-top: 1px solid #ccc; 
+}
+
+td, th {
+  border: none;
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+}
+
+td:first-child, th:first-child {
+  border-left: 1px solid #ccc;
+}
+</style>
