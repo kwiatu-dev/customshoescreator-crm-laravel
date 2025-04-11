@@ -45,13 +45,15 @@ import Filters from '@/Components/UI/List/Filters.vue'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import plLocale from '@fullcalendar/core/locales/pl'
-import { ref, computed, onMounted, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick, onBeforeMount } from 'vue'
 import { useProjectEvent } from '@/Composables/useProjectEvent'
 import { useUserEvent } from '@/Composables/useUserEvent'
 import FormPopup from '@/Components/UI/Popup/FormPopup.vue'
 import FormUserEventCreate from '@/Pages/UserEvents/Create.vue'
 import { provide } from 'vue'
 import { router } from '@inertiajs/vue3'
+import { useQueryParams } from '@/Composables/useQueryParams'
+import dayjs from 'dayjs'
  
 const props = defineProps({
   projects: {
@@ -92,8 +94,15 @@ const onEventClick = (info) => {
   const link = event.extendedProps.link
 
   if (link) {
-    router.visit(link)
+    router.post(route('remember.state'), {
+      url: link,
+      params: useQueryParams(),
+    })
   }
+}
+
+const onDatesSet = (info) => {
+  addDateToQuery()
 }
 
 const calendarOptions = ref({
@@ -114,6 +123,7 @@ const calendarOptions = ref({
     }
   },
   eventClick: onEventClick,
+  datesSet: onDatesSet,
 })
 
 const filterable = {
@@ -144,6 +154,24 @@ const columns = {
 const onNewUserEventCreated = (userEvent) => {
   
 }
+
+const addDateToQuery = () => {
+  const query = useQueryParams()
+  const calendarApi = fullCalendar.value.getApi()
+  const currentDate = calendarApi.getCurrentData().currentDate
+  const formattedDate = dayjs(currentDate).format('YYYY-MM-DD')
+  const newUrl = route('organizer.index', { ...query, date: formattedDate }) 
+
+  if (query.date !== formattedDate) {
+    router.get(newUrl, {}, { replace: true, preserveScroll: true, preserveState: true }) 
+  } 
+}
+
+onBeforeMount(() => {
+  const query = useQueryParams()
+  const date = query.date || dayjs().format('YYYY-MM-DD')
+  calendarOptions.value.initialDate = date
+})
 
 provide('users', props.users)
 provide('types', props.types)

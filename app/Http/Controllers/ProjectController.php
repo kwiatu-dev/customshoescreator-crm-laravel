@@ -159,6 +159,12 @@ class ProjectController extends Controller
             'type'
         ]);
 
+        $project->append([
+            'editable',
+            'deletable',
+            'restorable',
+        ]);
+
         $project->images->each(function ($image) {
             $image->url = route('private.files', ['catalog' => 'projects', 'file' => $image->file]);
         });

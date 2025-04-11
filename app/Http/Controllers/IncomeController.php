@@ -128,6 +128,12 @@ class IncomeController extends Controller
             }
         ]);
 
+        $income->append([
+            'editable',
+            'deletable',
+            'restorable',
+        ]);
+
         $users = User::query()->withTrashed()->get();
 
         return inertia(

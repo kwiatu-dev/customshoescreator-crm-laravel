@@ -105,6 +105,21 @@ class UserEventsController extends Controller
     public function update(Request $request, UserEvents $userEvent)
     {
         $this->authorize('update', $userEvent);
+
+        $fields = RequestProcessor::validation($request, $this->fields, new UserEvents(), [
+            'user_id' => 'required|exists:users,id',
+            'type_id' => 'required|exists:user_event_types,id',
+        ]);
+
+        $user = User::findOrFail($fields['created_by_user_id'] ?? Auth::id());
+
+        if (!$user->is_admin && $fields['user_id'] !== $user->id) {
+            return redirect()->back()->withErrors(['user_id' => 'Nie masz uprawnień do tworzenia wydarzeń dla innych użytkowników.']);
+        }
+
+        $userEvent->update($fields);
+
+        return redirect()->route('restore.state', ['url' => route('organizer.index')])->with('success', 'Wydarzenie zostało zaktualizowane!');
     }
 
     /**

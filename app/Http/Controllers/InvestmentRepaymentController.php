@@ -47,6 +47,12 @@ class InvestmentRepaymentController extends Controller
             ->filter($request)
             ->footer();
 
+        $investment->append([
+            'editable',
+            'deletable',
+            'restorable',
+        ]);
+
         return inertia('InvestmentRepayment/Index', [
             'repayments' => $repayments,
             'investment' => $investment,

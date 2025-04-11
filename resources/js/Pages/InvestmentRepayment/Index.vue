@@ -15,7 +15,7 @@
   >
     <template #create>
       <Link
-        v-if="investment.status_id != 2"
+        v-if="investment.status_id != 2 && investment.editable"
         :href="route('repayments.create', { investment: props.investment.id })" 
         class="btn-primary px-4"
       >

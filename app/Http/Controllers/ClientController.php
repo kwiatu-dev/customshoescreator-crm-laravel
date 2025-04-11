@@ -71,6 +71,12 @@ class ClientController extends Controller
             },
         ]);
 
+        $client->append([
+            'editable',
+            'deletable',
+            'restorable',
+        ]);
+
         $projects = $client->projects;
 
         return inertia(

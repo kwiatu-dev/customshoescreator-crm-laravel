@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
@@ -155,7 +156,17 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 
     public function getEditableAttribute()
     {
-        return $this->deleted_at == null;
+        return $this->deleted_at == null && $this->is_admin == false;
+    }
+
+    public function getDeletableAttribute()
+    {
+        return $this->deleted_at === null && $this->is_admin == false;
+    }
+    
+    public function getRestorableAttribute()
+    {
+        return $this->deleted_at !== null && $this->is_admin == false;
     }
 
     public function getStreetAttribute($value)

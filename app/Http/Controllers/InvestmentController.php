@@ -124,6 +124,12 @@ class InvestmentController extends Controller
             }
         ]);
 
+        $investment->append([
+            'editable',
+            'deletable',
+            'restorable',
+        ]);
+
         return inertia('Investment/Show', [
             'investment' => $investment
         ]);

@@ -109,14 +109,49 @@ class Project extends Model
         return $this->hasMany(ProjectImage::class, 'project_id');
     }
 
+    public function income()
+    {
+        return $this->hasOne(Income::class, 'project_id', 'id');
+    }
+
     public function getEndAttribute($value)
     {
         return $value === null ? '' : $value;
     }
 
+    public function getDeletableAttribute()
+    {
+        $income = $this->income;
+
+        if ($this->deleted_at != null) {
+            return false;
+        }
+
+        if ($income && $income->status_id == 2) {
+            return false;
+        }
+
+        return true;
+    }
+    
+    public function getRestorableAttribute()
+    {
+        $income = $this->income;
+
+        if ($this->deleted_at == null) {
+            return false;
+        }
+
+        if ($income && $income->status_id == 2) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function getEditableAttribute()
     {   
-        $income = $this->getRelatedIncome();
+        $income = $this->income;
 
         if ($this->deleted_at != null) {
             return false;
@@ -178,7 +213,7 @@ class Project extends Model
             return Income::withTrashed()->where('project_id', $this->id)->first();
         }
         
-        return $this->hasOne(Income::class, 'project_id', 'id')->first();
+        return $this->income;
     }
 
     public function createRelatedIncome() {

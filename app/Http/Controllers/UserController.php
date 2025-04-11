@@ -70,6 +70,12 @@ class UserController extends Controller
                 ]);
             },
         ]);
+
+        $user->append([
+            'editable',
+            'deletable',
+            'restorable',
+        ]);
         
         $admins = User::query()->where('is_admin', true)->get();
 
