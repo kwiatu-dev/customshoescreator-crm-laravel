@@ -10,9 +10,13 @@
             <svg class="w-[18px] h-[18px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" /></svg>
             <span class="sr-only">Toggle sidebar</span>
           </button> -->
-          <a href="/dashboard" class="flex mr-4">
+          <a href="/" class="flex items-center mr-4">
             <img src="/storage/logo.webp" class="mr-3 h-10 rounded-full" />
-            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">customshoescreator.pl</span>
+            <div>
+              <p class="hidden sm:block self-center text-2xl font-semibold whitespace-nowrap dark:text-white mb-0 -mt-2">panelCSC</p>
+              <p class="hidden sm:block text-sm -mt-1 text-gray-500">System do zarządzania zleceniami.</p>
+            </div>
+
           </a>
         </div>
         <div class="flex items-center lg:order-2">          
