@@ -11,28 +11,64 @@
         <div class="text-gray-800 font-medium text-2xl">12137.12 <span>zł</span></div>
       </div>
     </div>
-    
-    <div class="col-span-12 font-medium text-gray-600 mt-4">Podsumowanie KPI</div>
 
-    <div class="col-span-12 flex flex-row flex-nowrap justify-end items-start gap-4">
-      <button 
-        style="font-size: 10px"
-        class="col-span-3 text-center border border-gray-950 border-solid rounded-md font-medium px-4 bg-gray-100"
-      >
-        2025-04-14
-      </button>
-      <div 
-        class="col-span-2 text-center" 
-        style="font-size: 10px;"
-      >
-        do
+    <div class="col-span-12 font-medium text-gray-600 mt-4 flex flex-row flex-nowrap items-center justify-between">
+      <div>Całkowite wartości</div>
+    </div>
+
+    <div class="col-span-4 card">
+      <h2>Użytkownicy</h2>
+      <div class="total">10</div>
+    </div>
+    <div class="col-span-4 card">
+      <h2>Klienci</h2>
+      <div class="total">23</div>
+    </div>
+    <div class="col-span-4 card">
+      <h2>Projekty</h2>
+      <div class="total">56</div>
+    </div>
+    <div class="col-span-4 card">
+      <h2>Przychód</h2>
+      <div class="total">
+        1215 <span>zł</span> 
       </div>
-      <button 
-        style="font-size: 10px"
-        class="col-span-3 text-center border border-gray-950 border-solid rounded-md font-medium  px-4 bg-gray-100"
-      >
-        2025-05-14
-      </button>
+    </div>
+    <div class="col-span-4 card">
+      <h2>Koszty</h2>
+      <div class="total">
+        230 <span>zł</span> 
+      </div>
+    </div>
+    <div class="col-span-4 card">
+      <h2>Zysk</h2>
+      <div class="total">
+        7612 <span>zł</span> 
+      </div>
+    </div>
+    
+    <div class="col-span-12 font-medium text-gray-600 mt-4 flex flex-row flex-nowrap items-center justify-between">
+      <div>Podsumowanie KPI</div>
+      <div class="flex flex-row flex-nowrap justify-end items-start gap-2">
+        <button 
+          style="font-size: 10px"
+          class="col-span-3 text-center border border-gray-950 border-solid rounded-md font-medium px-4 bg-gray-100"
+        >
+          2025-04
+        </button>
+        <div 
+          class="col-span-2 text-center" 
+          style="font-size: 10px;"
+        >
+          do
+        </div>
+        <button 
+          style="font-size: 10px"
+          class="col-span-3 text-center border border-gray-950 border-solid rounded-md font-medium  px-4 bg-gray-100"
+        >
+          2025-05
+        </button>
+      </div>
     </div>
 
     <div class="col-span-4 card">
@@ -218,37 +254,7 @@
       </div>
     </div>
 
-    <div class="col-span-12 font-medium text-gray-600 mt-4">Całkowite wartości</div>
-    <div class="col-span-4 card">
-      <h2>Użytkownicy</h2>
-      <div class="total">10</div>
-    </div>
-    <div class="col-span-4 card">
-      <h2>Klienci</h2>
-      <div class="total">23</div>
-    </div>
-    <div class="col-span-4 card">
-      <h2>Projekty</h2>
-      <div class="total">56</div>
-    </div>
-    <div class="col-span-4 card">
-      <h2>Przychód</h2>
-      <div class="total">
-        1215 <span>zł</span> 
-      </div>
-    </div>
-    <div class="col-span-4 card">
-      <h2>Koszty</h2>
-      <div class="total">
-        230 <span>zł</span> 
-      </div>
-    </div>
-    <div class="col-span-4 card">
-      <h2>Zysk</h2>
-      <div class="total">
-        7612 <span>zł</span> 
-      </div>
-    </div>
+
     <div class="col-span-12 card">test</div>
   </div>
 </template>
