@@ -25,7 +25,8 @@ const user_id = ref(null)
 const userSearchQuery = ref(null)
 
 const addUser = () => {
-  emit('created', users.value.find(u => u.id === parseInt(user_id.value)))
+  const user = users.value.find(u => u.id == parseInt(user_id.value))
+  emit('created', user)
   userSearchQuery.value = null
   user_id.value = null
 }

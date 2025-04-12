@@ -10,7 +10,7 @@
 
 <script setup>
 import DialogWindow from '@/Components/UI/Popup/Popup.vue'
-import { ref } from 'vue'
+import { isProxy, ref } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 
 defineProps({
@@ -38,7 +38,7 @@ const open = () => {
 const created = (data) => {
   show.value = false
 
-  if(page.props.inertia){
+  if(isProxy(page.props.inertia) && !Array.isArray(page.props.inertia)){
     emit('form-action-created', page.props.inertia)
   }
   else {

@@ -30,8 +30,8 @@
       <div v-if="form.costs < 100 && typeof form.costs === 'number'" class="col-span-6">
         <label for="distribution" class="label">Podział</label>
         <UserDistribution v-model="form.distribution" :distribution="form.distribution" :users="usersIncluded" />
-        <FormError :error="form.errors.distribution" />
         <FormPopup :form="AddUserToDistribution" label="Dodaj osobę do podziału" @form-action-created="onUserAddToDistribution" />
+        <FormError :error="form.errors.distribution" />
       </div>
 
       <div class="col-span-6">

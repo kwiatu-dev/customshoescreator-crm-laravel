@@ -189,7 +189,7 @@ watch(events, (_) => reload())
 }
 
 .fc-next-button, .fc-prev-button {
-  @apply !bg-gray-800 !py-2 !px-4 !border-0 hover:!bg-gray-700 !m-0; 
+  @apply !bg-gray-300 dark:!bg-gray-800 !py-2 !px-4 !border-0 hover:!bg-gray-700 !m-0 !text-gray-600 dark:!text-gray-200; 
   width: 46px;
   height: 40px;
 }

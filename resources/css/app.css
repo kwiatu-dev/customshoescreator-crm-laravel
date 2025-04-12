@@ -68,6 +68,10 @@
         .btn-action[disabled]:not([disabled="false"]) {
             display: none;
         }
+
+        .view-show .btn-action {
+            display: block !important;
+        }
     }
 
     .view-show .btn-action {
