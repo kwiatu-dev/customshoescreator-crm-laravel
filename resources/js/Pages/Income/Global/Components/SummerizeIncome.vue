@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-700 p-4 rounded-sm">
+  <div class="bg-gray-200 dark:bg-gray-700 p-4 rounded-md shadow-sm">
     <div v-if="income.project_id" class="grid grid-cols-1 gap-2">
       <div>
         <span>Projekt: </span>
@@ -41,12 +41,12 @@
       </div>
       <div class="line m-0" />
       <div v-if="projectDistribution">
-        <div v-for="[userId, percentage] in Object.entries(projectDistribution)" :key="userId">
+        <div v-for="([userId, percentage], index) in Object.entries(projectDistribution)" :key="userId">
           <div>
             <span>{{ name(userId, users) + ': ' }}</span>
             <span class="font-medium">{{ percentage }}% to {{ projectCosts.managementDistribution.value[userId] }} zł</span>
           </div>
-          <div class="line m-0 my-2" />
+          <div v-if="index < Object.entries(projectDistribution).length - 1" class="line m-0 my-2" />
         </div>
       </div>
     </div>
@@ -73,12 +73,12 @@
       </div>
       <div class="line m-0" />
       <div v-if="incomeDistribution">
-        <div v-for="[userId, percentage] in Object.entries(incomeDistribution)" :key="userId">
+        <div v-for="([userId, percentage], index) in Object.entries(incomeDistribution)" :key="userId">
           <div>
             <span>{{ name(userId, users) + ': ' }}</span>
             <span class="font-medium">{{ percentage }}% to {{ incomeCosts.usersDistribution.value[userId] }} zł</span>
           </div>
-          <div class="line m-0 my-2" />
+          <div v-if="index < Object.entries(incomeDistribution).length - 1" class="line m-0 my-2" />
         </div>
       </div>
     </div>

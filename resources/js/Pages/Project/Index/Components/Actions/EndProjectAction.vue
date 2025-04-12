@@ -66,7 +66,7 @@
           Przed zakończeniem projektu upewnij się, że wszystkie dane zostały poprawnie uzupełnione.
         </p>
         <section class="mt-8 flex flex-col gap-8">
-          <Box class="!border-indigo-500 !bg-gray-900">
+          <Box class="!border-indigo-500 dark:!bg-gray-900 !bg-gray-200">
             <template #header>
               Terminy
             </template>
@@ -85,7 +85,7 @@
               </div>
             </div>
           </Box>
-          <Box class="!border-indigo-500 !bg-gray-900">
+          <Box class="!border-indigo-500 dark:!bg-gray-900 !bg-gray-200">
             <template #header>
               Koszty i prowizje
             </template>
@@ -106,7 +106,7 @@
               {{ project.commission }}%
             </div>
           </Box>
-          <Box class="!border-indigo-500 !bg-gray-900">
+          <Box class="!border-indigo-500 dark:!bg-gray-900 !bg-gray-200">
             <template #header>
               Rozliczenie
             </template>
@@ -123,7 +123,7 @@
               {{ useProjectCosts(project).managementProfit }} zł
             </div>
           </Box>
-          <Box class="!border-indigo-500 !bg-gray-900">
+          <Box class="!border-indigo-500 dark:!bg-gray-900 !bg-gray-200">
             <template #header>
               Zdjęcia
             </template>

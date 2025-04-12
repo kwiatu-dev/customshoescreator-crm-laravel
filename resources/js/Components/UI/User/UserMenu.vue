@@ -3,10 +3,10 @@
     <button 
       type="button" 
       class="flex text-sm bg-gray-400 dark:bg-gray-800 rounded-full md:me-0 z-50" 
-      :class="{['ring-2 ring-gray-200 dark:ring-gray-600']: true}" 
+      :class="{['ring-2 ring-gray-200 dark:ring-gray-600 hover:ring-gray-300 dark:hover:ring-gray-500']: true}" 
       @click="toggle"
     >
-      <div class="w-9 h-9 rounded-full bg-gray-300 dark:bg-gray-900 relative">
+      <div class="w-9 h-9 rounded-full bg-gray-300 dark:bg-gray-900 relative hover:bg-gray-400 hover:shadow-md dark:hover:bg-gray-950">
         <div 
           class="absolute w-4 h-4 bg-red-400 dark:bg-red-500 text-xs rounded-full font-medium text-gray-200" 
           style="top: -5px; left: -2px; text-shadow: 1px 1px 2px black;"

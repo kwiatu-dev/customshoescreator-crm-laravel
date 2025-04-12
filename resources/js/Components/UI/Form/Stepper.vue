@@ -85,7 +85,7 @@ defineExpose({
 
 <style scoped>
 .step{
-    @apply flex w-full items-center after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-100 after:border-4 after:inline-block dark:after:border-gray-700; 
+    @apply flex w-full items-center after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-4 after:inline-block dark:after:border-gray-700; 
 }
 
 .step--last{
@@ -93,18 +93,18 @@ defineExpose({
 }
 
 .step--active{
-    @apply text-indigo-200 dark:text-indigo-200 after:border-blue-100 dark:after:border-indigo-800;
+    @apply text-indigo-200 dark:text-indigo-200 after:border-indigo-400 dark:after:border-indigo-800;
 }
 
 .step_circle{
-    @apply flex items-center justify-center w-10 h-10 bg-gray-100 rounded-full lg:h-12 lg:w-12 dark:bg-gray-700 shrink-0 cursor-pointer hover:dark:bg-indigo-600;
+    @apply flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full lg:h-12 lg:w-12 dark:bg-gray-700 shrink-0 cursor-pointer hover:dark:bg-indigo-500 hover:bg-indigo-400 hover:text-gray-200;
 }
 
 .step_circle--active{
-    @apply dark:bg-indigo-800;
+    @apply dark:bg-indigo-800 bg-indigo-300 text-gray-200;
 }
 
 .step_circle--focus{
-    @apply dark:bg-indigo-600;
+    @apply dark:bg-indigo-600 bg-indigo-500 text-gray-200;
 }
 </style>

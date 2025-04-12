@@ -1,5 +1,5 @@
 <template>
-  <section class="mt-8 bg-gray-800 p-2 rounded-sm grid grid-cols-1 gap-2">
+  <section class="mt-8 bg-gray-100 dark:bg-gray-800 rounded-md shadow-sm p-4 grid grid-cols-1 gap-2">
     <div>
       <div>Firma: </div>
       <ol class="!list-disc ml-4" style="list-style-type: disc;">

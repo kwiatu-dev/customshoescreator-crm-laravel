@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col">
-    <div class="flex flex-row justify-between flex-nowrap w-full border-b border-gray-400 px-2 py-2 mb-2 cursor-pointer hover:bg-gray-600" :class="{'bg-red-900': danger}" @click="toggle">
+    <div class="flex flex-row justify-between flex-nowrap w-full border-b border-gray-400 px-2 py-2 mb-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600" :class="{'bg-red-900': danger}" @click="toggle">
       <div>{{ title }}</div>
       <button :class="{'rotate-180': !hidden}">↓</button>
     </div>
