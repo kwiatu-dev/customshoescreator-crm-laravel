@@ -39,7 +39,7 @@ use App\Models\UserEvents;
 */
 
 //IndexController
-Route::get('/', [DashboardController::class, 'index'])->name('home');
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
 
 //ListingController
 Route::resource('listing', ListingController::class)->only('index', 'show');

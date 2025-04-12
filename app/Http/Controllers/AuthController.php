@@ -10,7 +10,7 @@ class AuthController extends Controller
 {
     public function create(){
         if(Auth::user())
-            return redirect()->route('home');
+            return redirect()->route('dashboard.index');
 
         return inertia(
             'Auth/Login'
@@ -38,6 +38,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('home');
+        return redirect()->route('dashboard.index');
     }
 }
