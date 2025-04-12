@@ -15,7 +15,7 @@ library.add(fas, far, fab)
 
 createInertiaApp({
   progress: { 
-    color: '#29d',
+    color: '#818cf8',
     delay: 0,
     showSpinner: true,
   },

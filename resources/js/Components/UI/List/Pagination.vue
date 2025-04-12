@@ -8,12 +8,12 @@
       v-html="link.label"
     />
   </div>
-  <div v-else class="flex flex-row flex-nowrap justify-center w-full mb-2">
-    <Link :href="prev.url ?? '#'" as="button" class="w-8 h-8 bg-indigo-600 rounded-l-md">
+  <div v-else class="flex flex-row flex-nowrap justify-center w-full mb-2 text-gray-200">
+    <Link :href="prev.url ?? '#'" as="button" class="w-8 h-8 dark:bg-indigo-600 bg-indigo-400 rounded-l-md">
       <font-awesome-icon :icon="['fas', 'angles-left']" />
     </Link>
-    <div class="bg-gray-500 font-medium px-4 pt-1">{{ page.label }}</div>
-    <Link :href="next.url ?? '#'" as="button" class="w-8 h-8 bg-indigo-600 rounded-r-md">
+    <div class="dark:bg-gray-500 bg-gray-400 font-medium px-4 pt-1">{{ page.label }}</div>
+    <Link :href="next.url ?? '#'" as="button" class="w-8 h-8 dark:bg-indigo-600 bg-indigo-400 rounded-r-md">
       <font-awesome-icon :icon="['fas', 'angles-right']" />
     </Link>
   </div>
