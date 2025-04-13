@@ -2,7 +2,7 @@
   <div class="relative">
     <div class="w-full bg-white dark:bg-gray-800 rounded-md md:p-8 p-4 shadow-md border border-solid border-gray-300">
       <ChartNavButtons :labels="labels" @label_click="toggleDataset($event)" />
-      <div style="height: 500px;">
+      <div class="doughnut-height">
         <Doughnut ref="doughnut" :data="chartData" :options="options" />
       </div>
     </div>
@@ -83,12 +83,12 @@ onMounted(async () => {
 
 <style scoped>
 .doughnut-height{
-  height: unset;
+  height: 500px;
 }
 
-@media(min-width: 768px) {
+@media(max-width: 768px) {
   .doughnut-height{
-    height: 500px;
+    height: unset;
   }
 }
 </style>

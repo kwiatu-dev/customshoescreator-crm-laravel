@@ -1,29 +1,29 @@
 <template>
   <div class="grid grid-cols-12 gap-2">
-    <div class="col-span-4 font-medium  flex flex-row flex-nowrap items-center justify-between border border-solid border-gray-100 rounded-md p-4 shadow-sm text-xl">
+    <div class="hidden md:flex col-span-4 font-medium flex-row flex-nowrap items-center justify-between border border-solid border-gray-100 rounded-md p-4 shadow-sm text-xl">
       Projekty
       <font-awesome-icon :icon="['far', 'hand-point-right']" class="text-2xl" />
     </div>
 
-    <div class="col-span-2 card text-center" style="background-color: rgb(253 224 71 / .5) !important">
+    <div class="col-span-6 md:col-span-2 card text-center" style="background-color: rgb(253 224 71 / .5) !important">
       <font-awesome-icon :icon="['fas', 'pause']" class="!text-yellow-400 text-xl" />
       <h2 class="!text-gray-600">Oczekujące</h2>
       <div class="font-bold text-2xl">10</div>
     </div>
 
-    <div class="col-span-2 card text-center" style="background-color: rgb(251 146 60 / .5) !important">
+    <div class="col-span-6 md:col-span-2 card text-center" style="background-color: rgb(251 146 60 / .5) !important">
       <font-awesome-icon :icon="['fas', 'screwdriver-wrench']" class="!text-orange-400 text-xl" />
       <h2 class="!text-gray-600">W trakcie</h2>
       <div class="font-bold text-2xl">10</div>
     </div>
 
-    <div class="col-span-2 card text-center" style="background-color: rgb(248 113 113 / .5) !important;">
+    <div class="col-span-6 md:col-span-2 card text-center" style="background-color: rgb(248 113 113 / .5) !important;">
       <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="!text-red-400 text-xl" />
       <h2 class="!text-gray-600">Po czasie</h2>
       <div class="font-bold text-2xl">10</div>
     </div>
 
-    <div class="col-span-2 card text-center " style="background-color: rgb(74 222 128 / .5) !important;">
+    <div class="col-span-6 md:col-span-2 card text-center " style="background-color: rgb(74 222 128 / .5) !important;">
       <font-awesome-icon :icon="['fas', 'flag-checkered']" class="!text-green-400 text-xl" />
       <h2 class="!text-gray-600">Zakończone</h2>
       <div class="font-bold text-2xl ">10</div>
@@ -33,7 +33,7 @@
       <div>Całkowite wartości</div>
     </div>
 
-    <div class="col-span-4 card">
+    <div class="col-span-12 md:col-span-4 card">
       <h2>Stan konta</h2>
       <div class="flex flex-row flex-nowrap items-center gap-4">
         <font-awesome-icon :icon="['fas', 'wallet']" style="font-size: 40px;" class="text-indigo-400" />
@@ -41,59 +41,55 @@
       </div>
     </div>
     
-    <div class="col-span-8" />
+    <div class="hidden md:block md:col-span-8" />
 
-    
-
-    <div class="col-span-4 card">
+    <div class="col-span-6 md:col-span-4 card">
       <h2>Użytkownicy</h2>
       <div class="total">10</div>
     </div>
-    <div class="col-span-4 card">
+    <div class="col-span-6 md:col-span-4 card">
       <h2>Klienci</h2>
       <div class="total">23</div>
     </div>
-    <div class="col-span-4 card">
+    <div class="col-span-6 md:col-span-4 card">
       <h2>Projekty</h2>
       <div class="total">56</div>
     </div>
-    <div class="col-span-4 card">
+    <div class="col-span-6 md:col-span-4 card">
       <h2>Przychód</h2>
       <div class="total">
         1215 <span>zł</span> 
       </div>
     </div>
-    <div class="col-span-4 card">
+    <div class="col-span-6 md:col-span-4 card">
       <h2>Wydatki</h2>
       <div class="total">
         230 <span>zł</span> 
       </div>
     </div>
-    <div class="col-span-4 card">
+    <div class="col-span-6 md:col-span-4 card">
       <h2>Dochód</h2>
       <div class="total">
         7612 <span>zł</span> 
       </div>
     </div>
 
-    
-    
-    <div class="col-span-12 font-medium text-gray-600 mt-4 flex flex-row flex-nowrap items-center justify-between">
+    <div class="col-span-12 font-medium text-gray-600 mt-4 flex flex-row flex-wrap items-center justify-between">
       <div>Podsumowanie KPI</div>
-      <DateRangePicker v-model="dateRange" />
+      <DateRangePicker v-model="dateRange" class="ml-auto mt-4 md:ml-0 md:mt-0" />
     </div>
 
-    <div class="col-span-4 card">
+    <div class="col-span-12 md:col-span-4 card">
       <div class="flex flex-row flex-nowrap justify-start items-center gap-4 mb-4">
         <div class="p-2 bg-indigo-400 w-16 h-16 rounded-xl flex items-center justify-center">
           <font-awesome-icon :icon="['fas', 'sack-dollar']" class="text-gray-50" style="font-size: 30px;" />
         </div>
         <div class="text-gray-800 font-medium text-xl">Pieniądze</div>
       </div>
-      <div class="flex flex-col gap-2">
+      <div class="flex md:flex-col md:gap-2 gap-8 flex-wrap">
         <div>
           <div class="text-gray-400">Przychód</div>
-          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
+          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
             <span>10 zł</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -103,7 +99,7 @@
         </div>
         <div>
           <div class="text-gray-400">Wydatki</div>
-          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
+          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
             <span>10 zł</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -113,7 +109,7 @@
         </div>
         <div>
           <div class="text-gray-400">Dochód</div>
-          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
+          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
             <span>10 zł</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -125,17 +121,17 @@
     </div>
 
     
-    <div class="col-span-4 card">
+    <div class="col-span-12 md:col-span-4 card">
       <div class="flex flex-row flex-nowrap justify-start items-center gap-4 mb-4">
         <div class="p-2 bg-indigo-400 w-16 h-16 rounded-xl flex items-center justify-center">
           <font-awesome-icon :icon="['fas', 'pen-ruler']" class="text-gray-50" style="font-size: 30px;" />
         </div>
         <div class="text-gray-800 font-medium text-xl">Projekty</div>
       </div>
-      <div class="flex flex-col gap-2">
+      <div class="flex md:flex-col md:gap-2 gap-8 flex-wrap">
         <div>
           <div class="text-gray-400">Nowe</div>
-          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
+          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
             <span>10</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -145,7 +141,7 @@
         </div>
         <div>
           <div class="text-gray-400">Zakończone</div>
-          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
+          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
             <span>10</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -155,7 +151,7 @@
         </div>
         <div>
           <div class="text-gray-400">Średni czas realizacji</div>
-          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
+          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
             <span>10</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -166,17 +162,17 @@
       </div>
     </div>
 
-    <div class="col-span-4 card">
+    <div class="col-span-12 md:col-span-4 card">
       <div class="flex flex-row flex-nowrap justify-start items-center gap-4 mb-4">
         <div class="p-2 bg-indigo-400 w-16 h-16 rounded-xl flex items-center justify-center">
           <font-awesome-icon :icon="['fas', 'people-group']" class="text-gray-50" style="font-size: 30px;" />
         </div>
         <div class="text-gray-800 font-medium text-xl">Klienci</div>
       </div>
-      <div class="flex flex-col gap-2">
+      <div class="flex md:flex-col md:gap-2 gap-8 flex-wrap">
         <div>
           <div class="text-gray-400">Nowi</div>
-          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
+          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
             <span>10</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -186,7 +182,7 @@
         </div>
         <div>
           <div class="text-gray-400">Powracający</div>
-          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
+          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
             <span>10</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -197,7 +193,7 @@
       </div>
     </div>
     
-    <div class="col-span-2 card">
+    <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
       <div class="text-gray-800 font-medium text-xs">
         <div>Renowacja butów</div>
         <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
@@ -209,7 +205,7 @@
         </div>
       </div>
     </div>
-    <div class="col-span-2 card">
+    <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
       <div class="text-gray-800 font-medium text-xs">
         <div>Personalizacja butów</div>
         <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
@@ -221,7 +217,7 @@
         </div>
       </div>
     </div>
-    <div class="col-span-2 card">
+    <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
       <div class="text-gray-800 font-medium text-xs">
         <div>Personalizacja ubrań</div>
         <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
@@ -233,7 +229,7 @@
         </div>
       </div>
     </div>
-    <div class="col-span-2 card">
+    <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
       <div class="text-gray-800 font-medium text-xs">
         <div>Haft ręczny</div>
         <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
@@ -245,7 +241,7 @@
         </div>
       </div>
     </div>
-    <div class="col-span-2 card">
+    <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
       <div class="text-gray-800 font-medium text-xs">
         <div>Haft komputerowy</div>
         <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
@@ -257,7 +253,7 @@
         </div>
       </div>
     </div>
-    <div class="col-span-2 card">
+    <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
       <div class="text-gray-800 font-medium text-xs">
         <div>Inne</div>
         <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
@@ -274,9 +270,7 @@
       <div>TOP 3</div>
     </div>
 
-
-
-    <div class="col-span-6 card">
+    <div class="col-span-12 md:col-span-6 card">
       <div class="col-span-12 flex flex-row flex-nowrap justify-center items-center">
         <div class="bg-gray-200 rounded-full px-1 py-1 flex flex-row flex-nowrap justify-between items-center gap-2 border border-solid border-gray-300">
           <button class="shadow-md bg-white rounded-full px-2 py-1 text-gray-800 text-xs font-medium">Ostatnie 30 dni</button>
@@ -343,14 +337,14 @@
           </div>
         </div>
       </div>
-      <div class="mt-4 flex flex-row flex-nowrap justify-between items-center gap-4">
-        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 w-1/4">
+      <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
+        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
           <div class="p-2 bg-rose-300 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', 'trophy']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
           <div class="text-gray-500 text-md font-medium">Aleksandra</div>
         </div>
-        <table class="text-left border-collapse w-3/4">
+        <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
             <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
               <th class="py-2 px-4 border-b">Przychód</th>
@@ -368,14 +362,14 @@
         </table>
       </div>
       <div class="w-full bg-gray-200 my-4" style="height: 1px;" />
-      <div class="mt-4 flex flex-row flex-nowrap justify-between items-center gap-4">
-        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 w-1/4">
+      <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
+        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
           <div class="p-2 bg-green-300 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '2']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
           <div class="text-gray-500 text-md font-medium">Filip</div>
         </div>
-        <table class="text-left border-collapse w-3/4">
+        <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
             <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
               <th class="py-2 px-4 border-b">Przychód</th>
@@ -393,14 +387,14 @@
         </table>
       </div>
       <div class="w-full bg-gray-200 my-4" style="height: 1px;" />
-      <div class="mt-4 flex flex-row flex-nowrap justify-between items-center gap-4">
-        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 w-1/4">
+      <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
+        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
           <div class="p-2 bg-sky-300 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '3']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
           <div class="text-gray-500 text-md font-medium">Weronika</div>
         </div>
-        <table class="text-left border-collapse w-3/4">
+        <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
             <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
               <th class="py-2 px-4 border-b">Przychód</th>
@@ -418,7 +412,7 @@
         </table>
       </div>
     </div>
-    <div class="col-span-6 card">
+    <div class="col-span-12 md:col-span-6 card">
       <div class="col-span-12 flex flex-row flex-nowrap justify-center items-center">
         <div class="bg-gray-200 rounded-full px-1 py-1 flex flex-row flex-nowrap justify-between items-center gap-2 border border-solid border-gray-300">
           <button class="shadow-md bg-white rounded-full px-2 py-1 text-gray-800 text-xs font-medium">Ostatnie 30 dni</button>
@@ -436,8 +430,7 @@
               <img
                 src="https://customshoescreator.pl/wp-content/uploads/2022/04/malowanie-butow-na-zamowienie-custom-shoes-creator.webp" 
                 alt="" 
-                class="p-3 bg-gray-300 rounded-full shadow-sm text-white"
-                style="width: 200px; object-fit: cover; aspect-ratio: 1;"
+                class="p-1 md:p-3 bg-gray-300 rounded-full shadow-sm text-white top-3-img top-3-img-level-2"
               />
             </div>
             <div class="text-sm text-gray-900 font-medium">Projekt #11</div>
@@ -459,8 +452,7 @@
               <img
                 src="https://customshoescreator.pl/wp-content/uploads/2022/12/malowanie-ubran-2-edited-1.jpg" 
                 alt="" 
-                class="p-3 bg-gray-300 rounded-full shadow-sm text-white"
-                style="width: 250px; object-fit: cover; aspect-ratio: 1;"
+                class="p-1 md:p-3 bg-gray-300 rounded-full shadow-sm text-white top-3-img top-3-img-level-1"
               />
             </div>
             <div class="text-sm text-gray-900 font-medium">Projekt #33</div>
@@ -482,8 +474,7 @@
               <img
                 src="https://customshoescreator.pl/wp-content/uploads/2022/04/sneaker-custom-malowanie-butow-custom-butow-customshoescreator-but-sm-1.webp" 
                 alt="" 
-                class="p-3 bg-gray-300 rounded-full shadow-sm text-white"
-                style="width: 150px; object-fit: cover; aspect-ratio: 1;"
+                class="p-1 md:p-3 bg-gray-300 rounded-full shadow-sm text-white top-3-img top-3-img-level-3"
               />
             </div>
             <div class="text-sm text-gray-900 font-medium">Projekt #23</div>
@@ -500,14 +491,14 @@
           </div>
         </div>
       </div>
-      <div class="mt-4 flex flex-row flex-nowrap justify-between items-center gap-4">
-        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 w-1/4">
+      <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
+        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
           <div class="p-2 bg-rose-300 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', 'trophy']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
           <div class="text-gray-500 text-md font-medium">Projekt #33</div>
         </div>
-        <table class="text-left border-collapse w-3/4">
+        <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
             <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
               <th class="py-2 px-4 border-b">Przychód</th>
@@ -523,14 +514,14 @@
         </table>
       </div>
       <div class="w-full bg-gray-200 my-4" style="height: 1px;" />
-      <div class="mt-4 flex flex-row flex-nowrap justify-between items-center gap-4">
-        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 w-1/4">
+      <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
+        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
           <div class="p-2 bg-green-300 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '2']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
           <div class="text-gray-500 text-md font-medium">Projekt #11</div>
         </div>
-        <table class="text-left border-collapse w-3/4">
+        <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
             <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
               <th class="py-2 px-4 border-b">Przychód</th>
@@ -546,14 +537,14 @@
         </table>
       </div>
       <div class="w-full bg-gray-200 my-4" style="height: 1px;" />
-      <div class="mt-4 flex flex-row flex-nowrap justify-between items-center gap-4">
-        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 w-1/4">
+      <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
+        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
           <div class="p-2 bg-sky-300 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '3']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
           <div class="text-gray-500 text-md font-medium">Projekt #23</div>
         </div>
-        <table class="text-left border-collapse w-3/4">
+        <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
             <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
               <th class="py-2 px-4 border-b">Przychód</th>
@@ -572,7 +563,7 @@
     <div class="col-span-12 font-medium text-gray-600 mt-4 flex flex-row flex-nowrap items-center justify-between">
       <div>Wykresy</div>
     </div>
-    <div class="col-span-4 card">
+    <div class="col-span-12 md:col-span-4 card">
       <h2>Projekty wg. kategorii</h2>
       <DoughnutChart
         :data="doughnutChartData" 
@@ -580,7 +571,7 @@
         :colors="colors({ theme: 'dark' })"
       />
     </div>
-    <div class="col-span-8 card">
+    <div class="col-span-12 md:col-span-8 card">
       <h2>Pieniądze</h2>
       <YearlyBarChart 
         :data="yearlyBarChartData" 
@@ -588,7 +579,7 @@
         :colors="colors({ theme: 'dark' })"
       />
     </div>
-    <div class="col-span-12 card">
+    <div class="col-span-12 2xl:col-span-6 card">
       <h2>Ilość nowych projektów</h2>
       <LineChart 
         :data="lineChartData" 
@@ -596,7 +587,7 @@
         :colors="colors({ theme: 'dark' })"
       />
     </div>
-    <div class="col-span-12 card">
+    <div class="col-span-12 2xl:col-span-6 card">
       <h2>Ilość zakończonych projektów</h2>
       <LineChart 
         :data="lineChartData" 
@@ -723,6 +714,12 @@ th {
 
 td {
   @apply text-gray-700 text-sm;
+}
+
+.top-3-img {
+  aspect-ratio: 1;
+  object-fit: cover;
+  max-width: 200px;
 }
 </style>
   

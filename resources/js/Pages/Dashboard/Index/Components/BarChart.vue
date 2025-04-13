@@ -1,9 +1,9 @@
 <template>
   <div class="relative">
-    <div class="w-full bg-white dark:bg-gray-800 rounded-md md:p-8 p-4 shadow-md border border-solid border-gray-300">
+    <div class="w-full bg-white dark:bg-gray-800 rounded-md md:p-8 p-4 shadow-md border border-solid border-gray-300 chart-container">
       <slot name="header" />
       <ChartNavButtons v-if="hasNav" :labels="labels" @label_click="toggleDataset($event)" />
-      <div style="height: 500px;">
+      <div style="height: 500px;" class="chart-inner">
         <Bar ref="bar" :data="chartData" :options="options" />
       </div>
     </div>
@@ -74,3 +74,16 @@ onMounted(async () => {
   chartData.value = injectDatasetsProperties(props.data)
 })
 </script>
+
+<style scoped>
+@media(max-width: 768px) {
+  .chart-container {
+    overflow-x: auto;
+
+  }
+
+  .chart-inner {
+    min-width: 800px;
+  }
+}
+</style>
