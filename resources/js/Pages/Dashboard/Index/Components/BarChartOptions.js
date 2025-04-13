@@ -1,11 +1,11 @@
-export const options = ({ local, currency }) => ({
+export const options = ({ local, currency, theme }) => ({
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
     legend: {
       display: true,
       position: 'bottom',
-      onClick: null,
+      //onClick: null,
     },
     datalabels: {
       display: false,
@@ -19,7 +19,7 @@ export const options = ({ local, currency }) => ({
       callbacks: {
         label: (context) => {
           let label = context.dataset.label || ''
-  
+    
           if (label) {
             label += ': '
           }
@@ -29,7 +29,7 @@ export const options = ({ local, currency }) => ({
           else {
             label += context.parsed.y
           }
-
+  
           return label
         },
       },
@@ -55,7 +55,7 @@ export const options = ({ local, currency }) => ({
           if (index === 0) {
             return ''
           }
-
+  
           if (currency) {
             return new Intl.NumberFormat(local, { style: 'currency', currency: currency }).format(value)
           }

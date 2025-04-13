@@ -11,6 +11,7 @@ import {
   Legend,
   Filler,
   ArcElement,
+  BarElement,
 } from 'chart.js'
   
 ChartJS.register(
@@ -24,4 +25,5 @@ ChartJS.register(
   Filler,
   ArcElement,
   ChartDataLabels,
+  BarElement,
 )

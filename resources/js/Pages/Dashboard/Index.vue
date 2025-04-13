@@ -64,13 +64,13 @@
       </div>
     </div>
     <div class="col-span-4 card">
-      <h2>Koszty</h2>
+      <h2>Wydatki</h2>
       <div class="total">
         230 <span>zł</span> 
       </div>
     </div>
     <div class="col-span-4 card">
-      <h2>Zysk</h2>
+      <h2>Dochód</h2>
       <div class="total">
         7612 <span>zł</span> 
       </div>
@@ -111,15 +111,15 @@
     <div class="col-span-4 card">
       <div class="flex flex-row flex-nowrap justify-start items-center gap-4 mb-4">
         <div class="p-2 bg-indigo-400 w-16 h-16 rounded-xl flex items-center justify-center">
-          <font-awesome-icon :icon="['fas', 'people-group']" class="text-gray-50" style="font-size: 30px;" />
+          <font-awesome-icon :icon="['fas', 'sack-dollar']" class="text-gray-50" style="font-size: 30px;" />
         </div>
-        <div class="text-gray-800 font-medium text-xl">Klienci</div>
+        <div class="text-gray-800 font-medium text-xl">Pieniądze</div>
       </div>
       <div class="flex flex-col gap-2">
         <div>
-          <div class="text-gray-400">Nowi</div>
+          <div class="text-gray-400">Przychód</div>
           <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
-            <span>10</span>
+            <span>10 zł</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
               2%
@@ -127,9 +127,19 @@
           </div>
         </div>
         <div>
-          <div class="text-gray-400">Powracający</div>
+          <div class="text-gray-400">Wydatki</div>
           <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
-            <span>10</span>
+            <span>10 zł</span>
+            <span class="text-xs text-green-500">
+              <font-awesome-icon :icon="['fas', 'caret-up']" />
+              2%
+            </span>
+          </div>
+        </div>
+        <div>
+          <div class="text-gray-400">Dochód</div>
+          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
+            <span>10 zł</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
               2%
@@ -138,6 +148,8 @@
         </div>
       </div>
     </div>
+
+    
     <div class="col-span-4 card">
       <div class="flex flex-row flex-nowrap justify-start items-center gap-4 mb-4">
         <div class="p-2 bg-indigo-400 w-16 h-16 rounded-xl flex items-center justify-center">
@@ -178,18 +190,19 @@
         </div>
       </div>
     </div>
+
     <div class="col-span-4 card">
       <div class="flex flex-row flex-nowrap justify-start items-center gap-4 mb-4">
         <div class="p-2 bg-indigo-400 w-16 h-16 rounded-xl flex items-center justify-center">
-          <font-awesome-icon :icon="['fas', 'sack-dollar']" class="text-gray-50" style="font-size: 30px;" />
+          <font-awesome-icon :icon="['fas', 'people-group']" class="text-gray-50" style="font-size: 30px;" />
         </div>
-        <div class="text-gray-800 font-medium text-xl">Pieniądze</div>
+        <div class="text-gray-800 font-medium text-xl">Klienci</div>
       </div>
       <div class="flex flex-col gap-2">
         <div>
-          <div class="text-gray-400">Przychód</div>
+          <div class="text-gray-400">Nowi</div>
           <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
-            <span>10 zł</span>
+            <span>10</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
               2%
@@ -197,19 +210,9 @@
           </div>
         </div>
         <div>
-          <div class="text-gray-400">Koszty</div>
+          <div class="text-gray-400">Powracający</div>
           <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
-            <span>10 zł</span>
-            <span class="text-xs text-green-500">
-              <font-awesome-icon :icon="['fas', 'caret-up']" />
-              2%
-            </span>
-          </div>
-        </div>
-        <div>
-          <div class="text-gray-400">Zysk</div>
-          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
-            <span>10 zł</span>
+            <span>10</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
               2%
@@ -218,6 +221,7 @@
         </div>
       </div>
     </div>
+    
     <div class="col-span-2 card">
       <div class="text-gray-800 font-medium text-xs">
         <div>Renowacja butów</div>
@@ -602,7 +606,23 @@
       />
     </div>
     <div class="col-span-8 card">
+      <h2>Pieniądze</h2>
+      <YearlyBarChart 
+        :data="yearlyBarChartData" 
+        :options="barChartOptions({ local: 'pl-PL', currency: 'PLN', })" 
+        :colors="colors({ theme: 'dark' })"
+      />
+    </div>
+    <div class="col-span-12 card">
       <h2>Ilość nowych projektów</h2>
+      <LineChart 
+        :data="lineChartData" 
+        :options="lineChartOptions({ local: 'pl-PL', currency: null, })" 
+        :colors="colors({ theme: 'dark' })"
+      />
+    </div>
+    <div class="col-span-12 card">
+      <h2>Ilość zakończonych projektów</h2>
       <LineChart 
         :data="lineChartData" 
         :options="lineChartOptions({ local: 'pl-PL', currency: null, })" 
@@ -617,8 +637,55 @@ import '@/Pages/Dashboard/Index/Components/ChartRegister.js'
 import { colors } from '@/Pages/Dashboard/Index/Components/ChartColors.js'
 import { options as doughnutChartOptions } from '@/Pages/Dashboard/Index/Components/DoughnutChartOptions.js'
 import { options as lineChartOptions } from '@/Pages/Dashboard/Index/Components/LineChartOptions.js'
+import { options as barChartOptions } from '@/Pages/Dashboard/Index/Components/BarChartOptions.js'
 import LineChart from '@/Pages/Dashboard/Index/Components/LineChart.vue'
 import DoughnutChart from '@/Pages/Dashboard/Index/Components/DoughnutChart.vue'
+import YearlyBarChart from '@/Pages/Dashboard/Index/Components/YearlyBarChart.vue'
+
+const yearlyBarChartData = {
+  2023: {
+    labels: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
+    datasets: [
+      {
+        label: 'Przychód',
+        data: [1000, 1200, 1500, 1300, 1700, 2000, 2200, 2100, 1900, 1800, 1600, 1400],
+      },
+      {
+        label: 'Dochód',
+        data: [800, 1000, 1200, 1100, 1500, 1800, 2000, 1900, 1700, 1600, 1400, 1200],
+      },
+      {
+        label: 'Wydatki',
+        data: [200, 200, 300, 200, 200, 200, 200, 200, 200, 200, 200, 200],
+      },
+      {
+        label: 'Zysk',
+        data: [600, 800, 900, 900, 1300, 1600, 1800, 1700, 1500, 1400, 1200, 1000],
+      },
+    ],
+  },
+  2024: {
+    labels: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
+    datasets: [
+      {
+        label: 'Przychód',
+        data: [1200, 1400, 1700, 1500, 1900, 2200, 2400, 2300, 2100, 2000, 1800, 1600],
+      },
+      {
+        label: 'Dochód',
+        data: [1000, 1200, 1400, 1300, 1700, 2000, 2200, 2100, 1900, 1800, 1600, 1400],
+      },
+      {
+        label: 'Wydatki',
+        data: [200, 200, 300, 200, 200, 200, 200, 200, 200, 200, 200, 200],
+      },
+      {
+        label: 'Zysk',
+        data: [800, 1000, 1100, 1100, 1500, 1800, 2000, 1900, 1700, 1600, 1400, 1200],
+      },
+    ],
+  },
+}
 
 const doughnutChartData = {
   labels: ['Renowacja butów', 'Personalizacja butów', 'Personalizacja ubrań', 'Haft ręczny', 'Haft komputerowy', 'Inne'],
