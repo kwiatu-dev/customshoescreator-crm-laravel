@@ -2,7 +2,6 @@
   <div class="grid grid-cols-12 gap-2">
     <div class="hidden md:flex col-span-4 font-medium flex-row flex-nowrap items-center justify-between border border-solid border-gray-100 rounded-md p-4 shadow-sm text-xl">
       Projekty
-      <font-awesome-icon :icon="['far', 'hand-point-right']" class="text-2xl" />
     </div>
 
     <div class="col-span-6 md:col-span-2 card text-center" style="background-color: rgb(253 224 71 / .5) !important">
