@@ -430,7 +430,7 @@
               <img
                 src="https://customshoescreator.pl/wp-content/uploads/2022/04/malowanie-butow-na-zamowienie-custom-shoes-creator.webp" 
                 alt="" 
-                class="p-1 md:p-3 bg-gray-300 rounded-full shadow-sm text-white top-3-img top-3-img-level-2"
+                class="p-1 bg-gray-300 rounded-full shadow-sm text-white top-3-img top-3-img-level-2"
               />
             </div>
             <div class="text-sm text-gray-900 font-medium">Projekt #11</div>
@@ -452,7 +452,7 @@
               <img
                 src="https://customshoescreator.pl/wp-content/uploads/2022/12/malowanie-ubran-2-edited-1.jpg" 
                 alt="" 
-                class="p-1 md:p-3 bg-gray-300 rounded-full shadow-sm text-white top-3-img top-3-img-level-1"
+                class="p-1 bg-gray-300 rounded-full shadow-sm text-white top-3-img top-3-img-level-1"
               />
             </div>
             <div class="text-sm text-gray-900 font-medium">Projekt #33</div>
@@ -474,7 +474,7 @@
               <img
                 src="https://customshoescreator.pl/wp-content/uploads/2022/04/sneaker-custom-malowanie-butow-custom-butow-customshoescreator-but-sm-1.webp" 
                 alt="" 
-                class="p-1 md:p-3 bg-gray-300 rounded-full shadow-sm text-white top-3-img top-3-img-level-3"
+                class="p-1 bg-gray-300 rounded-full shadow-sm text-white top-3-img top-3-img-level-3"
               />
             </div>
             <div class="text-sm text-gray-900 font-medium">Projekt #23</div>
@@ -719,7 +719,7 @@ td {
 .top-3-img {
   aspect-ratio: 1;
   object-fit: cover;
-  max-width: 200px;
+  max-width: 120px;
 }
 </style>
   
