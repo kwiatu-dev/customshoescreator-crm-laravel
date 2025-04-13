@@ -1,14 +1,49 @@
 <template>
   <div class="grid grid-cols-12 gap-2">
-    <div class="col-span-4 card -mb-2">
+    <div class="col-span-4 font-medium  flex flex-row flex-nowrap items-center justify-between border border-solid border-gray-100 rounded-md p-4 shadow-sm text-xl">
+      Projekty
+      <font-awesome-icon :icon="['far', 'hand-point-right']" class="text-2xl" />
+    </div>
+
+    <div class="col-span-2 card text-center" style="background-color: rgb(253 224 71 / .5) !important">
+      <font-awesome-icon :icon="['fas', 'pause']" class="!text-yellow-400 text-xl" />
+      <h2 class="!text-gray-600">Oczekujące</h2>
+      <div class="font-bold text-2xl">10</div>
+    </div>
+
+    <div class="col-span-2 card text-center" style="background-color: rgb(251 146 60 / .5) !important">
+      <font-awesome-icon :icon="['fas', 'screwdriver-wrench']" class="!text-orange-400 text-xl" />
+      <h2 class="!text-gray-600">W trakcie</h2>
+      <div class="font-bold text-2xl">10</div>
+    </div>
+
+    <div class="col-span-2 card text-center" style="background-color: rgb(248 113 113 / .5) !important;">
+      <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="!text-red-400 text-xl" />
+      <h2 class="!text-gray-600">Po czasie</h2>
+      <div class="font-bold text-2xl">10</div>
+    </div>
+
+    <div class="col-span-2 card text-center " style="background-color: rgb(74 222 128 / .5) !important;">
+      <font-awesome-icon :icon="['fas', 'flag-checkered']" class="!text-green-400 text-xl" />
+      <h2 class="!text-gray-600">Zakończone</h2>
+      <div class="font-bold text-2xl ">10</div>
+    </div>
+
+    <div class="col-span-12 font-medium text-gray-600 mt-4 flex flex-row flex-nowrap items-center justify-between">
+      <div>Całkowite wartości</div>
+    </div>
+
+    <div class="col-span-4 card">
       <h2>Stan konta</h2>
       <div class="flex flex-row flex-nowrap items-center gap-4">
         <font-awesome-icon :icon="['fas', 'wallet']" style="font-size: 40px;" class="text-indigo-400" />
         <div class="text-gray-800 font-medium text-2xl">12137.12 <span>zł</span></div>
       </div>
     </div>
+    
+    <div class="col-span-8" />
 
-    <div class="col-span-12" />
+    
 
     <div class="col-span-4 card">
       <h2>Użytkownicy</h2>
@@ -40,6 +75,8 @@
         7612 <span>zł</span> 
       </div>
     </div>
+
+    
     
     <div class="col-span-12 font-medium text-gray-600 mt-4 flex flex-row flex-nowrap items-center justify-between">
       <div>Podsumowanie KPI</div>
@@ -254,7 +291,6 @@
       </div>
     </div>
 
-
     <div class="col-span-12 font-medium text-gray-600 mt-4 flex flex-row flex-nowrap items-center justify-between">
       <div>TOP 3</div>
     </div>
@@ -339,7 +375,7 @@
           <thead>
             <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
               <th class="py-2 px-4 border-b">Przychód</th>
-              <th class="py-2 px-4 border-b">Zakończone zlecenia</th>
+              <th class="py-2 px-4 border-b">Zakończone projekty</th>
               <th class="py-2 px-4 border-b">Średni czas realizacji</th>
             </tr>
           </thead>
@@ -364,7 +400,7 @@
           <thead>
             <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
               <th class="py-2 px-4 border-b">Przychód</th>
-              <th class="py-2 px-4 border-b">Zakończone zlecenia</th>
+              <th class="py-2 px-4 border-b">Zakończone projekty</th>
               <th class="py-2 px-4 border-b">Średni czas realizacji</th>
             </tr>
           </thead>
@@ -389,7 +425,7 @@
           <thead>
             <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
               <th class="py-2 px-4 border-b">Przychód</th>
-              <th class="py-2 px-4 border-b">Zakończone zlecenia</th>
+              <th class="py-2 px-4 border-b">Zakończone projekty</th>
               <th class="py-2 px-4 border-b">Średni czas realizacji</th>
             </tr>
           </thead>
@@ -558,7 +594,7 @@
       <div>Wykresy</div>
     </div>
     <div class="col-span-4 card">
-      <h2>Zlecenia wg. kategorii</h2>
+      <h2>Projekty wg. kategorii</h2>
       <DoughnutChart
         :data="doughnutChartData" 
         :options="doughnutChartOptions({ local: 'pl-PL', currency: null, theme: 'light' })" 
@@ -566,7 +602,7 @@
       />
     </div>
     <div class="col-span-8 card">
-      <h2>Ilość zleceń</h2>
+      <h2>Ilość nowych projektów</h2>
       <LineChart 
         :data="lineChartData" 
         :options="lineChartOptions({ local: 'pl-PL', currency: null, })" 
