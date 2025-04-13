@@ -1,24 +1,29 @@
 <template>
-  <div class="w-full bg-gray-800 rounded-md md:p-8 p-4 shadow-md">
-    <div class="title text-center mb-8">
-      Przykładowy wykres
-    </div>
-    <ChartNavButtons :labels="labels" @label_click="toggleDataset($event)" />
-    <div class="doughnut-height">
-      <Doughnut ref="doughnut" :data="chartData" :options="options" />
+  <div class="relative">
+    <div class="w-full bg-white dark:bg-gray-800 rounded-md md:p-8 p-4 shadow-md border border-solid border-gray-300">
+      <ChartNavButtons :labels="labels" @label_click="toggleDataset($event)" />
+      <div style="height: 500px;">
+        <Doughnut ref="doughnut" :data="chartData" :options="options" />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import ChartNavButtons from '@/Pages/Dashboard/Index/Components/ChartNavButtons.vue'
-import { options } from '@/Pages/Dashboard/Index/Components/DoughnutChartOptions.js'
-import { colors } from '@/Pages/Dashboard/Index/Components/ChartColors.js'
 import { Doughnut } from 'vue-chartjs'
 import { ref, onMounted, nextTick } from 'vue'
 
 const props = defineProps({
   data: { 
+    required: true, 
+    type: Object, 
+  },
+  options: { 
+    required: true, 
+    type: Object, 
+  },
+  colors: { 
     required: true, 
     type: Object, 
   },
@@ -29,13 +34,19 @@ const labels = ref({})
 const chartData = ref({ datasets: [] })
 
 const toggleDataset = (index) => {
-  const meta = doughnut.value.chart.getDatasetMeta(0)
-  meta.data[index].hidden = !meta.data[index].hidden
-  doughnut.value.chart.update()
-  labels.value[index].visible = !labels.value[index].visible
+  const chart = doughnut.value.chart
+  
+  chart.data.datasets.forEach((_, i) => {
+    const meta = chart.getDatasetMeta(i)
+    meta.hidden = i !== index 
+    labels.value[i].visible = i === index 
+  })
+
+  chart.update()
 }
 
 const injectDatasetsProperties = (data) => {
+  const chartArea = doughnut.value.chart.chartArea
   const canvas = doughnut.value.chart.canvas
   const ctx = canvas.getContext('2d')
 
@@ -43,21 +54,15 @@ const injectDatasetsProperties = (data) => {
     let backgroundColors = []
 
     for (const [index, _] of dataset.data.entries()) {
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+      const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top)
 
-      gradient.addColorStop(0, colors[index].backgroundColor.replace('{opacity}', '0.9'))
-      gradient.addColorStop(0.5, colors[index].backgroundColor.replace('{opacity}', '0.5'))
-      gradient.addColorStop(1, colors[index].backgroundColor.replace('{opacity}', '0.2'))
+      gradient.addColorStop(0, props.colors[index].backgroundColor.replace('{opacity}', '0.9'))
+      gradient.addColorStop(0.5, props.colors[index].backgroundColor.replace('{opacity}', '0.5'))
+      gradient.addColorStop(1, props.colors[index].backgroundColor.replace('{opacity}', '0.2'))
 
       backgroundColors.push(gradient)
     }
 
-    dataset.pointBackgroundColor = 'rgb(209 213 219)'
-    dataset.pointBorderColor = 'rgb(209 213 219)'
-    dataset.borderWidth = 0
-    dataset.borderRadius = 10
-    dataset.cutout = '70%'
-    dataset.spacing = 5
     dataset.backgroundColor = backgroundColors
   }
 
@@ -66,11 +71,14 @@ const injectDatasetsProperties = (data) => {
 
 onMounted(async () => {
   await nextTick()
-  labels.value = props.data.labels.map(label => ({ value: label, visible: true }))
+  labels.value = props.data.datasets.map((dataset, index) => ({ value: dataset.label, visible: index === props.data.datasets.length - 1 }))
+
+  props.data.datasets.forEach((dataset, index) => {
+    dataset.hidden = index !== props.data.datasets.length - 1
+  })
+
   chartData.value = injectDatasetsProperties(props.data)
 })
-
-//todo - dodać napis w środku donata z informacją ile procent oczekuje na na wypłacenie
 </script>
 
 <style scoped>

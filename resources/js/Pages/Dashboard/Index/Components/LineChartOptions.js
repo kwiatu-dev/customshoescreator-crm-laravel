@@ -1,4 +1,4 @@
-export const options = {
+export const options = ({ local, currency }) => ({
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
@@ -21,9 +21,13 @@ export const options = {
           if (label) {
             label += ': '
           }
-          if (context.parsed.y !== null) {
-            label += new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(context.parsed.y)
+          if (currency && context.parsed.y !== null) {
+            label += new Intl.NumberFormat(local, { style: 'currency', currency: currency }).format(context.parsed.y)
           }
+          else {
+            label += context.parsed.y
+          }
+
           return label
         },
       },
@@ -49,10 +53,15 @@ export const options = {
           if (index === 0) {
             return ''
           }
-  
-          return new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(value)
+
+          if (currency) {
+            return new Intl.NumberFormat(local, { style: 'currency', currency: currency }).format(value)
+          }
+          else {
+            return value
+          }
         },
       },
     },
   },
-}
+})

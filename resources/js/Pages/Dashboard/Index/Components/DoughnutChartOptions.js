@@ -1,12 +1,17 @@
-export const options = {
+export const options = ({ local, currency, theme }) => ({
   responsive: true,
   maintainAspectRatio: false,
+  cutout: '60%',
+  spacing: 1,
+  borderRadius: 8,
+  borderWidth: 1,
   plugins: {
     legend: {
-      display: false,
+      display: true,
+      position: 'bottom',
     },
     tooltip: {
-      enabled: false,
+      enabled: true,
       displayColors: false,
       bodyColor: 'rgb(209 213 219)',
       titleColor: 'rgb(209 213 219)',
@@ -19,14 +24,21 @@ export const options = {
           if (label) {
             label += ': '
           }
-          if (context.parsed.y !== null) {
-            label += new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(context.parsed)
+
+          if (currency && context.parsed !== null) {
+            label += new Intl.NumberFormat(local, { style: 'currency', currency: currency }).format(context.parsed)
           }
+          else {
+            label += context.parsed
+          }
+
           return label
         },
       },
     },
     datalabels: { 
+      anchor: 'center',
+      align: 'center',
       display: (context) => {
         const meta = context.chart.getDatasetMeta(0)
         
@@ -35,13 +47,18 @@ export const options = {
         }
       },
       formatter: (value, _) => {
-        return new Intl.NumberFormat('pl-PL', { style: 'currency', currency: 'PLN' }).format(value)
+        if (currency) {
+          return new Intl.NumberFormat(local, { style: 'currency', currency: currency }).format(value)
+        }
+        else {
+          return value
+        }
       },
       font: {
         weight: 'bold',
-        size: 20,
+        size: 30,
       },
-      color: 'rgb(156 163 175)',
+      color: theme === 'dark' ? 'rgb(209 213 219)' : 'white',
     },
   },
-}
+})
