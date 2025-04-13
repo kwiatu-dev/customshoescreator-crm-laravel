@@ -80,32 +80,7 @@
     
     <div class="col-span-12 font-medium text-gray-600 mt-4 flex flex-row flex-nowrap items-center justify-between">
       <div>Podsumowanie KPI</div>
-      <div class="flex flex-row flex-nowrap justify-end items-start gap-2">
-        <div 
-          class="col-span-2 text-center" 
-          style="font-size: 10px;"
-        >
-          od
-        </div>
-        <button 
-          style="font-size: 10px"
-          class="col-span-3 text-center border border-gray-950 border-solid rounded-md font-medium px-4 bg-gray-100"
-        >
-          2025-04
-        </button>
-        <div 
-          class="col-span-2 text-center" 
-          style="font-size: 10px;"
-        >
-          do
-        </div>
-        <button 
-          style="font-size: 10px"
-          class="col-span-3 text-center border border-gray-950 border-solid rounded-md font-medium  px-4 bg-gray-100"
-        >
-          2025-05
-        </button>
-      </div>
+      <DateRangePicker v-model="dateRange" />
     </div>
 
     <div class="col-span-4 card">
@@ -641,6 +616,10 @@ import { options as barChartOptions } from '@/Pages/Dashboard/Index/Components/B
 import LineChart from '@/Pages/Dashboard/Index/Components/LineChart.vue'
 import DoughnutChart from '@/Pages/Dashboard/Index/Components/DoughnutChart.vue'
 import YearlyBarChart from '@/Pages/Dashboard/Index/Components/YearlyBarChart.vue'
+import DateRangePicker from '@/Pages/Dashboard/Index/Components/DateRangePicker.vue'
+import { ref } from 'vue'
+
+const dateRange = ref(null)
 
 const yearlyBarChartData = {
   2023: {

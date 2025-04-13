@@ -1,7 +1,7 @@
 import Datepicker from 'flowbite-datepicker/Datepicker'
 import language from 'flowbite-datepicker/locales/pl'
 
-const create = (input, date_start, callback) => {
+const create = (input, date_start, callback, format = 'yyyy-mm-dd') => {
   Datepicker.locales.pl = language.pl
   
   const datepicker = new Datepicker(input.value, {
@@ -9,8 +9,26 @@ const create = (input, date_start, callback) => {
     clearBtn: true,
     todayHighlight: true,
     language: 'pl',
-    format: 'yyyy-mm-dd',
+    format: format,
     defaultViewDate: new Date(date_start ?? 'today'),
+  })
+      
+  input.value.addEventListener('changeDate', callback)
+
+  return datepicker
+}
+
+const range = (input, date_start, callback, format = 'yyyy-mm-dd') => {
+  Datepicker.locales.pl = language.pl
+  
+  const datepicker = new Datepicker(input.value, {
+    todayBtn: false,
+    clearBtn: false,
+    todayHighlight: true,
+    language: 'pl',
+    format: format,
+    defaultViewDate: new Date(date_start ?? 'today'),
+    pickLevel: 1,
   })
       
   input.value.addEventListener('changeDate', callback)
@@ -20,4 +38,5 @@ const create = (input, date_start, callback) => {
 
 export default {
   create,
+  range,
 }
