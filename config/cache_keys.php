@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'total_projects_count' => 'total_projects_count',
+    'total_clients_count' => 'total_clients_count',
+    'total_users_count' => 'total_users_count',
+    'total_income_count' => 'total_income_count',
+    'total_expenses_count' => 'total_expenses_count',
+    'total_expenses_sum' => 'total_expenses_sum',
+    'total_gross_income_sum' => 'total_gross_income_sum',
+    'total_net_income_sum' => 'total_net_income_sum',
+    'total_investments_sum' => 'total_investments_sum',
+    'total_investments_count' => 'total_investments_count',
+    'total_active_investments_count' => 'total_active_investments_count',
+    'total_after_date_investments_count' => 'total_after_date_investments_count',
+    'total_completed_investments_count' => 'total_completed_investments_count',
+    'total_awaiting_repayment_sum' => 'total_awaiting_repayment_sum',
+    'total_repayment_sum' => 'total_repayment_sum',
+    'total_awaiting_projects_count' => 'total_awaiting_projects_count',
+    'total_in_progress_projects_count' => 'total_in_progress_projects_count',
+    'total_after_deadline_projects_count' => 'total_after_deadline_projects_count',
+    'total_completed_projects_count' => 'total_completed_projects_count',
+    'total_active_income_count' => 'total_active_income_count',
+    'total_completed_income_count' => 'total_completed_income_count',
+    'total_awaiting_income_sum' => 'total_awaiting_income_sum',
+    'wallet' => 'wallet',
+];

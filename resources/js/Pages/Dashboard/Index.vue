@@ -1,6 +1,6 @@
 <template>
   <div class="grid grid-cols-12 gap-2">
-    <div class="hidden md:flex col-span-4 font-medium flex-row flex-nowrap items-center justify-between border border-solid border-gray-100 dark:border-gray-500 rounded-md p-4 shadow-sm text-xl">
+    <div class="flex col-span-12 md:col-span-4  font-medium flex-row flex-nowrap items-center justify-between border border-solid border-gray-100 dark:border-gray-500 rounded-md p-4 shadow-sm text-xl">
       Projekty
     </div>
 
@@ -9,9 +9,9 @@
       class="col-span-6 md:col-span-2 card text-center" 
       style="background-color: rgb(253 224 71 / .5) !important"
     >
-      <font-awesome-icon :icon="['fas', 'pause']" class="!text-yellow-400 text-xl" />
+      <font-awesome-icon :icon="['far', 'hourglass-half']" class="!text-yellow-400 text-xl" />
       <h2 class="!text-gray-600 dark:!text-gray-300">Oczekujące</h2>
-      <div class="font-bold text-2xl">10</div>
+      <div class="font-bold text-2xl">{{ metrics['total_awaiting_projects_count'] }}</div>
     </Link>
 
     <Link
@@ -21,7 +21,7 @@
     >
       <font-awesome-icon :icon="['fas', 'screwdriver-wrench']" class="!text-orange-400 text-xl" />
       <h2 class="!text-gray-600 dark:!text-gray-300">W trakcie</h2>
-      <div class="font-bold text-2xl">10</div>
+      <div class="font-bold text-2xl">{{ metrics['total_in_progress_projects_count'] }}</div>
     </Link>
 
     <Link 
@@ -31,7 +31,7 @@
     >
       <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="!text-red-400 text-xl" />
       <h2 class="!text-gray-600 dark:!text-gray-300">Po czasie</h2>
-      <div class="font-bold text-2xl">10</div>
+      <div class="font-bold text-2xl">{{ metrics['total_after_deadline_projects_count'] }}</div>
     </Link>
 
     <Link 
@@ -41,52 +41,124 @@
     >
       <font-awesome-icon :icon="['fas', 'flag-checkered']" class="!text-green-400 text-xl" />
       <h2 class="!text-gray-600 dark:!text-gray-300">Zakończone</h2>
-      <div class="font-bold text-2xl ">10</div>
+      <div class="font-bold text-2xl ">{{ metrics['total_completed_projects_count'] }}</div>
     </Link>
 
-    <div class="col-span-12 font-medium text-gray-600 mt-4 flex flex-row flex-nowrap items-center justify-between">
-      <div>Całkowite wartości</div>
+    <div class="flex col-span-12 md:col-span-4 font-medium flex-row flex-nowrap items-center justify-between border border-solid border-gray-100 dark:border-gray-500 rounded-md p-4 shadow-sm text-xl">
+      Inwestycje
     </div>
 
-    <div class="col-span-12 md:col-span-4 card">
-      <h2>Stan konta</h2>
+    <Link 
+      :href="route('projects.index', { status_id: '1'})"
+      class="col-span-6 md:col-span-2 card text-center" 
+      style="background-color: rgb(253 224 71 / .5) !important"
+    >
+      <font-awesome-icon :icon="['far', 'hourglass-half']" class="!text-yellow-400 text-xl" />
+      <h2 class="!text-gray-600 dark:!text-gray-300">Oczekujące</h2>
+      <div class="font-bold text-2xl">{{ metrics['total_active_investments_count'] }}</div>
+    </Link>
+
+    <Link 
+      :href="route('projects.index', { after_deadline: 'true'})"
+      class="col-span-6 md:col-span-2 card text-center" 
+      style="background-color: rgb(248 113 113 / .5) !important;"
+    >
+      <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="!text-red-400 text-xl" />
+      <h2 class="!text-gray-600 dark:!text-gray-300">Po czasie</h2>
+      <div class="font-bold text-2xl">{{ metrics['total_after_date_investments_count'] }}</div>
+    </Link>
+
+    <Link 
+      :href="route('projects.index', { status_id: '3'})"
+      class="col-span-6 md:col-span-2 card text-center " 
+      style="background-color: rgb(74 222 128 / .5) !important;"
+    >
+      <font-awesome-icon :icon="['fas', 'flag-checkered']" class="!text-green-400 text-xl" />
+      <h2 class="!text-gray-600 dark:!text-gray-300">Rozliczone</h2>
+      <div class="font-bold text-2xl ">{{ metrics['total_completed_investments_count'] }}</div>
+    </Link>
+
+    <div class="flex col-span-12 md:col-span-4 font-medium flex-row flex-nowrap items-center justify-between border border-solid border-gray-100 dark:border-gray-500 rounded-md p-4 shadow-sm text-xl">
+      Przychód
+    </div>
+
+    <Link 
+      :href="route('projects.index', { status_id: '1'})"
+      class="col-span-6 md:col-span-2 card text-center" 
+      style="background-color: rgb(253 224 71 / .5) !important"
+    >
+      <font-awesome-icon :icon="['far', 'hourglass-half']" class="!text-yellow-400 text-xl" />
+      <h2 class="!text-gray-600 dark:!text-gray-300">Oczekujące</h2>
+      <div class="font-bold text-2xl">{{ metrics['total_active_income_count'] }}</div>
+    </Link>
+
+    <Link 
+      :href="route('projects.index', { status_id: '3'})"
+      class="col-span-6 md:col-span-2 card text-center " 
+      style="background-color: rgb(74 222 128 / .5) !important;"
+    >
+      <font-awesome-icon :icon="['fas', 'flag-checkered']" class="!text-green-400 text-xl" />
+      <h2 class="!text-gray-600 dark:!text-gray-300">Rozliczone</h2>
+      <div class="font-bold text-2xl ">{{ metrics['total_completed_income_count'] }}</div>
+    </Link>
+
+    <div class="hidden md:block col-span-4" />
+
+    <div class="col-span-12 font-medium text-gray-600 mt-4 flex flex-row flex-nowrap items-center justify-between">
+      <div>Aktualne</div>
+    </div>
+
+    <div class="col-span-12 card !bg-gray-200 dark:!bg-gray-700">
+      <h2 class="dark:!text-gray-400">Stan konta</h2>
       <div class="flex flex-row flex-nowrap items-center gap-4">
-        <font-awesome-icon :icon="['fas', 'wallet']" style="font-size: 40px;" class="text-indigo-400 dark:text-indigo-500" />
-        <div class="text-gray-800 font-medium text-3xl dark:text-gray-400">12137.12 <span>zł</span></div>
+        <font-awesome-icon :icon="['fas', 'wallet']" style="font-size: 40px;" class="text-indigo-500 dark:text-indigo-400" />
+        <div class="text-gray-800 font-medium text-3xl dark:text-gray-300">{{ metrics['wallet'] }} <span>zł</span></div>
       </div>
     </div>
-    
-    <div class="hidden md:block md:col-span-8" />
+
+    <div class="col-span-12 md:col-span-6 card !bg-gray-200 dark:!bg-gray-700">
+      <h2 class="dark:!text-gray-400">Oczekujące na realizację</h2>
+      <div class="flex flex-row flex-nowrap items-center gap-4">
+        <font-awesome-icon :icon="['far', 'hourglass-half']" style="font-size: 40px;" class="text-indigo-500 dark:text-indigo-400" />
+        <div class="text-gray-800 font-medium text-3xl dark:text-gray-300">{{ metrics['total_awaiting_income_sum'] }} <span>zł</span></div>
+      </div>
+    </div>
+
+    <div class="col-span-12 md:col-span-6 card !bg-gray-200 dark:!bg-gray-700">
+      <h2 class="dark:!text-gray-400">Do zwrotu</h2>
+      <div class="flex flex-row flex-nowrap items-center gap-4">
+        <font-awesome-icon :icon="['fas', 'money-bill-transfer']" style="font-size: 40px;" class="text-indigo-500 dark:text-indigo-400" />
+        <div class="text-gray-800 font-medium text-3xl dark:text-gray-300">{{ metrics['total_awaiting_repayment_sum'] }} <span>zł</span></div>
+      </div>
+    </div>
+
+    <div class="col-span-12 font-medium text-gray-600 mt-4 flex flex-row flex-nowrap items-center justify-between">
+      <div>Pozycje</div>
+    </div>
 
     <div class="col-span-6 md:col-span-4 card">
       <h2>Użytkownicy</h2>
-      <div class="total">10</div>
+      <div class="total">{{ metrics['total_users_count'] }} </div>
     </div>
     <div class="col-span-6 md:col-span-4 card">
       <h2>Klienci</h2>
-      <div class="total">23</div>
+      <div class="total">{{ metrics['total_clients_count'] }}</div>
     </div>
     <div class="col-span-6 md:col-span-4 card">
       <h2>Projekty</h2>
-      <div class="total">56</div>
+      <div class="total">{{ metrics['total_projects_count'] }}</div>
+    </div>
+    <div class="col-span-6 md:col-span-4 card">
+      <h2>Inwestycje</h2>
+      <div class="total">{{ metrics['total_investments_count'] }}</div>
     </div>
     <div class="col-span-6 md:col-span-4 card">
       <h2>Przychód</h2>
-      <div class="total">
-        1215 <span>zł</span> 
-      </div>
+      <div class="total">{{ metrics['total_income_count'] }}</div>
     </div>
     <div class="col-span-6 md:col-span-4 card">
       <h2>Wydatki</h2>
-      <div class="total">
-        230 <span>zł</span> 
-      </div>
-    </div>
-    <div class="col-span-6 md:col-span-4 card">
-      <h2>Dochód</h2>
-      <div class="total">
-        7612 <span>zł</span> 
-      </div>
+      <div class="total">{{ metrics['total_expenses_count'] }}</div>
     </div>
 
     <div class="col-span-12 font-medium text-gray-600 mt-4 flex flex-row flex-wrap items-center justify-between">
@@ -123,7 +195,7 @@
           </div>
         </div>
         <div>
-          <div class="text-gray-400 dark:text-gray-500">Dochód</div>
+          <div class="text-gray-400 dark:text-gray-500">Zysk</div>
           <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
             <span>10 zł</span>
             <span class="text-xs text-green-500">
@@ -612,6 +684,17 @@ import DateRangePicker from '@/Pages/Dashboard/Index/Components/DateRangePicker.
 import ViewToggle from '@/Pages/Dashboard/Index/Components/ViewToggle.vue'
 import {  ref } from 'vue'
 import { Link } from '@inertiajs/vue3'
+
+defineProps({
+  metrics: {
+    type: Object,
+    required: true,
+  },
+  kpi: {
+    type: Object,
+    required: true,
+  },
+})
 
 const top3UsersSelectedView = ref(0)
 const top3ProjectSelectedView = ref(0)

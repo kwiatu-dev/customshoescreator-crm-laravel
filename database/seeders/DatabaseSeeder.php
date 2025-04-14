@@ -51,11 +51,15 @@ class DatabaseSeeder extends Seeder
         $projects = \App\Models\Project::where('status_id', 3)->get();
 
         foreach ($projects as $project) {
+            $endDate = new \DateTime($project->end);
+
             \App\Models\Income::factory()->create([
                 'project_id' => $project->id,
                 'created_by_user_id' => null,
                 'costs' => null,
-                'distribution' => null
+                'distribution' => null,
+                'date' => fake()->dateTimeBetween($project->start, $endDate->modify('+1 month')),
+                'created_at' => fake()->dateTimeBetween($project->start, $project->end),
             ]);
         }
 
