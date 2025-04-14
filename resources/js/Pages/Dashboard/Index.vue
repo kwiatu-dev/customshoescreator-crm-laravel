@@ -52,7 +52,7 @@
       <h2>Stan konta</h2>
       <div class="flex flex-row flex-nowrap items-center gap-4">
         <font-awesome-icon :icon="['fas', 'wallet']" style="font-size: 40px;" class="text-indigo-400 dark:text-indigo-500" />
-        <div class="text-gray-800 font-medium text-2xl">12137.12 <span>zł</span></div>
+        <div class="text-gray-800 font-medium text-3xl dark:text-gray-400">12137.12 <span>zł</span></div>
       </div>
     </div>
     
