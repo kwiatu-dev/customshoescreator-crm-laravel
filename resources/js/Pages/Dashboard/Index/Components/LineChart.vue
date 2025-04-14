@@ -1,6 +1,6 @@
 <template>
   <div class="relative">
-    <div class="w-full bg-white dark:bg-gray-800 rounded-md md:p-8 p-4 shadow-md border border-solid border-gray-300 chart-container">
+    <div class="w-full bg-white dark:bg-gray-800 rounded-md md:p-8 p-4 shadow-md border border-solid border-gray-300 dark:border-gray-600 chart-container">
       <ChartNavButtons :labels="labels" @label_click="toggleDataset($event)" />
       <div style="height: 500px;" class="chart-inner">
         <Line ref="line" :data="chartData" :options="options" />

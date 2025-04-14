@@ -1,6 +1,6 @@
 <template>
   <div class="relative">
-    <div class="w-full bg-white dark:bg-gray-800 rounded-md md:p-8 p-4 shadow-md border border-solid border-gray-300">
+    <div class="w-full bg-white dark:bg-gray-800 rounded-md md:p-8 p-4 shadow-md border dark:border-gray-600 border-solid border-gray-300">
       <ChartNavButtons :labels="labels" @label_click="toggleDataset($event)" />
       <div class="doughnut-height">
         <Doughnut ref="doughnut" :data="chartData" :options="options" />

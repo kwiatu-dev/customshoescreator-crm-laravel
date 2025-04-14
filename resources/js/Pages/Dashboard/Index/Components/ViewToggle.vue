@@ -1,12 +1,12 @@
 <template>
   <div class="col-span-12 flex flex-row flex-nowrap justify-center items-center">
-    <div class="bg-gray-200 rounded-full px-1 py-1 flex flex-row flex-nowrap justify-between items-center gap-2 border border-solid border-gray-300">
+    <div class="bg-gray-200 dark:bg-gray-600 rounded-full px-1 py-1 flex flex-row flex-nowrap justify-between items-center gap-2 border border-solid border-gray-300 dark:border-gray-700">
       <button
         v-for="(label, index) in options"
         :key="index"
         :class="[
           'rounded-full px-2 py-1 text-xs font-medium',
-          selectedOption === index ? 'shadow-md bg-white text-gray-800' : 'text-gray-600'
+          selectedOption === index ? 'shadow-md bg-white dark:bg-gray-400 text-gray-800' : 'text-gray-600 dark:text-gray-200'
         ]"
         @click="selectOption(index)"
       >

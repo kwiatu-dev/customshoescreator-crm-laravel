@@ -1,6 +1,6 @@
 <template>
   <div class="grid grid-cols-12 gap-2">
-    <div class="hidden md:flex col-span-4 font-medium flex-row flex-nowrap items-center justify-between border border-solid border-gray-100 rounded-md p-4 shadow-sm text-xl">
+    <div class="hidden md:flex col-span-4 font-medium flex-row flex-nowrap items-center justify-between border border-solid border-gray-100 dark:border-gray-500 rounded-md p-4 shadow-sm text-xl">
       Projekty
     </div>
 
@@ -10,7 +10,7 @@
       style="background-color: rgb(253 224 71 / .5) !important"
     >
       <font-awesome-icon :icon="['fas', 'pause']" class="!text-yellow-400 text-xl" />
-      <h2 class="!text-gray-600">Oczekujące</h2>
+      <h2 class="!text-gray-600 dark:!text-gray-300">Oczekujące</h2>
       <div class="font-bold text-2xl">10</div>
     </Link>
 
@@ -20,7 +20,7 @@
       style="background-color: rgb(251 146 60 / .5) !important"
     >
       <font-awesome-icon :icon="['fas', 'screwdriver-wrench']" class="!text-orange-400 text-xl" />
-      <h2 class="!text-gray-600">W trakcie</h2>
+      <h2 class="!text-gray-600 dark:!text-gray-300">W trakcie</h2>
       <div class="font-bold text-2xl">10</div>
     </Link>
 
@@ -30,7 +30,7 @@
       style="background-color: rgb(248 113 113 / .5) !important;"
     >
       <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="!text-red-400 text-xl" />
-      <h2 class="!text-gray-600">Po czasie</h2>
+      <h2 class="!text-gray-600 dark:!text-gray-300">Po czasie</h2>
       <div class="font-bold text-2xl">10</div>
     </Link>
 
@@ -40,7 +40,7 @@
       style="background-color: rgb(74 222 128 / .5) !important;"
     >
       <font-awesome-icon :icon="['fas', 'flag-checkered']" class="!text-green-400 text-xl" />
-      <h2 class="!text-gray-600">Zakończone</h2>
+      <h2 class="!text-gray-600 dark:!text-gray-300">Zakończone</h2>
       <div class="font-bold text-2xl ">10</div>
     </Link>
 
@@ -51,7 +51,7 @@
     <div class="col-span-12 md:col-span-4 card">
       <h2>Stan konta</h2>
       <div class="flex flex-row flex-nowrap items-center gap-4">
-        <font-awesome-icon :icon="['fas', 'wallet']" style="font-size: 40px;" class="text-indigo-400" />
+        <font-awesome-icon :icon="['fas', 'wallet']" style="font-size: 40px;" class="text-indigo-400 dark:text-indigo-500" />
         <div class="text-gray-800 font-medium text-2xl">12137.12 <span>zł</span></div>
       </div>
     </div>
@@ -96,15 +96,15 @@
 
     <div class="col-span-12 md:col-span-4 card">
       <div class="flex flex-row flex-nowrap justify-start items-center gap-4 mb-4">
-        <div class="p-2 bg-indigo-400 w-16 h-16 rounded-xl flex items-center justify-center">
-          <font-awesome-icon :icon="['fas', 'sack-dollar']" class="text-gray-50" style="font-size: 30px;" />
+        <div class="p-2 bg-indigo-400 dark:bg-indigo-500 w-16 h-16 rounded-xl flex items-center justify-center">
+          <font-awesome-icon :icon="['fas', 'sack-dollar']" class="text-gray-50 dark:text-gray-200" style="font-size: 30px;" />
         </div>
-        <div class="text-gray-800 font-medium text-xl">Pieniądze</div>
+        <div class="text-gray-800 font-medium text-xl dark:text-gray-400">Pieniądze</div>
       </div>
       <div class="flex md:flex-col md:gap-2 gap-8 flex-wrap">
         <div>
-          <div class="text-gray-400">Przychód</div>
-          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
+          <div class="text-gray-400 dark:text-gray-500">Przychód</div>
+          <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
             <span>10 zł</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -113,8 +113,8 @@
           </div>
         </div>
         <div>
-          <div class="text-gray-400">Wydatki</div>
-          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
+          <div class="text-gray-400 dark:text-gray-500">Wydatki</div>
+          <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
             <span>10 zł</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -123,8 +123,8 @@
           </div>
         </div>
         <div>
-          <div class="text-gray-400">Dochód</div>
-          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
+          <div class="text-gray-400 dark:text-gray-500">Dochód</div>
+          <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
             <span>10 zł</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -138,15 +138,15 @@
     
     <div class="col-span-12 md:col-span-4 card">
       <div class="flex flex-row flex-nowrap justify-start items-center gap-4 mb-4">
-        <div class="p-2 bg-indigo-400 w-16 h-16 rounded-xl flex items-center justify-center">
-          <font-awesome-icon :icon="['fas', 'pen-ruler']" class="text-gray-50" style="font-size: 30px;" />
+        <div class="p-2 bg-indigo-400 dark:bg-indigo-500 w-16 h-16 rounded-xl flex items-center justify-center">
+          <font-awesome-icon :icon="['fas', 'pen-ruler']" class="text-gray-50 dark:text-gray-200" style="font-size: 30px;" />
         </div>
-        <div class="text-gray-800 font-medium text-xl">Projekty</div>
+        <div class="text-gray-800 dark:text-gray-400 font-medium text-xl">Projekty</div>
       </div>
       <div class="flex md:flex-col md:gap-2 gap-8 flex-wrap">
         <div>
-          <div class="text-gray-400">Nowe</div>
-          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
+          <div class="text-gray-400 dark:text-gray-500">Nowe</div>
+          <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
             <span>10</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -155,8 +155,8 @@
           </div>
         </div>
         <div>
-          <div class="text-gray-400">Zakończone</div>
-          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
+          <div class="text-gray-400 dark:text-gray-500">Zakończone</div>
+          <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
             <span>10</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -165,8 +165,8 @@
           </div>
         </div>
         <div>
-          <div class="text-gray-400">Średni czas realizacji</div>
-          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
+          <div class="text-gray-400 dark:text-gray-500">Średni czas realizacji</div>
+          <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
             <span>10</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -179,15 +179,15 @@
 
     <div class="col-span-12 md:col-span-4 card">
       <div class="flex flex-row flex-nowrap justify-start items-center gap-4 mb-4">
-        <div class="p-2 bg-indigo-400 w-16 h-16 rounded-xl flex items-center justify-center">
-          <font-awesome-icon :icon="['fas', 'people-group']" class="text-gray-50" style="font-size: 30px;" />
+        <div class="p-2 bg-indigo-400 dark:bg-indigo-500 w-16 h-16 rounded-xl flex items-center justify-center">
+          <font-awesome-icon :icon="['fas', 'people-group']" class="text-gray-50 dark:text-gray-200" style="font-size: 30px;" />
         </div>
-        <div class="text-gray-800 font-medium text-xl">Klienci</div>
+        <div class="text-gray-800 dark:text-gray-400 font-medium text-xl">Klienci</div>
       </div>
       <div class="flex md:flex-col md:gap-2 gap-8 flex-wrap">
         <div>
-          <div class="text-gray-400">Nowi</div>
-          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
+          <div class="text-gray-400 dark:text-gray-500">Nowi</div>
+          <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
             <span>10</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -196,8 +196,8 @@
           </div>
         </div>
         <div>
-          <div class="text-gray-400">Powracający</div>
-          <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
+          <div class="text-gray-400 dark:text-gray-500">Powracający</div>
+          <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
             <span>10</span>
             <span class="text-xs text-green-500">
               <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -209,9 +209,9 @@
     </div>
     
     <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
-      <div class="text-gray-800 font-medium text-xs">
+      <div class="text-gray-800 dark:text-gray-500 font-medium text-xs">
         <div>Renowacja butów</div>
-        <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
+        <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
           <span>10</span>
           <span class="text-xs text-green-500">
             <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -221,9 +221,9 @@
       </div>
     </div>
     <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
-      <div class="text-gray-800 font-medium text-xs">
+      <div class="text-gray-800 dark:text-gray-500 font-medium text-xs">
         <div>Personalizacja butów</div>
-        <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
+        <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
           <span>10</span>
           <span class="text-xs text-green-500">
             <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -233,9 +233,9 @@
       </div>
     </div>
     <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
-      <div class="text-gray-800 font-medium text-xs">
+      <div class="text-gray-800 dark:text-gray-500 font-medium text-xs">
         <div>Personalizacja ubrań</div>
-        <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
+        <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
           <span>10</span>
           <span class="text-xs text-green-500">
             <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -245,9 +245,9 @@
       </div>
     </div>
     <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
-      <div class="text-gray-800 font-medium text-xs">
+      <div class="text-gray-800 dark:text-gray-500 font-medium text-xs">
         <div>Haft ręczny</div>
-        <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
+        <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
           <span>10</span>
           <span class="text-xs text-green-500">
             <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -257,9 +257,9 @@
       </div>
     </div>
     <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
-      <div class="text-gray-800 font-medium text-xs">
+      <div class="text-gray-800 dark:text-gray-500 font-medium text-xs">
         <div>Haft komputerowy</div>
-        <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
+        <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
           <span>10</span>
           <span class="text-xs text-green-500">
             <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -269,9 +269,9 @@
       </div>
     </div>
     <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
-      <div class="text-gray-800 font-medium text-xs">
+      <div class="text-gray-800 dark:text-gray-500 font-medium text-xs">
         <div>Inne</div>
-        <div class="font-medium text-gray-600 text-xl flex flex-row flex-nowrap justify-between items-center">
+        <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
           <span>10</span>
           <span class="text-xs text-green-500">
             <font-awesome-icon :icon="['fas', 'caret-up']" />
@@ -288,20 +288,20 @@
     <div class="col-span-12 md:col-span-6 card">
       <ViewToggle v-model="top3UsersSelectedView" :options="['Ostatni miesiąc', 'Od zawsze']" />
       <div class="flex flex-col flex-nowrap justify-center items-center my-4">
-        <h2 class="!text-xl !text-gray-700">Użytkownicy</h2>
+        <h2 class="!text-xl !text-gray-700 dark:!text-gray-500">Użytkownicy</h2>
         <p class="text-center -mt-2 text-sm text-gray-400">Wygenerowany przychód</p>
       </div>
       <div class="grid grid-cols-12 gap-2 mt-8">
         <div class="col-span-4 flex flex-col items-center justify-end">
           <div class="mb-4 flex flex-col flex-nowrap justify-center items-center w-full">
             <div>
-              <font-awesome-icon :icon="['fas', 'user']" class="p-3 bg-gray-300 rounded-full shadow-sm text-white" style="font-size: 20px;" />
+              <font-awesome-icon :icon="['fas', 'user']" class="p-3 bg-gray-300 dark:bg-gray-400 rounded-full shadow-sm text-white" style="font-size: 20px;" />
             </div>
-            <div class="text-sm text-gray-900 font-medium">Filip</div>
+            <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">Filip</div>
           </div>
           <div 
             style="height: 150px;"
-            class="bg-green-200 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
+            class="bg-green-200 dark:bg-green-500 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
           >
             <font-awesome-icon :icon="['fas', '2']" />
             <div class="absolute top-2 left-2 w-1 h-1 bg-green-400 rounded-full" />
@@ -313,13 +313,13 @@
         <div class="col-span-4 flex flex-col items-center justify-end">
           <div class="mb-4 flex flex-col flex-nowrap justify-center items-center w-full">
             <div>
-              <font-awesome-icon :icon="['fas', 'user']" class="p-3 bg-gray-300 rounded-full shadow-sm text-white" style="font-size: 20px;" />
+              <font-awesome-icon :icon="['fas', 'user']" class="p-3 bg-gray-300 dark:bg-gray-400  rounded-full shadow-sm text-white" style="font-size: 20px;" />
             </div>
-            <div class="text-sm text-gray-900 font-medium">Aleksandra</div>
+            <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">Aleksandra</div>
           </div>
           <div 
             style="height: 200px;"
-            class="bg-rose-200 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
+            class="bg-rose-200 dark:bg-rose-500 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
           >
             <font-awesome-icon :icon="['fas', 'trophy']" />
             <div class="absolute top-2 left-2 w-1 h-1 bg-rose-400 rounded-full" />
@@ -331,13 +331,13 @@
         <div class="col-span-4 flex flex-col items-center justify-end">
           <div class="mb-4 flex flex-col flex-nowrap justify-center items-center w-full">
             <div>
-              <font-awesome-icon :icon="['fas', 'user']" class="p-3 bg-gray-300 rounded-full shadow-sm text-white" style="font-size: 20px;" />
+              <font-awesome-icon :icon="['fas', 'user']" class="p-3 bg-gray-300 dark:bg-gray-400 rounded-full shadow-sm text-white" style="font-size: 20px;" />
             </div>
-            <div class="text-sm text-gray-900 font-medium">Weronika</div>
+            <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">Weronika</div>
           </div>
           <div 
             style="height: 100px;"
-            class="bg-sky-200 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
+            class="bg-sky-200 dark:bg-sky-500 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
           >
             <font-awesome-icon :icon="['fas', '3']" />
             <div class="absolute top-2 left-2 w-1 h-1 bg-sky-400 rounded-full" />
@@ -349,10 +349,10 @@
       </div>
       <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
         <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-rose-300 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+          <div class="p-2 bg-rose-300 dark:bg-rose-600 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', 'trophy']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
-          <div class="text-gray-500 text-md font-medium">Aleksandra</div>
+          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Aleksandra</div>
         </div>
         <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
@@ -371,13 +371,13 @@
           </tbody>
         </table>
       </div>
-      <div class="w-full bg-gray-200 my-4" style="height: 1px;" />
+      <div class="w-full bg-gray-200 dark:bg-gray-700 my-4" style="height: 1px;" />
       <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
         <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-green-300 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+          <div class="p-2 bg-green-300 dark:bg-green-600 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '2']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
-          <div class="text-gray-500 text-md font-medium">Filip</div>
+          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Filip</div>
         </div>
         <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
@@ -396,13 +396,13 @@
           </tbody>
         </table>
       </div>
-      <div class="w-full bg-gray-200 my-4" style="height: 1px;" />
+      <div class="w-full bg-gray-200 dark:bg-gray-700 my-4" style="height: 1px;" />
       <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
         <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-sky-300 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+          <div class="p-2 bg-sky-300 dark:bg-sky-600 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '3']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
-          <div class="text-gray-500 text-md font-medium">Weronika</div>
+          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Weronika</div>
         </div>
         <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
@@ -425,7 +425,7 @@
     <div class="col-span-12 md:col-span-6 card">
       <ViewToggle v-model="top3ProjectSelectedView" :options="['Ostatni miesiąc', 'Od zawsze']" />
       <div class="flex flex-col flex-nowrap justify-center items-center my-4">
-        <h2 class="!text-xl !text-gray-700">Projekty</h2>
+        <h2 class="!text-xl !text-gray-700 dark:!text-gray-500">Projekty</h2>
         <p class="text-center -mt-2 text-sm text-gray-400">Wygenerowany przychód</p>
       </div>
       <div class="grid grid-cols-12 gap-2 mt-8">
@@ -435,14 +435,14 @@
               <img
                 src="https://customshoescreator.pl/wp-content/uploads/2022/04/malowanie-butow-na-zamowienie-custom-shoes-creator.webp" 
                 alt="" 
-                class="p-1 bg-gray-300 rounded-full shadow-sm text-white top-3-img top-3-img-level-2"
+                class="p-1 bg-gray-300 dark:bg-gray-600 rounded-full shadow-sm text-white top-3-img top-3-img-level-2"
               />
             </div>
-            <div class="text-sm text-gray-900 font-medium">Projekt #11</div>
+            <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">Projekt #11</div>
           </div>
           <div 
             style="height: 150px;"
-            class="bg-green-200 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
+            class="bg-green-200 dark:bg-green-500 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
           >
             <font-awesome-icon :icon="['fas', '2']" />
             <div class="absolute top-2 left-2 w-1 h-1 bg-green-400 rounded-full" />
@@ -457,14 +457,14 @@
               <img
                 src="https://customshoescreator.pl/wp-content/uploads/2022/12/malowanie-ubran-2-edited-1.jpg" 
                 alt="" 
-                class="p-1 bg-gray-300 rounded-full shadow-sm text-white top-3-img top-3-img-level-1"
+                class="p-1 bg-gray-300 dark:bg-gray-600 rounded-full shadow-sm text-white top-3-img top-3-img-level-1"
               />
             </div>
-            <div class="text-sm text-gray-900 font-medium">Projekt #33</div>
+            <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">Projekt #33</div>
           </div>
           <div 
             style="height: 200px;"
-            class="bg-rose-200 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
+            class="bg-rose-200 dark:bg-rose-500 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
           >
             <font-awesome-icon :icon="['fas', 'trophy']" />
             <div class="absolute top-2 left-2 w-1 h-1 bg-rose-400 rounded-full" />
@@ -479,14 +479,14 @@
               <img
                 src="https://customshoescreator.pl/wp-content/uploads/2022/04/sneaker-custom-malowanie-butow-custom-butow-customshoescreator-but-sm-1.webp" 
                 alt="" 
-                class="p-1 bg-gray-300 rounded-full shadow-sm text-white top-3-img top-3-img-level-3"
+                class="p-1 bg-gray-300 dark:bg-gray-600 rounded-full shadow-sm text-white top-3-img top-3-img-level-3"
               />
             </div>
-            <div class="text-sm text-gray-900 font-medium">Projekt #23</div>
+            <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">Projekt #23</div>
           </div>
           <div 
             style="height: 100px;"
-            class="bg-sky-200 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
+            class="bg-sky-200 dark:bg-sky-500 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
           >
             <font-awesome-icon :icon="['fas', '3']" />
             <div class="absolute top-2 left-2 w-1 h-1 bg-sky-400 rounded-full" />
@@ -498,10 +498,10 @@
       </div>
       <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
         <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-rose-300 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+          <div class="p-2 bg-rose-300 dark:bg-rose-600 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', 'trophy']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
-          <div class="text-gray-500 text-md font-medium">Projekt #33</div>
+          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Projekt #33</div>
         </div>
         <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
@@ -518,13 +518,13 @@
           </tbody>
         </table>
       </div>
-      <div class="w-full bg-gray-200 my-4" style="height: 1px;" />
+      <div class="w-full bg-gray-200 dark:bg-gray-700 dark:bg-gray-700 my-4" style="height: 1px;" />
       <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
         <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-green-300 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+          <div class="p-2 bg-green-300 dark:bg-green-600 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '2']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
-          <div class="text-gray-500 text-md font-medium">Projekt #11</div>
+          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Projekt #11</div>
         </div>
         <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
@@ -541,13 +541,13 @@
           </tbody>
         </table>
       </div>
-      <div class="w-full bg-gray-200 my-4" style="height: 1px;" />
+      <div class="w-full bg-gray-200 dark:bg-gray-700 my-4" style="height: 1px;" />
       <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
         <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-sky-300 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+          <div class="p-2 bg-sky-300 dark:bg-sky-600 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '3']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
-          <div class="text-gray-500 text-md font-medium">Projekt #23</div>
+          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Projekt #23</div>
         </div>
         <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
@@ -698,20 +698,19 @@ const lineChartData = {
 
 <style scoped>
 .card {
-  @apply bg-gray-100 shadow-sm rounded-md p-4 transition-all duration-200 ease-in-out;
+  @apply bg-gray-100 shadow-sm rounded-md p-4 transition-all duration-200 ease-in-out dark:bg-gray-800;
 }
 
 .card:hover {
   @apply shadow-md;
-  transform: scale(1.003);
 }
 
 .card h2 {
-  @apply text-gray-400 text-sm font-medium mb-2;
+  @apply text-gray-400 dark:text-gray-500 text-sm font-medium mb-2;
 }
 
 .card .total {
-  @apply text-3xl font-bold text-gray-800;
+  @apply text-3xl font-bold text-gray-800 dark:text-gray-400;
 }
 
 table {
@@ -719,15 +718,15 @@ table {
 }
 
 th, td {
-  @apply py-2 px-4 border-b;
+  @apply py-2 px-4 border-b dark:border-gray-600 border-gray-200;
 }
 
 th {
-  @apply bg-gray-100 text-gray-600 text-sm font-medium border border-gray-300; /* Dodano obramowanie */
+  @apply bg-gray-200 text-gray-600 text-sm font-medium border border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-400; 
 }
 
 td {
-  @apply text-gray-700 text-sm;
+  @apply text-gray-700 text-sm dark:text-gray-300;
 }
 
 .top-3-img {
