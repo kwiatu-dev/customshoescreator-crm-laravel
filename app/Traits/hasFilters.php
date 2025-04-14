@@ -142,6 +142,14 @@ trait HasFilters
                 $query->where($this->table_name .'.'. 'created_by_user_id', Auth::user()->id);
             }
         );
+
+        $query->when(
+            $filters['after_deadline'] ?? false,
+            function ($query, $value){
+                $query->whereNull($this->table_name . '.end')
+                      ->where($this->table_name . '.deadline', '<', now());
+            }
+        );
         
         return $query;
     }

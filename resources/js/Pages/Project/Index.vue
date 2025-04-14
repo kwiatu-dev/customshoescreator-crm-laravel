@@ -74,7 +74,19 @@ const filterable = {
     { table: 'ProjectType', column: 'type_id', label: 'Typ' },
   ], 
   pagination: {},
-  others: [ { name: 'deleted', label: 'Pokaż usunięte' }, { name: 'created_by_user', label: 'Pokaż moje', admin: true }],
+  others: [ { 
+    name: 'deleted', 
+    label: 'Pokaż usunięte', 
+  }, 
+  { 
+    name: 'created_by_user', 
+    label: 'Pokaż moje', 
+    admin: true, 
+  }, 
+  {
+    name: 'after_deadline',
+    label: 'Po deadline',
+  }],
 }
 
 const sortable = { 

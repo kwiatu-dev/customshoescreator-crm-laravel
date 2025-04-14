@@ -2,7 +2,7 @@
   <div class="flex justify-center mb-8 gap-2">
     <button 
       v-for="(label, index) in labels" :key="index"
-      class="py-1 px-4 rounded-md shadow-sm text-gray-800 font-medium text-sm bg-white border border-solid border-gray-300"
+      class="py-1 px-4 rounded-md shadow-sm text-gray-800 font-medium text-sm bg-white border border-solid border-gray-300 transition-all duration-200 ease-in-out"
       :class="[{ '': label.visible, 'opacity-40': !label.visible }]"
       @click="emit('label_click', index)"
     >
@@ -21,3 +21,9 @@ defineProps({
 
 const emit = defineEmits(['label_click'])
 </script>
+
+<style scoped>
+button:hover {
+  @apply bg-gray-100 shadow-md transform scale-105;
+}
+</style>

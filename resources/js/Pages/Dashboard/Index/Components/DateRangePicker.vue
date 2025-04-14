@@ -96,3 +96,14 @@ watch(() => value.value.to, (newTo) => {
 
 const emit = defineEmits(['update:modelValue'])
 </script>
+
+<style scoped>
+input {
+  transition: all 0.2s ease-in-out;
+}
+
+input:hover {
+  background-color: #e5e7eb; /* Jasnoszary kolor tła */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Delikatny cień */ /* Subtelne powiększenie */
+}
+</style>

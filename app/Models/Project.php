@@ -55,7 +55,8 @@ class Project extends Model
         ],
         'others' => [
             ['deleted' => 'boolean'],
-            ['created_by_user' => 'boolean']
+            ['created_by_user' => 'boolean'],
+            ['after_deadline' => 'boolean'],
         ],
         'pagination' => 'string',
     ];

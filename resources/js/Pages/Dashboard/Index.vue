@@ -4,29 +4,45 @@
       Projekty
     </div>
 
-    <div class="col-span-6 md:col-span-2 card text-center" style="background-color: rgb(253 224 71 / .5) !important">
+    <Link 
+      :href="route('projects.index', { status_id: '1'})"
+      class="col-span-6 md:col-span-2 card text-center" 
+      style="background-color: rgb(253 224 71 / .5) !important"
+    >
       <font-awesome-icon :icon="['fas', 'pause']" class="!text-yellow-400 text-xl" />
       <h2 class="!text-gray-600">Oczekujące</h2>
       <div class="font-bold text-2xl">10</div>
-    </div>
+    </Link>
 
-    <div class="col-span-6 md:col-span-2 card text-center" style="background-color: rgb(251 146 60 / .5) !important">
+    <Link
+      :href="route('projects.index', { status_id: '2'})"
+      class="col-span-6 md:col-span-2 card text-center" 
+      style="background-color: rgb(251 146 60 / .5) !important"
+    >
       <font-awesome-icon :icon="['fas', 'screwdriver-wrench']" class="!text-orange-400 text-xl" />
       <h2 class="!text-gray-600">W trakcie</h2>
       <div class="font-bold text-2xl">10</div>
-    </div>
+    </Link>
 
-    <div class="col-span-6 md:col-span-2 card text-center" style="background-color: rgb(248 113 113 / .5) !important;">
+    <Link 
+      :href="route('projects.index', { after_deadline: 'true'})"
+      class="col-span-6 md:col-span-2 card text-center" 
+      style="background-color: rgb(248 113 113 / .5) !important;"
+    >
       <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="!text-red-400 text-xl" />
       <h2 class="!text-gray-600">Po czasie</h2>
       <div class="font-bold text-2xl">10</div>
-    </div>
+    </Link>
 
-    <div class="col-span-6 md:col-span-2 card text-center " style="background-color: rgb(74 222 128 / .5) !important;">
+    <Link 
+      :href="route('projects.index', { status_id: '3'})"
+      class="col-span-6 md:col-span-2 card text-center " 
+      style="background-color: rgb(74 222 128 / .5) !important;"
+    >
       <font-awesome-icon :icon="['fas', 'flag-checkered']" class="!text-green-400 text-xl" />
       <h2 class="!text-gray-600">Zakończone</h2>
       <div class="font-bold text-2xl ">10</div>
-    </div>
+    </Link>
 
     <div class="col-span-12 font-medium text-gray-600 mt-4 flex flex-row flex-nowrap items-center justify-between">
       <div>Całkowite wartości</div>
@@ -270,12 +286,7 @@
     </div>
 
     <div class="col-span-12 md:col-span-6 card">
-      <div class="col-span-12 flex flex-row flex-nowrap justify-center items-center">
-        <div class="bg-gray-200 rounded-full px-1 py-1 flex flex-row flex-nowrap justify-between items-center gap-2 border border-solid border-gray-300">
-          <button class="shadow-md bg-white rounded-full px-2 py-1 text-gray-800 text-xs font-medium">Ostatnie 30 dni</button>
-          <button class="rounded-full px-2 py-1 text-gray-800 text-xs">Od zawsze</button>
-        </div>
-      </div>
+      <ViewToggle v-model="top3UsersSelectedView" :options="['Ostatni miesiąc', 'Od zawsze']" />
       <div class="flex flex-col flex-nowrap justify-center items-center my-4">
         <h2 class="!text-xl !text-gray-700">Użytkownicy</h2>
         <p class="text-center -mt-2 text-sm text-gray-400">Wygenerowany przychód</p>
@@ -412,12 +423,7 @@
       </div>
     </div>
     <div class="col-span-12 md:col-span-6 card">
-      <div class="col-span-12 flex flex-row flex-nowrap justify-center items-center">
-        <div class="bg-gray-200 rounded-full px-1 py-1 flex flex-row flex-nowrap justify-between items-center gap-2 border border-solid border-gray-300">
-          <button class="shadow-md bg-white rounded-full px-2 py-1 text-gray-800 text-xs font-medium">Ostatnie 30 dni</button>
-          <button class="rounded-full px-2 py-1 text-gray-800 text-xs">Od zawsze</button>
-        </div>
-      </div>
+      <ViewToggle v-model="top3ProjectSelectedView" :options="['Ostatni miesiąc', 'Od zawsze']" />
       <div class="flex flex-col flex-nowrap justify-center items-center my-4">
         <h2 class="!text-xl !text-gray-700">Projekty</h2>
         <p class="text-center -mt-2 text-sm text-gray-400">Wygenerowany przychód</p>
@@ -607,8 +613,12 @@ import LineChart from '@/Pages/Dashboard/Index/Components/LineChart.vue'
 import DoughnutChart from '@/Pages/Dashboard/Index/Components/DoughnutChart.vue'
 import YearlyBarChart from '@/Pages/Dashboard/Index/Components/YearlyBarChart.vue'
 import DateRangePicker from '@/Pages/Dashboard/Index/Components/DateRangePicker.vue'
+import ViewToggle from '@/Pages/Dashboard/Index/Components/ViewToggle.vue'
 import { ref } from 'vue'
+import { Link } from '@inertiajs/vue3'
 
+const top3UsersSelectedView = ref(0)
+const top3ProjectSelectedView = ref(0)
 const dateRange = ref(null)
 
 const yearlyBarChartData = {
@@ -688,7 +698,12 @@ const lineChartData = {
 
 <style scoped>
 .card {
-  @apply bg-gray-100 shadow-sm rounded-md p-4;
+  @apply bg-gray-100 shadow-sm rounded-md p-4 transition-all duration-200 ease-in-out;
+}
+
+.card:hover {
+  @apply shadow-md;
+  transform: scale(1.003);
 }
 
 .card h2 {
@@ -721,5 +736,4 @@ td {
   max-width: 120px;
 }
 </style>
-  
-  
+
