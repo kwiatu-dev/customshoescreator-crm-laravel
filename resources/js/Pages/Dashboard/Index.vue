@@ -285,13 +285,13 @@
       <div>TOP 3</div>
     </div>
 
-    <div class="col-span-12 md:col-span-6 card">
+    <div class="col-span-12 md:col-span-6 card flex flex-col justify-between">
       <ViewToggle v-model="top3UsersSelectedView" :options="['Ostatni miesiąc', 'Od zawsze']" />
       <div class="flex flex-col flex-nowrap justify-center items-center my-4">
         <h2 class="!text-xl !text-gray-700 dark:!text-gray-500">Użytkownicy</h2>
         <p class="text-center -mt-2 text-sm text-gray-400">Wygenerowany przychód</p>
       </div>
-      <div class="grid grid-cols-12 gap-2 mt-8">
+      <div class="grid grid-cols-12 gap-2 mt-8" style="min-height: 356px;">
         <div class="col-span-4 flex flex-col items-center justify-end">
           <div class="mb-4 flex flex-col flex-nowrap justify-center items-center w-full">
             <div>
@@ -347,82 +347,84 @@
           </div>
         </div>
       </div>
-      <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
-        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-rose-300 dark:bg-rose-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
-            <font-awesome-icon :icon="['fas', 'trophy']" style="font-size: 16px;" class="font-medium text-white" />
+      <div>
+        <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
+          <div class="flex flex-row flex-nowrap justify-start items-center gap-2 w-full">
+            <div class="p-2 bg-rose-300 dark:bg-rose-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+              <font-awesome-icon :icon="['fas', 'trophy']" style="font-size: 16px;" class="font-medium text-white" />
+            </div>
+            <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Aleksandra</div>
           </div>
-          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Aleksandra</div>
+          <table class="text-left border-collapse md:w-3/4 w-full">
+            <thead>
+              <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
+                <th class="py-2 px-4 border-b">Przychód</th>
+                <th class="py-2 px-4 border-b">Zakończone projekty</th>
+                <th class="py-2 px-4 border-b">Średni czas realizacji</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="text-gray-700 text-sm">
+                <td class="py-2 px-4 border-b">10</td>
+                <td class="py-2 px-4 border-b">10</td>
+                <td class="py-2 px-4 border-b">10</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <table class="text-left border-collapse md:w-3/4 w-full">
-          <thead>
-            <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
-              <th class="py-2 px-4 border-b">Przychód</th>
-              <th class="py-2 px-4 border-b">Zakończone projekty</th>
-              <th class="py-2 px-4 border-b">Średni czas realizacji</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="text-gray-700 text-sm">
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="w-full bg-gray-200 dark:bg-gray-700 my-4" style="height: 1px;" />
-      <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
-        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-green-300 dark:bg-green-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
-            <font-awesome-icon :icon="['fas', '2']" style="font-size: 16px;" class="font-medium text-white" />
+        <div class="w-full bg-gray-200 dark:bg-gray-700 my-4" style="height: 1px;" />
+        <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
+          <div class="flex flex-row flex-nowrap justify-start items-center gap-2 w-full">
+            <div class="p-2 bg-green-300 dark:bg-green-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+              <font-awesome-icon :icon="['fas', '2']" style="font-size: 16px;" class="font-medium text-white" />
+            </div>
+            <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Filip</div>
           </div>
-          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Filip</div>
+          <table class="text-left border-collapse md:w-3/4 w-full">
+            <thead>
+              <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
+                <th class="py-2 px-4 border-b">Przychód</th>
+                <th class="py-2 px-4 border-b">Zakończone projekty</th>
+                <th class="py-2 px-4 border-b">Średni czas realizacji</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="text-gray-700 text-sm">
+                <td class="py-2 px-4 border-b">10</td>
+                <td class="py-2 px-4 border-b">10</td>
+                <td class="py-2 px-4 border-b">10</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <table class="text-left border-collapse md:w-3/4 w-full">
-          <thead>
-            <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
-              <th class="py-2 px-4 border-b">Przychód</th>
-              <th class="py-2 px-4 border-b">Zakończone projekty</th>
-              <th class="py-2 px-4 border-b">Średni czas realizacji</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="text-gray-700 text-sm">
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="w-full bg-gray-200 dark:bg-gray-700 my-4" style="height: 1px;" />
-      <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
-        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-sky-300 dark:bg-sky-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
-            <font-awesome-icon :icon="['fas', '3']" style="font-size: 16px;" class="font-medium text-white" />
+        <div class="w-full bg-gray-200 dark:bg-gray-700 my-4" style="height: 1px;" />
+        <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
+          <div class="flex flex-row flex-nowrap justify-start items-center gap-2 w-full">
+            <div class="p-2 bg-sky-300 dark:bg-sky-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+              <font-awesome-icon :icon="['fas', '3']" style="font-size: 16px;" class="font-medium text-white" />
+            </div>
+            <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Weronika</div>
           </div>
-          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Weronika</div>
+          <table class="text-left border-collapse md:w-3/4 w-full">
+            <thead>
+              <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
+                <th class="py-2 px-4 border-b">Przychód</th>
+                <th class="py-2 px-4 border-b">Zakończone projekty</th>
+                <th class="py-2 px-4 border-b">Średni czas realizacji</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="text-gray-700 text-sm">
+                <td class="py-2 px-4 border-b">10</td>
+                <td class="py-2 px-4 border-b">10</td>
+                <td class="py-2 px-4 border-b">10</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <table class="text-left border-collapse md:w-3/4 w-full">
-          <thead>
-            <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
-              <th class="py-2 px-4 border-b">Przychód</th>
-              <th class="py-2 px-4 border-b">Zakończone projekty</th>
-              <th class="py-2 px-4 border-b">Średni czas realizacji</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="text-gray-700 text-sm">
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
-    <div class="col-span-12 md:col-span-6 card">
+    <div class="col-span-12 md:col-span-6 card flex flex-col justify-between">
       <ViewToggle v-model="top3ProjectSelectedView" :options="['Ostatni miesiąc', 'Od zawsze']" />
       <div class="flex flex-col flex-nowrap justify-center items-center my-4">
         <h2 class="!text-xl !text-gray-700 dark:!text-gray-500">Projekty</h2>
@@ -496,73 +498,75 @@
           </div>
         </div>
       </div>
-      <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
-        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-rose-300 dark:bg-rose-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
-            <font-awesome-icon :icon="['fas', 'trophy']" style="font-size: 16px;" class="font-medium text-white" />
+      <div>
+        <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
+          <div class="flex flex-row flex-nowrap justify-start items-center gap-2 w-full">
+            <div class="p-2 bg-rose-300 dark:bg-rose-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+              <font-awesome-icon :icon="['fas', 'trophy']" style="font-size: 16px;" class="font-medium text-white" />
+            </div>
+            <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Projekt #33</div>
           </div>
-          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Projekt #33</div>
+          <table class="text-left border-collapse md:w-3/4 w-full">
+            <thead>
+              <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
+                <th class="py-2 px-4 border-b">Przychód</th>
+                <th class="py-2 px-4 border-b">Czas realizacji</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="text-gray-700 text-sm">
+                <td class="py-2 px-4 border-b">10</td>
+                <td class="py-2 px-4 border-b">10</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <table class="text-left border-collapse md:w-3/4 w-full">
-          <thead>
-            <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
-              <th class="py-2 px-4 border-b">Przychód</th>
-              <th class="py-2 px-4 border-b">Czas realizacji</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="text-gray-700 text-sm">
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="w-full bg-gray-200 dark:bg-gray-700 dark:bg-gray-700 my-4" style="height: 1px;" />
-      <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
-        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-green-300 dark:bg-green-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
-            <font-awesome-icon :icon="['fas', '2']" style="font-size: 16px;" class="font-medium text-white" />
+        <div class="w-full bg-gray-200 dark:bg-gray-700 my-4" style="height: 1px;" />
+        <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
+          <div class="flex flex-row flex-nowrap justify-start items-center gap-2 w-full">
+            <div class="p-2 bg-green-300 dark:bg-green-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+              <font-awesome-icon :icon="['fas', '2']" style="font-size: 16px;" class="font-medium text-white" />
+            </div>
+            <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Projekt #11</div>
           </div>
-          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Projekt #11</div>
+          <table class="text-left border-collapse md:w-3/4 w-full">
+            <thead>
+              <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
+                <th class="py-2 px-4 border-b">Przychód</th>
+                <th class="py-2 px-4 border-b">Czas realizacji</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="text-gray-700 text-sm">
+                <td class="py-2 px-4 border-b">10</td>
+                <td class="py-2 px-4 border-b">10</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <table class="text-left border-collapse md:w-3/4 w-full">
-          <thead>
-            <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
-              <th class="py-2 px-4 border-b">Przychód</th>
-              <th class="py-2 px-4 border-b">Czas realizacji</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="text-gray-700 text-sm">
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="w-full bg-gray-200 dark:bg-gray-700 my-4" style="height: 1px;" />
-      <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
-        <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-sky-300 dark:bg-sky-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
-            <font-awesome-icon :icon="['fas', '3']" style="font-size: 16px;" class="font-medium text-white" />
+        <div class="w-full bg-gray-200 dark:bg-gray-700 my-4" style="height: 1px;" />
+        <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
+          <div class="flex flex-row flex-nowrap justify-start items-center gap-2 w-full">
+            <div class="p-2 bg-sky-300 dark:bg-sky-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+              <font-awesome-icon :icon="['fas', '3']" style="font-size: 16px;" class="font-medium text-white" />
+            </div>
+            <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Projekt #23</div>
           </div>
-          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Projekt #23</div>
+          <table class="text-left border-collapse md:w-3/4 w-full">
+            <thead>
+              <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
+                <th class="py-2 px-4 border-b">Przychód</th>
+                <th class="py-2 px-4 border-b">Czas realizacji</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="text-gray-700 text-sm">
+                <td class="py-2 px-4 border-b">10</td>
+                <td class="py-2 px-4 border-b">10</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <table class="text-left border-collapse md:w-3/4 w-full">
-          <thead>
-            <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
-              <th class="py-2 px-4 border-b">Przychód</th>
-              <th class="py-2 px-4 border-b">Czas realizacji</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="text-gray-700 text-sm">
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
     <div class="col-span-12 font-medium text-gray-600 mt-4 flex flex-row flex-nowrap items-center justify-between">
