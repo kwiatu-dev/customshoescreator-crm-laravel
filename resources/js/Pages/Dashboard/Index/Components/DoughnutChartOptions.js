@@ -5,6 +5,7 @@ export const options = ({ local, currency, theme }) => ({
   spacing: 1,
   borderRadius: 8,
   borderWidth: 1,
+  borderColor: theme === 'dark' ? 'rgb(55 65 81)' : 'rgb(243 244 246)',
   plugins: {
     legend: {
       display: true,

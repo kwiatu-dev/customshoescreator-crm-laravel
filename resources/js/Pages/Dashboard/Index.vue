@@ -572,8 +572,8 @@
       <h2>Projekty wg. kategorii</h2>
       <DoughnutChart
         :data="doughnutChartData" 
-        :options="doughnutChartOptions({ local: 'pl-PL', currency: null, theme: 'light' })" 
-        :colors="colors({ theme: 'dark' })"
+        :options="doughnutChartOptionsComputed" 
+        :colors="chartColors"
       />
     </div>
     <div class="col-span-12 md:col-span-8 card">
@@ -581,7 +581,7 @@
       <YearlyBarChart 
         :data="yearlyBarChartData" 
         :options="barChartOptions({ local: 'pl-PL', currency: 'PLN', })" 
-        :colors="colors({ theme: 'dark' })"
+        :colors="chartColors"
       />
     </div>
     <div class="col-span-12 2xl:col-span-6 card">
@@ -589,7 +589,7 @@
       <LineChart 
         :data="lineChartData" 
         :options="lineChartOptions({ local: 'pl-PL', currency: null, })" 
-        :colors="colors({ theme: 'dark' })"
+        :colors="chartColors"
       />
     </div>
     <div class="col-span-12 2xl:col-span-6 card">
@@ -597,7 +597,7 @@
       <LineChart 
         :data="lineChartData" 
         :options="lineChartOptions({ local: 'pl-PL', currency: null, })" 
-        :colors="colors({ theme: 'dark' })"
+        :colors="chartColors"
       />
     </div>
   </div>
@@ -614,12 +614,20 @@ import DoughnutChart from '@/Pages/Dashboard/Index/Components/DoughnutChart.vue'
 import YearlyBarChart from '@/Pages/Dashboard/Index/Components/YearlyBarChart.vue'
 import DateRangePicker from '@/Pages/Dashboard/Index/Components/DateRangePicker.vue'
 import ViewToggle from '@/Pages/Dashboard/Index/Components/ViewToggle.vue'
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Link } from '@inertiajs/vue3'
+import { useDark } from '@vueuse/core'
 
 const top3UsersSelectedView = ref(0)
 const top3ProjectSelectedView = ref(0)
 const dateRange = ref(null)
+const isDark = useDark()
+const theme = computed(() => (isDark.value ? 'dark' : 'light'))
+
+const doughnutChartOptionsComputed = computed(() => {
+  return doughnutChartOptions({ local: 'pl-PL', currency: null, theme: theme.value })
+})
+const chartColors = computed(() => colors({theme: theme.value}))
 
 const yearlyBarChartData = {
   2023: {
@@ -694,6 +702,10 @@ const lineChartData = {
 
   ],
 }
+
+watch(() => theme.value, (_) => {
+  console.log(theme.value)
+})
 </script>
 
 <style scoped>
