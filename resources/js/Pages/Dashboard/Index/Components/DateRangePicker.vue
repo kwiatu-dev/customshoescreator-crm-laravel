@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-row flex-nowrap justify-end items-center gap-2">
     <div 
-      class="col-span-2 text-center" 
+      class="col-span-2 text-center dark:text-gray-400" 
       style="font-size: 10px;"
     >
       od
@@ -12,10 +12,10 @@
       v-model="value.from" 
       type="text"
       style="font-size: 10px"
-      class="col-span-3 text-center border border-gray-950 border-solid rounded-md font-medium px-0 py-0 bg-gray-100 cursor-pointer"
+      class="col-span-3 text-center border border-gray-950 border-solid rounded-md font-medium px-0 py-0 bg-gray-100 dark:bg-gray-600 dark:border-gray-800 cursor-pointer dark:text-gray-50"
     />
     <div 
-      class="col-span-2 text-center" 
+      class="col-span-2 text-center dark:text-gray-400" 
       style="font-size: 10px;"
     >
       do
@@ -26,7 +26,7 @@
       v-model="value.to" 
       type="text"
       style="font-size: 10px"
-      class="col-span-3 text-center border border-gray-950 border-solid rounded-md font-medium px-0 py-0 bg-gray-100 cursor-pointer"
+      class="col-span-3 text-center border border-gray-950 border-solid rounded-md font-medium px-0 py-0 bg-gray-100 dark:bg-gray-600 dark:border-gray-800 cursor-pointer dark:text-gray-50"
     />
   </div>
 </template>
@@ -103,7 +103,7 @@ input {
 }
 
 input:hover {
-  background-color: #e5e7eb; /* Jasnoszary kolor tła */
+  @apply bg-gray-200 dark:bg-gray-700; /* Jasnoszary kolor tła */
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Delikatny cień */ /* Subtelne powiększenie */
 }
 </style>
