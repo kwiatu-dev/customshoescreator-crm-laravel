@@ -212,3 +212,11 @@ Route::put('user-events/{user_event}/restore', [UserEventsController::class, 're
     ->name('user-events.restore')
     ->withTrashed();
 
+Route::prefix('api')->group(function () {
+    Route::prefix('dashboard')->group(function () {
+        Route::get('kpi', [DashboardController::class, 'kpi'])
+            ->name('dashboard.kpi');
+    });
+});
+
+

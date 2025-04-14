@@ -47,7 +47,7 @@ const value = ref(
   props.modelValue && props.modelValue.from && props.modelValue.to
     ? { ...props.modelValue }
     : {
-      from: dayjs().subtract(1, 'month').format('YYYY-MM'),
+      from: dayjs().format('YYYY-MM'),
       to: dayjs().format('YYYY-MM'),
     },
 )
@@ -74,7 +74,7 @@ watch(() => value.value.from, (newFrom) => {
   const fromDate = dayjs(newFrom, 'YYYY-MM')
   const toDate = dayjs(value.value.to, 'YYYY-MM')
 
-  if (fromDate.isAfter(toDate) || fromDate.isSame(toDate)) {
+  if (fromDate.isAfter(toDate)) {
     value.value.to = fromDate.add(1, 'month').format('YYYY-MM')
   }
 
@@ -86,7 +86,7 @@ watch(() => value.value.to, (newTo) => {
   const fromDate = dayjs(value.value.from, 'YYYY-MM')
   const toDate = dayjs(newTo, 'YYYY-MM')
 
-  if (fromDate.isAfter(toDate) || fromDate.isSame(toDate)) {
+  if (fromDate.isAfter(toDate)) {
     value.value.from = toDate.subtract(1, 'month').format('YYYY-MM')
   }
 

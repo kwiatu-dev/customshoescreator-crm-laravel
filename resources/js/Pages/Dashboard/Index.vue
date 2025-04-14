@@ -161,11 +161,11 @@
       <div class="total">{{ metrics['total_expenses_count'] }}</div>
     </div>
 
+
     <div class="col-span-12 font-medium text-gray-600 mt-4 flex flex-row flex-wrap items-center justify-between">
       <div>Podsumowanie KPI</div>
-      <DateRangePicker v-model="dateRange" class="ml-auto mt-4 md:ml-0 md:mt-0" />
+      <DateRangePicker v-model="range" class="ml-auto mt-4 md:ml-0 md:mt-0" />
     </div>
-
     <div class="col-span-12 md:col-span-4 card">
       <div class="flex flex-row flex-nowrap justify-start items-center gap-4 mb-4">
         <div class="p-2 bg-indigo-400 dark:bg-indigo-500 w-16 h-16 rounded-xl flex items-center justify-center">
@@ -176,33 +176,39 @@
       <div class="flex md:flex-col md:gap-2 gap-8 flex-wrap">
         <div>
           <div class="text-gray-400 dark:text-gray-500">Przychód</div>
-          <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
-            <span>10 zł</span>
-            <span class="text-xs text-green-500">
-              <font-awesome-icon :icon="['fas', 'caret-up']" />
-              2%
+          <div v-if="kpi" class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
+            <span>{{ kpi['financial']['income']['value'] }} zł</span>
+            <span class="text-xs" :class="{'text-green-500': kpi['financial']['income']['arrow'] === 'up', 'text-rose-500': kpi['financial']['income']['arrow'] === 'down'}">
+              <font-awesome-icon v-if="kpi['financial']['income']['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
+              <font-awesome-icon v-if="kpi['financial']['income']['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
+              {{ kpi['financial']['income']['percentage'] }}%
             </span>
           </div>
+          <div v-else>test</div>
         </div>
         <div>
           <div class="text-gray-400 dark:text-gray-500">Wydatki</div>
-          <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
-            <span>10 zł</span>
-            <span class="text-xs text-green-500">
-              <font-awesome-icon :icon="['fas', 'caret-up']" />
-              2%
+          <div v-if="kpi" class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
+            <span>{{ kpi['financial']['expenses']['value'] }} zł</span>
+            <span class="text-xs" :class="{'text-green-500': kpi['financial']['expenses']['arrow'] === 'up', 'text-rose-500': kpi['financial']['expenses']['arrow'] === 'down'}">
+              <font-awesome-icon v-if="kpi['financial']['expenses']['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
+              <font-awesome-icon v-if="kpi['financial']['expenses']['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
+              {{ kpi['financial']['expenses']['percentage'] }}%
             </span>
           </div>
+          <div v-else>test</div> 
         </div>
         <div>
           <div class="text-gray-400 dark:text-gray-500">Zysk</div>
-          <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
-            <span>10 zł</span>
-            <span class="text-xs text-green-500">
-              <font-awesome-icon :icon="['fas', 'caret-up']" />
-              2%
+          <div v-if="kpi" class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
+            <span>{{ kpi['financial']['profit']['value'] }} zł</span>
+            <span class="text-xs" :class="{'text-green-500': kpi['financial']['profit']['arrow'] === 'up', 'text-rose-500': kpi['financial']['profit']['arrow'] === 'down'}">
+              <font-awesome-icon v-if="kpi['financial']['profit']['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
+              <font-awesome-icon v-if="kpi['financial']['profit']['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
+              {{ kpi['financial']['profit']['percentage'] }}%
             </span>
           </div>
+          <div v-else>test</div>
         </div>
       </div>
     </div>
@@ -218,33 +224,39 @@
       <div class="flex md:flex-col md:gap-2 gap-8 flex-wrap">
         <div>
           <div class="text-gray-400 dark:text-gray-500">Nowe</div>
-          <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
-            <span>10</span>
-            <span class="text-xs text-green-500">
-              <font-awesome-icon :icon="['fas', 'caret-up']" />
-              2%
+          <div v-if="kpi" class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
+            <span>{{ kpi['projects']['new']['value'] }}</span>
+            <span class="text-xs" :class="{'text-green-500': kpi['projects']['new']['arrow'] === 'up', 'text-rose-500': kpi['projects']['new']['arrow'] === 'down'}">
+              <font-awesome-icon v-if="kpi['projects']['new']['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
+              <font-awesome-icon v-if="kpi['projects']['new']['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
+              {{ kpi['projects']['new']['percentage'] }}%
             </span>
           </div>
+          <div v-else>test</div>
         </div>
         <div>
           <div class="text-gray-400 dark:text-gray-500">Zakończone</div>
-          <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
-            <span>10</span>
-            <span class="text-xs text-green-500">
-              <font-awesome-icon :icon="['fas', 'caret-up']" />
-              2%
+          <div v-if="kpi" class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
+            <span>{{ kpi['projects']['completed']['value'] }}</span>
+            <span class="text-xs" :class="{'text-green-500': kpi['projects']['completed']['arrow'] === 'up', 'text-rose-500': kpi['projects']['completed']['arrow'] === 'down'}">
+              <font-awesome-icon v-if="kpi['projects']['completed']['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
+              <font-awesome-icon v-if="kpi['projects']['completed']['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
+              {{ kpi['projects']['completed']['percentage'] }}%
             </span>
           </div>
+          <div v-else>test</div>
         </div>
         <div>
           <div class="text-gray-400 dark:text-gray-500">Średni czas realizacji</div>
-          <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
-            <span>10</span>
-            <span class="text-xs text-green-500">
-              <font-awesome-icon :icon="['fas', 'caret-up']" />
-              2%
+          <div v-if="kpi" class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
+            <span>{{ kpi['projects']['avg_days']['value'] }} dni</span>
+            <span class="text-xs" :class="{'text-green-500': kpi['projects']['avg_days']['arrow'] === 'up', 'text-rose-500': kpi['projects']['avg_days']['arrow'] === 'down'}">
+              <font-awesome-icon v-if="kpi['projects']['avg_days']['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
+              <font-awesome-icon v-if="kpi['projects']['avg_days']['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
+              {{ kpi['projects']['avg_days']['percentage'] }}%
             </span>
           </div>
+          <div v-else>test</div>
         </div>
       </div>
     </div>
@@ -259,23 +271,27 @@
       <div class="flex md:flex-col md:gap-2 gap-8 flex-wrap">
         <div>
           <div class="text-gray-400 dark:text-gray-500">Nowi</div>
-          <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
-            <span>10</span>
-            <span class="text-xs text-green-500">
-              <font-awesome-icon :icon="['fas', 'caret-up']" />
-              2%
+          <div v-if="kpi" class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
+            <span>{{ kpi['clients']['new']['value'] }}</span>
+            <span class="text-xs" :class="{'text-green-500': kpi['clients']['new']['arrow'] === 'up', 'text-rose-500': kpi['clients']['new']['arrow'] === 'down'}">
+              <font-awesome-icon v-if="kpi['clients']['new']['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
+              <font-awesome-icon v-if="kpi['clients']['new']['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
+              {{ kpi['clients']['new']['percentage'] }}%
             </span>
           </div>
+          <div v-else>test</div>
         </div>
         <div>
           <div class="text-gray-400 dark:text-gray-500">Powracający</div>
-          <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
-            <span>10</span>
-            <span class="text-xs text-green-500">
-              <font-awesome-icon :icon="['fas', 'caret-up']" />
-              2%
+          <div v-if="kpi" class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
+            <span>{{ kpi['clients']['returning']['value'] }}</span>
+            <span class="text-xs" :class="{'text-green-500': kpi['clients']['returning']['arrow'] === 'up', 'text-rose-500': kpi['clients']['returning']['arrow'] === 'down'}">
+              <font-awesome-icon v-if="kpi['clients']['returning']['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
+              <font-awesome-icon v-if="kpi['clients']['returning']['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
+              {{ kpi['clients']['returning']['percentage'] }}%
             </span>
           </div>
+          <div v-else>test</div>
         </div>
       </div>
     </div>
@@ -283,73 +299,85 @@
     <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
       <div class="text-gray-800 dark:text-gray-500 font-medium text-xs">
         <div>Renowacja butów</div>
-        <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
-          <span>10</span>
-          <span class="text-xs text-green-500">
-            <font-awesome-icon :icon="['fas', 'caret-up']" />
-            2%
+        <div v-if="kpi" class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
+          <span>{{ kpi['projects']['types']['renowacja-butow']['value'] }}</span>
+          <span class="text-xs" :class="{'text-green-500': kpi['projects']['types']['renowacja-butow']['arrow'] === 'up', 'text-rose-500': kpi['projects']['types']['renowacja-butow']['arrow'] === 'down'}">
+            <font-awesome-icon v-if="kpi['projects']['types']['renowacja-butow']['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
+            <font-awesome-icon v-if="kpi['projects']['types']['renowacja-butow']['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
+            {{ kpi['projects']['types']['renowacja-butow']['percentage'] }}%
           </span>
         </div>
+        <div v-else>test</div>
       </div>
     </div>
     <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
       <div class="text-gray-800 dark:text-gray-500 font-medium text-xs">
         <div>Personalizacja butów</div>
-        <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
-          <span>10</span>
-          <span class="text-xs text-green-500">
-            <font-awesome-icon :icon="['fas', 'caret-up']" />
-            2%
+        <div v-if="kpi" class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
+          <span>{{ kpi['projects']['types']['personalizacja-butow']['value'] }}</span>
+          <span class="text-xs" :class="{'text-green-500': kpi['projects']['types']['personalizacja-butow']['arrow'] === 'up', 'text-rose-500': kpi['projects']['types']['personalizacja-butow']['arrow'] === 'down'}">
+            <font-awesome-icon v-if="kpi['projects']['types']['personalizacja-butow']['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
+            <font-awesome-icon v-if="kpi['projects']['types']['personalizacja-butow']['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
+            {{ kpi['projects']['types']['personalizacja-butow']['percentage'] }}%
           </span>
         </div>
+        <div v-else>test</div>
       </div>
     </div>
     <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
       <div class="text-gray-800 dark:text-gray-500 font-medium text-xs">
         <div>Personalizacja ubrań</div>
-        <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
-          <span>10</span>
-          <span class="text-xs text-green-500">
-            <font-awesome-icon :icon="['fas', 'caret-up']" />
-            2%
+        <div v-if="kpi" class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
+          <span>{{ kpi['projects']['types']['personalizacja-ubran']['value'] }}</span>
+          <span class="text-xs" :class="{'text-green-500': kpi['projects']['types']['personalizacja-ubran']['arrow'] === 'up', 'text-rose-500': kpi['projects']['types']['personalizacja-ubran']['arrow'] === 'down'}">
+            <font-awesome-icon v-if="kpi['projects']['types']['personalizacja-ubran']['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
+            <font-awesome-icon v-if="kpi['projects']['types']['personalizacja-ubran']['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
+            {{ kpi['projects']['types']['personalizacja-ubran']['percentage'] }}%
           </span>
         </div>
+        <div v-else>test</div>
       </div>
     </div>
     <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
       <div class="text-gray-800 dark:text-gray-500 font-medium text-xs">
         <div>Haft ręczny</div>
-        <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
-          <span>10</span>
-          <span class="text-xs text-green-500">
-            <font-awesome-icon :icon="['fas', 'caret-up']" />
-            2%
+        <div v-if="kpi" class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
+          <span>{{ kpi['projects']['types']['haft-reczny']['value'] }}</span>
+          <span class="text-xs" :class="{'text-green-500': kpi['projects']['types']['haft-reczny']['arrow'] === 'up', 'text-rose-500': kpi['projects']['types']['haft-reczny']['arrow'] === 'down'}">
+            <font-awesome-icon v-if="kpi['projects']['types']['haft-reczny']['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
+            <font-awesome-icon v-if="kpi['projects']['types']['haft-reczny']['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
+            {{ kpi['projects']['types']['haft-reczny']['percentage'] }}%
           </span>
         </div>
+        <div v-else>test</div>
       </div>
     </div>
     <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
       <div class="text-gray-800 dark:text-gray-500 font-medium text-xs">
         <div>Haft komputerowy</div>
-        <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
-          <span>10</span>
-          <span class="text-xs text-green-500">
-            <font-awesome-icon :icon="['fas', 'caret-up']" />
-            2%
+        <div v-if="kpi" class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
+          <span>{{ kpi['projects']['types']['haft-komputerowy']['value'] }}</span>
+          <span class="text-xs" :class="{'text-green-500': kpi['projects']['types']['haft-komputerowy']['arrow'] === 'up', 'text-rose-500': kpi['projects']['types']['haft-komputerowy']['arrow'] === 'down'}">
+            <font-awesome-icon v-if="kpi['projects']['types']['haft-komputerowy']['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
+            <font-awesome-icon v-if="kpi['projects']['types']['haft-komputerowy']['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
+            {{ kpi['projects']['types']['haft-komputerowy']['percentage'] }}%
           </span>
         </div>
+        <div v-else>test</div>
       </div>
     </div>
     <div class="col-span-6 sm:col-span-4 md:col-span-2 card">
       <div class="text-gray-800 dark:text-gray-500 font-medium text-xs">
         <div>Inne</div>
-        <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
-          <span>10</span>
-          <span class="text-xs text-green-500">
-            <font-awesome-icon :icon="['fas', 'caret-up']" />
-            2%
+        <div v-if="kpi" class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-between items-center">
+          <span>{{ kpi['projects']['types']['inne']['value'] }}</span>
+          <span class="text-xs" :class="{'text-green-500': kpi['projects']['types']['inne']['arrow'] === 'up', 'text-rose-500': kpi['projects']['types']['inne']['arrow'] === 'down'}">
+            <font-awesome-icon v-if="kpi['projects']['types']['inne']['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
+            <font-awesome-icon v-if="kpi['projects']['types']['inne']['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
+            {{ kpi['projects']['types']['inne']['percentage'] }}%
           </span>
         </div>
+        <div v-else>test</div>
       </div>
     </div>
 
@@ -682,15 +710,13 @@ import DoughnutChart from '@/Pages/Dashboard/Index/Components/DoughnutChart.vue'
 import YearlyBarChart from '@/Pages/Dashboard/Index/Components/YearlyBarChart.vue'
 import DateRangePicker from '@/Pages/Dashboard/Index/Components/DateRangePicker.vue'
 import ViewToggle from '@/Pages/Dashboard/Index/Components/ViewToggle.vue'
-import {  ref } from 'vue'
+import {  nextTick, onMounted, ref, watch } from 'vue'
 import { Link } from '@inertiajs/vue3'
+import { useKPI } from '@/Composables/useKPI'
+import { debounce } from 'lodash'
 
 defineProps({
   metrics: {
-    type: Object,
-    required: true,
-  },
-  kpi: {
     type: Object,
     required: true,
   },
@@ -698,7 +724,22 @@ defineProps({
 
 const top3UsersSelectedView = ref(0)
 const top3ProjectSelectedView = ref(0)
-const dateRange = ref(null)
+const range = ref(null)
+const kpi = ref(null)
+
+watch(() => range.value, debounce(async () => {
+  if (range.value) {
+    kpi.value = null
+    await nextTick()  
+    kpi.value = await useKPI(range.value)
+  }
+
+}, 1000), { deep: true })
+
+onMounted(async () => {
+  if (range.value)
+    kpi.value = await useKPI(range.value)
+})
 
 const yearlyBarChartData = {
   2023: {

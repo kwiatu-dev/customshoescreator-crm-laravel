@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 
 class DashboardController extends Controller
 {
@@ -22,18 +23,36 @@ class DashboardController extends Controller
     
     public function index(Request $request)
     {
-        $from = now()->startOfMonth();
-        $to = now()->endOfMonth();
         $metrics = $this->getMetrics();
-        $kpi = $this->getKPI($from, $to);
 
         return inertia(
             'Dashboard/Index',
             [
                 'metrics' => $metrics,
-                'kpi' => $kpi,
             ]
         );
+    }
+
+    public function kpi(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'from' => ['required', 'date_format:Y-m'],
+            'to'   => ['required', 'date_format:Y-m', 'after_or_equal:from'],
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+    
+        $fromInput = $request->input('from');
+        $toInput = $request->input('to');
+    
+        $from = Carbon::createFromFormat('Y-m', $fromInput)->startOfMonth()->startOfDay();
+        $to = Carbon::createFromFormat('Y-m', $toInput)->endOfMonth()->endOfDay();
+    
+        $kpi = $this->getKPI($from, $to);
+    
+        return response()->json($kpi);
     }
 
     private function getKPI($from, $to)
@@ -54,13 +73,13 @@ class DashboardController extends Controller
             return (int) floor(abs($change));
         };
 
-        dd([
-            'currentStats' => $currentStatus,
-            'previousStats' => $previousStats,
-            'financial' => $this->formatFinancialKPI($currentStatus, $previousStats, $getPercentageChange),
-            'projects' => $this->formatProjectKPI($currentStatus, $previousStats, $getPercentageChange),
-            'clients' => $this->formatClientKPI($currentStatus, $previousStats, $getPercentageChange),
-        ]);
+        // dd([
+        //     'current' => $currentStatus,
+        //     'previous' => $previousStats,
+        //     'financial' => $this->formatFinancialKPI($currentStatus, $previousStats, $getPercentageChange),
+        //     'projects' => $this->formatProjectKPI($currentStatus, $previousStats, $getPercentageChange),
+        //     'clients' => $this->formatClientKPI($currentStatus, $previousStats, $getPercentageChange),
+        // ]);
 
         return [
             'financial' => $this->formatFinancialKPI($currentStatus, $previousStats, $getPercentageChange),
@@ -89,7 +108,7 @@ class DashboardController extends Controller
             'profit' => $profit,
             'new_projects' => Project::whereBetween('created_at', [$from, $to])->count(),
             'completed_projects' => Project::whereBetween('end', [$from, $to])->count(),
-            'avg_days_projects' => Project::whereBetween('end', [$from, $to])->avg(\DB::raw('DATEDIFF(end, start)')),
+            'avg_days_projects' => round(Project::whereBetween('end', [$from, $to])->avg(\DB::raw('DATEDIFF(end, start)')), 2),
             'new_clients' => Client::whereBetween('created_at', [$from, $to])->count(),
             
             'returning_clients' => Client::whereHas('projects', function ($query) use ($from, $to) {
