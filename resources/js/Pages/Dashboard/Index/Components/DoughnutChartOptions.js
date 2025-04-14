@@ -10,13 +10,16 @@ export const options = ({ local, currency, theme }) => ({
     legend: {
       display: true,
       position: 'bottom',
+      labels: {
+        color: theme === 'dark' ? 'rgb(209 213 219)' : 'black', 
+      },
     },
     tooltip: {
       enabled: true,
       displayColors: false,
-      bodyColor: 'rgb(209 213 219)',
-      titleColor: 'rgb(209 213 219)',
-      backgroundColor: 'rgb(17 24 39)',
+      bodyColor: theme === 'dark' ? 'rgb(209 213 219)' : 'black',
+      titleColor: theme === 'dark' ? 'rgb(209 213 219)' : 'black',
+      backgroundColor: theme === 'dark' ? 'rgb(17 24 39)' : 'rgb(243 244 246)',
       padding: 10,
       callbacks: {
         label: (context) => {

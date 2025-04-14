@@ -3,7 +3,6 @@
     :key="barChartKey"
     :data="barChartData" 
     :options="options" 
-    :colors="colors"
     :has-nav="false"
   >
     <template #header>
@@ -26,10 +25,6 @@ const props = defineProps({
     type: Object, 
   },
   options: { 
-    required: true, 
-    type: Object, 
-  },
-  colors: { 
     required: true, 
     type: Object, 
   },

@@ -301,7 +301,7 @@
           </div>
           <div 
             style="height: 150px;"
-            class="bg-green-200 dark:bg-green-500 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
+            class="bg-green-200 dark:bg-green-700 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
           >
             <font-awesome-icon :icon="['fas', '2']" />
             <div class="absolute top-2 left-2 w-1 h-1 bg-green-400 rounded-full" />
@@ -319,7 +319,7 @@
           </div>
           <div 
             style="height: 200px;"
-            class="bg-rose-200 dark:bg-rose-500 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
+            class="bg-rose-200 dark:bg-rose-700 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
           >
             <font-awesome-icon :icon="['fas', 'trophy']" />
             <div class="absolute top-2 left-2 w-1 h-1 bg-rose-400 rounded-full" />
@@ -337,7 +337,7 @@
           </div>
           <div 
             style="height: 100px;"
-            class="bg-sky-200 dark:bg-sky-500 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
+            class="bg-sky-200 dark:bg-sky-700 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
           >
             <font-awesome-icon :icon="['fas', '3']" />
             <div class="absolute top-2 left-2 w-1 h-1 bg-sky-400 rounded-full" />
@@ -349,7 +349,7 @@
       </div>
       <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
         <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-rose-300 dark:bg-rose-600 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+          <div class="p-2 bg-rose-300 dark:bg-rose-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', 'trophy']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
           <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Aleksandra</div>
@@ -374,7 +374,7 @@
       <div class="w-full bg-gray-200 dark:bg-gray-700 my-4" style="height: 1px;" />
       <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
         <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-green-300 dark:bg-green-600 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+          <div class="p-2 bg-green-300 dark:bg-green-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '2']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
           <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Filip</div>
@@ -399,7 +399,7 @@
       <div class="w-full bg-gray-200 dark:bg-gray-700 my-4" style="height: 1px;" />
       <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
         <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-sky-300 dark:bg-sky-600 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+          <div class="p-2 bg-sky-300 dark:bg-sky-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '3']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
           <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Weronika</div>
@@ -442,7 +442,7 @@
           </div>
           <div 
             style="height: 150px;"
-            class="bg-green-200 dark:bg-green-500 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
+            class="bg-green-200 dark:bg-green-700 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
           >
             <font-awesome-icon :icon="['fas', '2']" />
             <div class="absolute top-2 left-2 w-1 h-1 bg-green-400 rounded-full" />
@@ -464,7 +464,7 @@
           </div>
           <div 
             style="height: 200px;"
-            class="bg-rose-200 dark:bg-rose-500 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
+            class="bg-rose-200 dark:bg-rose-700 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
           >
             <font-awesome-icon :icon="['fas', 'trophy']" />
             <div class="absolute top-2 left-2 w-1 h-1 bg-rose-400 rounded-full" />
@@ -486,7 +486,7 @@
           </div>
           <div 
             style="height: 100px;"
-            class="bg-sky-200 dark:bg-sky-500 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
+            class="bg-sky-200 dark:bg-sky-700 rounded-md shadow-sm w-full flex flex-row justify-center items-center relative text-white font-medium text-xl"
           >
             <font-awesome-icon :icon="['fas', '3']" />
             <div class="absolute top-2 left-2 w-1 h-1 bg-sky-400 rounded-full" />
@@ -498,7 +498,7 @@
       </div>
       <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
         <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-rose-300 dark:bg-rose-600 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+          <div class="p-2 bg-rose-300 dark:bg-rose-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', 'trophy']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
           <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Projekt #33</div>
@@ -521,7 +521,7 @@
       <div class="w-full bg-gray-200 dark:bg-gray-700 dark:bg-gray-700 my-4" style="height: 1px;" />
       <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
         <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-green-300 dark:bg-green-600 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+          <div class="p-2 bg-green-300 dark:bg-green-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '2']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
           <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Projekt #11</div>
@@ -544,7 +544,7 @@
       <div class="w-full bg-gray-200 dark:bg-gray-700 my-4" style="height: 1px;" />
       <div class="mt-4 flex flex-row flex-wrap justify-between items-center gap-4">
         <div class="flex flex-row flex-nowrap justify-start items-center gap-2 md:w-1/4 w-full">
-          <div class="p-2 bg-sky-300 dark:bg-sky-600 rounded-full h-8 w-8 flex flex-row justify-center items-center">
+          <div class="p-2 bg-sky-300 dark:bg-sky-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '3']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
           <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Projekt #23</div>
@@ -572,32 +572,28 @@
       <h2>Projekty wg. kategorii</h2>
       <DoughnutChart
         :data="doughnutChartData" 
-        :options="doughnutChartOptionsComputed" 
-        :colors="chartColors"
+        :options="{ local: 'pl-PL', currency: null }" 
       />
     </div>
     <div class="col-span-12 md:col-span-8 card">
       <h2>Pieniądze</h2>
       <YearlyBarChart 
         :data="yearlyBarChartData" 
-        :options="barChartOptions({ local: 'pl-PL', currency: 'PLN', })" 
-        :colors="chartColors"
+        :options="{ local: 'pl-PL', currency: 'PLN', }" 
       />
     </div>
     <div class="col-span-12 2xl:col-span-6 card">
       <h2>Ilość nowych projektów</h2>
       <LineChart 
         :data="lineChartData" 
-        :options="lineChartOptions({ local: 'pl-PL', currency: null, })" 
-        :colors="chartColors"
+        :options="{ local: 'pl-PL', currency: null, }" 
       />
     </div>
     <div class="col-span-12 2xl:col-span-6 card">
       <h2>Ilość zakończonych projektów</h2>
       <LineChart 
         :data="lineChartData" 
-        :options="lineChartOptions({ local: 'pl-PL', currency: null, })" 
-        :colors="chartColors"
+        :options="{ local: 'pl-PL', currency: null, }" 
       />
     </div>
   </div>
@@ -605,29 +601,17 @@
 
 <script setup>
 import '@/Pages/Dashboard/Index/Components/ChartRegister.js'
-import { colors } from '@/Pages/Dashboard/Index/Components/ChartColors.js'
-import { options as doughnutChartOptions } from '@/Pages/Dashboard/Index/Components/DoughnutChartOptions.js'
-import { options as lineChartOptions } from '@/Pages/Dashboard/Index/Components/LineChartOptions.js'
-import { options as barChartOptions } from '@/Pages/Dashboard/Index/Components/BarChartOptions.js'
 import LineChart from '@/Pages/Dashboard/Index/Components/LineChart.vue'
 import DoughnutChart from '@/Pages/Dashboard/Index/Components/DoughnutChart.vue'
 import YearlyBarChart from '@/Pages/Dashboard/Index/Components/YearlyBarChart.vue'
 import DateRangePicker from '@/Pages/Dashboard/Index/Components/DateRangePicker.vue'
 import ViewToggle from '@/Pages/Dashboard/Index/Components/ViewToggle.vue'
-import { computed, ref, watch } from 'vue'
+import {  ref } from 'vue'
 import { Link } from '@inertiajs/vue3'
-import { useDark } from '@vueuse/core'
 
 const top3UsersSelectedView = ref(0)
 const top3ProjectSelectedView = ref(0)
 const dateRange = ref(null)
-const isDark = useDark()
-const theme = computed(() => (isDark.value ? 'dark' : 'light'))
-
-const doughnutChartOptionsComputed = computed(() => {
-  return doughnutChartOptions({ local: 'pl-PL', currency: null, theme: theme.value })
-})
-const chartColors = computed(() => colors({theme: theme.value}))
 
 const yearlyBarChartData = {
   2023: {
@@ -703,9 +687,7 @@ const lineChartData = {
   ],
 }
 
-watch(() => theme.value, (_) => {
-  console.log(theme.value)
-})
+
 </script>
 
 <style scoped>

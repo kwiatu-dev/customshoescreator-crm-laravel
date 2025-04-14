@@ -6,15 +6,18 @@ export const options = ({ local, currency, theme }) => ({
       display: true,
       position: 'bottom',
       //onClick: null,
+      labels: {
+        color: theme === 'dark' ? 'rgb(209 213 219)' : 'black', 
+      },
     },
     datalabels: {
       display: false,
     },
     tooltip: {
       displayColors: false,
-      bodyColor: 'rgb(209 213 219)',
-      titleColor: 'rgb(209 213 219)',
-      backgroundColor: 'rgb(17 24 39)',
+      bodyColor: theme === 'dark' ? 'rgb(209 213 219)' : 'black',
+      titleColor: theme === 'dark' ? 'rgb(209 213 219)' : 'black',
+      backgroundColor: theme === 'dark' ? 'rgb(17 24 39)' : 'rgb(243 244 246)',
       padding: 10,
       callbacks: {
         label: (context) => {
@@ -38,16 +41,19 @@ export const options = ({ local, currency, theme }) => ({
   scales: {
     x: {
       ticks: {
-        color: 'rgb(156 163 175)',
+        color: theme === 'dark' ? 'rgb(156 163 175)' : 'black',
         font: {
           size: 10,
         },
+      },
+      grid: {
+        color: theme === 'dark' ? 'rgb(55 65 81)' : 'rgb(229 231 235)', 
       },
     },
     y: {
       beginAtZero: true,
       ticks: {
-        color: 'rgb(156 163 175)',
+        color: theme === 'dark' ? 'rgb(156 163 175)' : 'black',
         font: {
           size: 10,
         },
@@ -63,6 +69,9 @@ export const options = ({ local, currency, theme }) => ({
             return value
           }
         },
+      },
+      grid: {
+        color: theme === 'dark' ? 'rgb(55 65 81)' : 'rgb(229 231 235)', 
       },
     },
   },

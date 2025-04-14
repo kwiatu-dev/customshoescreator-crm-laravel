@@ -4,7 +4,7 @@
       <slot name="header" />
       <ChartNavButtons v-if="hasNav" :labels="labels" @label_click="toggleDataset($event)" />
       <div style="height: 500px;" class="chart-inner">
-        <Bar ref="bar" :data="chartData" :options="options" />
+        <Bar ref="bar" :data="chartData" :options="chartOptions" />
       </div>
     </div>
   </div>
@@ -13,7 +13,14 @@
 <script setup>
 import ChartNavButtons from '@/Pages/Dashboard/Index/Components/ChartNavButtons.vue'
 import { Bar } from 'vue-chartjs'
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, computed, watch } from 'vue'
+import { colors as barChartColors } from '@/Pages/Dashboard/Index/Components/ChartColors'
+import { useTheme } from '@/Composables/useTheme'
+import { options as barChartOptions } from '@/Pages/Dashboard/Index/Components/BarChartOptions.js'
+
+const theme = useTheme()
+const chartColors = computed(() => barChartColors({ theme: theme.value }))
+const chartOptions = computed(() => barChartOptions({...props.options, theme: theme.value }))
   
 const props = defineProps({
   data: { 
@@ -21,10 +28,6 @@ const props = defineProps({
     type: Object, 
   },
   options: { 
-    required: true, 
-    type: Object, 
-  },
-  colors: { 
     required: true, 
     type: Object, 
   },
@@ -47,15 +50,16 @@ const toggleDataset = (index) => {
 }
   
 const injectDatasetsProperties = (data) => {
+  const chartArea = bar.value.chart.chartArea
   const canvas = bar.value.chart.canvas
   const ctx = canvas.getContext('2d')
   
   for (const [index, dataset] of data.datasets.entries()) {
-    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
+    const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top)
   
-    gradient.addColorStop(0, props.colors[index].backgroundColor.replace('{opacity}', '0.9'))
-    gradient.addColorStop(0.5, props.colors[index].backgroundColor.replace('{opacity}', '0.5'))
-    gradient.addColorStop(1, props.colors[index].backgroundColor.replace('{opacity}', '0.2'))
+    gradient.addColorStop(0, chartColors.value[index].backgroundColor.replace('{opacity}', '0.9'))
+    gradient.addColorStop(0.5, chartColors.value[index].backgroundColor.replace('{opacity}', '0.5'))
+    gradient.addColorStop(1, chartColors.value[index].backgroundColor.replace('{opacity}', '0.2'))
   
     dataset.pointBackgroundColor = 'rgb(209 213 219)'
     dataset.pointBorderColor = 'rgb(209 213 219)'
@@ -71,6 +75,12 @@ const injectDatasetsProperties = (data) => {
 onMounted(async () => {
   await nextTick()
   labels.value = props.data.datasets.map(dataset => ({ value: dataset.label, visible: true }))
+  chartData.value = injectDatasetsProperties(props.data)
+})
+
+watch(() => chartColors.value, async () => {
+  chartData.value = { labels: [], datasets: [] }
+  await nextTick()
   chartData.value = injectDatasetsProperties(props.data)
 })
 </script>
