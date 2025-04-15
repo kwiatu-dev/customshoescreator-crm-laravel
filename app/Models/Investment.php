@@ -48,7 +48,8 @@ class Investment extends Model
         ],
         'others' => [
             ['deleted' => 'boolean'],
-            ['created_by_user' => 'boolean']
+            ['created_by_user' => 'boolean'],
+            ['after_date' => 'boolean']
         ],
         'pagination' => 'string',
     ];

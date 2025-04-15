@@ -10,14 +10,13 @@
             <svg class="w-[18px] h-[18px]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" /></svg>
             <span class="sr-only">Toggle sidebar</span>
           </button> -->
-          <a href="/" class="flex items-center mr-4">
+          <Link :href="route('dashboard.index')" class="flex items-center mr-4">
             <img src="/storage/logo.webp" class="mr-3 h-10 rounded-full" />
             <div>
               <p class="hidden sm:block self-center text-2xl font-semibold whitespace-nowrap dark:text-white mb-0 -mt-2">panelCSC</p>
               <p class="hidden sm:block text-sm -mt-1 text-gray-500">System do zarządzania zleceniami.</p>
             </div>
-
-          </a>
+          </Link>
         </div>
         <div class="flex items-center lg:order-2">          
           <!-- Notifications -->
@@ -96,13 +95,13 @@
               Menu
             </div>
             <div class="grid grid-cols-3 gap-4 p-4">
-              <a 
+              <Link 
                 :href="route('dashboard.index')"  
                 class="block p-4 text-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 group"
               >
                 <font-awesome-icon :icon="['fas', 'chart-pie']" class="mx-auto mb-2 w-5 h-5 text-gray-400 group-hover:text-gray-500 dark:text-gray-400 dark:group-hover:text-gray-400" />
                 <div class="text-sm font-medium text-gray-900 dark:text-white">Kokpit</div>
-              </a>
+              </Link>
               <Link 
                 v-if="user?.is_admin"
                 :href="route('user.index')" 

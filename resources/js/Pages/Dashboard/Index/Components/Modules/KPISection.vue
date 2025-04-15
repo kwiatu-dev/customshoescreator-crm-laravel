@@ -1,0 +1,99 @@
+<template>
+  <SectionTitle class="col-span-12">
+    <div>Podsumowanie KPI</div>
+    <DateRangePicker v-model="range" class="ml-auto mt-4 md:ml-0 md:mt-0" />
+  </SectionTitle>
+  <IconStatsCard 
+    class="col-span-12 md:col-span-4"
+    :icon="['fas', 'sack-dollar']"
+    :data="kpi?.['financial'] || null"
+    :labels="{ income: 'Przychód', expenses: 'Wydatki', profit: 'Zysk' }"
+    :units="{ income: ' zł', expenses: ' zł', profit: ' zł' }"
+  >
+    Pieniądze
+  </IconStatsCard>
+  <IconStatsCard 
+    class="col-span-12 md:col-span-4"
+    :icon="['fas', 'sack-dollar']"
+    :data="kpi?.['projects'] || null"
+    :labels="{ new: 'Nowe', completed: 'Zakończone', avg_days: 'Średni czas realizacji', }"
+    :units="{ avg_days: ' dni' }"
+  >
+    Projekty
+  </IconStatsCard>
+  <IconStatsCard 
+    class="col-span-12 md:col-span-4"
+    :icon="['fas', 'people-group']"
+    :data="kpi?.['clients'] || null"
+    :labels="{ new: 'Nowi', returning: 'Powracający' }"
+    :units="{}"
+  >
+    Projekty
+  </IconStatsCard>
+  <StatsCard 
+    class="col-span-6 sm:col-span-4 md:col-span-2"
+    :data="kpi?.['projects']?.['types']?.['renowacja-butow'] || null"
+  >
+    Renowacja butów
+  </StatsCard>
+  <StatsCard 
+    class="col-span-6 sm:col-span-4 md:col-span-2"
+    :data="kpi?.['projects']?.['types']?.['personalizacja-butow'] || null"
+  >
+    Personalizacja butów
+  </StatsCard>
+  <StatsCard 
+    class="col-span-6 sm:col-span-4 md:col-span-2"
+    :data="kpi?.['projects']?.['types']?.['personalizacja-ubran'] || null"
+  >
+    Personalizacja ubrań
+  </StatsCard>
+  <StatsCard 
+    class="col-span-6 sm:col-span-4 md:col-span-2"
+    :data="kpi?.['projects']?.['types']?.['haft-reczny'] || null"
+  >
+    Haft ręczny
+  </StatsCard>
+  <StatsCard 
+    class="col-span-6 sm:col-span-4 md:col-span-2"
+    :data="kpi?.['projects']?.['types']?.['haft-komputerowy'] || null"
+  >
+    Haft komputerowy
+  </StatsCard>
+  <StatsCard 
+    class="col-span-6 sm:col-span-4 md:col-span-2"
+    :data="kpi?.['projects']?.['types']?.['inne'] || null"
+  >
+    Inne
+  </StatsCard>
+</template>
+
+<script setup>
+import dayjs from 'dayjs'
+import { nextTick, onMounted, ref, watch } from 'vue'
+import { debounce } from 'lodash'
+import { useKPI } from '@/Composables/useKPI'
+import IconStatsCard from '@/Pages/Dashboard/Index/Components/IconStatsCard.vue'
+import StatsCard from '@/Pages/Dashboard/Index/Components/StatsCard.vue'
+import DateRangePicker from '@/Pages/Dashboard/Index/Components/DateRangePicker.vue'
+import SectionTitle from '@/Pages/Dashboard/Index/Components/SectionTitle.vue'
+
+const range = ref({ from: dayjs().format('YYYY-MM'), to: dayjs().format('YYYY-MM') })
+const kpi = ref(null)
+
+const fetch = debounce(async () => {
+  if (range.value) {
+    await nextTick()
+    kpi.value = await useKPI(range.value)
+  }
+}, 1000)
+
+watch(() => range.value, () => {
+  kpi.value = null
+  fetch()
+}, { deep: true })
+
+onMounted(async () => {
+  kpi.value = await useKPI(range.value)
+})
+</script>

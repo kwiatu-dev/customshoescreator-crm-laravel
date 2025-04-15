@@ -64,7 +64,11 @@ const filterable = {
     { table: 'InvestmentStatus', column: 'status_id', label: 'Status' }, 
   ], 
   pagination: {},
-  others: [ { name: 'deleted', label: 'Pokaż usunięte' }, { name: 'created_by_user', label: 'Pokaż moje', admin: true } ],
+  others: [ 
+    { name: 'deleted', label: 'Pokaż usunięte' }, 
+    { name: 'created_by_user', label: 'Pokaż moje', admin: true },
+    { name: 'after_date', label: 'Po czasie' }, 
+  ],
 }
 
 const sortable = {
