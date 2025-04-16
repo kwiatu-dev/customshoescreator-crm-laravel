@@ -5,7 +5,6 @@
   <div class="col-span-12 md:col-span-4 card">
     <h2>Projekty wg. kategorii</h2>
     <DoughnutChart
-      ref="doughnutChart"
       :data="doughnutChartData" 
       :options="{ local: 'pl-PL', currency: null }" 
     />
@@ -13,25 +12,26 @@
   <div class="col-span-12 md:col-span-8 card">
     <h2>Finanse</h2>
     <YearlyBarChart 
-      ref="yearlyBarChart"
       :data="yearlyBarChartData" 
       :options="{ local: 'pl-PL', currency: 'PLN', }" 
     />
   </div>
-  <!-- <div class="col-span-12 2xl:col-span-6 card">
+  <div class="col-span-12 2xl:col-span-6 card">
     <h2>Ilość nowych projektów</h2>
     <LineChart 
-      :data="lineChartData" 
+      :data="lineChartData01" 
       :options="{ local: 'pl-PL', currency: null, }" 
+      active="all"
     />
-  </div> -->
-  <!-- <div class="col-span-12 2xl:col-span-6 card">
+  </div>
+  <div class="col-span-12 2xl:col-span-6 card">
     <h2>Ilość zakończonych projektów</h2>
     <LineChart 
-      :data="lineChartData" 
+      :data="lineChartData02" 
       :options="{ local: 'pl-PL', currency: null, }" 
+      active="all"
     />
-  </div> -->
+  </div>
 </template>
 
 <script setup>
@@ -45,13 +45,14 @@ import { useProjectsTypeBreakdown } from '@/Composables/useProjectsTypeBreakdown
 import { useMonthlyFinancialStats } from '@/Composables/useMonthlyFinancialStats'
 import { onMounted, ref } from 'vue'
 import dayjs from 'dayjs'
-
+import { useMonthlyNewProjectsCount } from '@/Composables/useMonthlyNewProjectsCount'
+import { useMonthlyCompletedProjectsCount } from '@/Composables/useMonthlyCompletedProjectsCount'
 
 const projectYears = ref(null)
-const doughnutChart = ref(null)
 const doughnutChartData = ref(null)
-const yearlyBarChart = ref(null)
 const yearlyBarChartData = ref(null)
+const lineChartData01 = ref(null)
+const lineChartData02 = ref(null)
 
 const loadDoughnutChartData = async () => {
   const data = {
@@ -83,24 +84,43 @@ const loadYearlyBarChartData = async () => {
   yearlyBarChartData.value = data
 }
 
+const loadLineChartData01 = async () => {
+  const data = {
+    labels: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
+    datasets: [],
+  }
+
+  for (const year of projectYears.value) {
+    data.datasets.push({
+      label: year,
+      data: (await useMonthlyNewProjectsCount(year)).data,
+    })
+  }
+
+  lineChartData01.value = data
+}
+
+const loadLineChartData02 = async () => {
+  const data = {
+    labels: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
+    datasets: [],
+  }
+
+  for (const year of projectYears.value) {
+    data.datasets.push({
+      label: year,
+      data: (await useMonthlyCompletedProjectsCount(year)).data,
+    })
+  }
+
+  lineChartData02.value = data
+}
+
 onMounted(async () => {
   projectYears.value = await useProjectYears()
   loadDoughnutChartData()
   loadYearlyBarChartData()
+  loadLineChartData01()
+  loadLineChartData02()
 })
-
-// const lineChartData = {
-//   labels: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
-//   datasets: [
-//     {
-//       label: '2023',
-//       data: [40, 39, 10, 40, 45, 80, 40, 72, 88, 105, 13, 0],
-//     },
-//     {
-//       label: '2024',
-//       data: [60, 55, 32, 10, 2, 12, 53, 23, 40, 55, 13, 100],
-//     },
-
-//   ],
-// }
 </script>

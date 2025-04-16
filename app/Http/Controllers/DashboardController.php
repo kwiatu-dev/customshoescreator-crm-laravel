@@ -34,6 +34,68 @@ class DashboardController extends Controller
         );
     }
 
+    public function getMonthlyCompletedProjectsCount(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'year' => 'required|integer|min:2000|max:' . date('Y'),
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        $year = (int) $request->input('year');
+        $data = array_fill(0, 12, 0);
+
+        $rows = DB::table('projects')
+            ->selectRaw('MONTH(end) as month, COUNT(*) as count')
+            ->whereNull('deleted_at')
+            ->whereYear('end', $year)
+            ->groupBy(DB::raw('MONTH(end)'))
+            ->get();
+
+        foreach ($rows as $row) {
+            $index = (int) $row->month - 1;
+            $data[$index] = (int) $row->count;
+        }
+
+        return response()->json([
+            'labels' => $this->getPolishMonthLabels(),
+            'data' => $data,
+        ]);
+    }
+
+    public function getMonthlyNewProjectsCount(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'year' => 'required|integer|min:2000|max:' . date('Y'),
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+    
+        $year = (int) $request->input('year');
+        $data = array_fill(0, 12, 0);
+    
+        $rows = DB::table('projects')
+            ->selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+            ->whereNull('deleted_at')
+            ->whereYear('created_at', $year)
+            ->groupBy(DB::raw('MONTH(created_at)'))
+            ->get();
+    
+        foreach ($rows as $row) {
+            $index = (int) $row->month - 1;
+            $data[$index] = (int) $row->count;
+        }
+    
+        return response()->json([
+            'labels' => $this->getPolishMonthLabels(),
+            'data' => $data,
+        ]);
+    }
+
     public function monthlyFinancialStats(Request $request)
     {
         $validator = Validator::make($request->all(), [

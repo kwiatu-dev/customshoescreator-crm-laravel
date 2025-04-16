@@ -232,7 +232,11 @@ Route::prefix('api')->group(function () {
         Route::get('monthly-financial-stats', [DashboardController::class, 'monthlyFinancialStats'])
             ->name('dashboard.monthly-financial-stats');
 
-            
+        Route::get('monthly-completed-projects-count', [DashboardController::class, 'getMonthlyCompletedProjectsCount'])
+            ->name('dashboard.monthly-completed-projects-count');
+
+        Route::get('monthly-new-projects-count', [DashboardController::class, 'getMonthlyNewProjectsCount'])
+            ->name('dashboard.monthly-new-projects-count');
     });
 });
 

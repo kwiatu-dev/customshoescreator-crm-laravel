@@ -2,9 +2,17 @@
   <div class="relative">
     <div class="w-full bg-white dark:bg-gray-800 rounded-md md:p-8 p-4 shadow-md border border-solid border-gray-300 dark:border-gray-600 chart-container">
       <slot name="nav" />
-      <ChartNavButtons v-if="hasNav" :labels="labels" @label_click="toggleDataset($event)" />
+      <ChartNavButtons 
+        v-if="!hasNavSlot"
+        :labels="chartNavLabels" 
+        @label_click="toggleDataset($event)"
+      />
       <div style="height: 500px;" class="chart-inner">
-        <Line ref="line" :data="chartData" :options="chartOptions" />
+        <Line 
+          ref="line" 
+          :data="chartData || { datasets: [] }" 
+          :options="chartOptions"
+        />
       </div>
     </div>
   </div>
@@ -17,66 +25,115 @@ import { ref, onMounted, nextTick, computed, watch } from 'vue'
 import { useTheme } from '@/Composables/useTheme'
 import { options as lineChartOptions } from '@/Pages/Dashboard/Index/Components/LineChartOptions.js'
 import { colors as lineChartColors } from '@/Pages/Dashboard/Index/Components/ChartColors.js'
+import { useSlots } from 'vue'
 
+const slots = useSlots()
+const hasNavSlot = computed(() => !!slots.nav)
+
+const line = ref(null)
 const theme = useTheme()
 const chartColors = computed(() => lineChartColors({ theme: theme.value }))
-const chartOptions = computed(() => lineChartOptions({...props.options, theme: theme.value }))
+const chartOptions = computed(() => lineChartOptions({...props.options, theme: theme.value, showTicks: !!chartData.value, showGrid: !!chartData.value }))
+const chartData = ref(null)
+const chartNavLabels = ref(null)
 
 const props = defineProps({
   data: { 
     required: true, 
-    type: Object, 
+    type: [Object, null], 
   },
   options: { 
     required: true, 
     type: Object, 
   },
-  hasNav: { 
-    required: false, 
-    default: true,
-    type: Boolean, 
+  active: {
+    required: false,
+    type: String,
+    default: 'last',
   },
 })
 
-const line = ref(null)
-const labels = ref({})
-const chartData = ref({ datasets: [] })
-  
-const toggleDataset = (index) => {
-  const meta = line.value.chart.getDatasetMeta(index)
-  meta.hidden = !meta.hidden 
-  line.value.chart.update()  
-  labels.value[index].visible = !labels.value[index].visible
-}
+const toggleDataset = (label) => {
+  const chart = line.value.chart
 
-const injectDatasetsProperties = (data) => {
+  chartNavLabels.value[label].active = !chartNavLabels.value[label].active
+
+  chart.data.datasets.forEach((dataset, i) => {
+    const meta = chart.getDatasetMeta(i)
+    meta.hidden = !isDatasetActive(dataset.label)
+  })
+
+  chart.update()
+}
+  
+const injectDatasetsProperties = (datasets) => {
   const chartArea = line.value.chart.chartArea
   const canvas = line.value.chart.canvas
   const ctx = canvas.getContext('2d')
-
-  for (const [index, dataset] of data.datasets.entries()) {
+  
+  for (const [index, dataset] of datasets.entries()) {
     const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top)
-
+  
     gradient.addColorStop(0, chartColors.value[index].backgroundColor.replace('{opacity}', '0.9'))
     gradient.addColorStop(0.5, chartColors.value[index].backgroundColor.replace('{opacity}', '0.5'))
     gradient.addColorStop(1, chartColors.value[index].backgroundColor.replace('{opacity}', '0.2'))
-
+  
     dataset.backgroundColor = gradient
+    dataset.hidden = !isDatasetActive(dataset.label)
+  }
+  
+  return datasets
+}
+
+const isDatasetActive = (label) => {
+  if (hasNavSlot.value) {
+    return true
   }
 
-  return data
+  if (chartNavLabels.value && typeof chartNavLabels.value === 'object') {
+    return chartNavLabels.value[label]?.active === true
+  }
+
+  return false
 }
-  
-onMounted(async () => {
+
+const buildChartData = (data) => {
+  if (data && data.datasets) {
+    buildNavLabels(data.datasets)
+    injectDatasetsProperties(data.datasets)
+    return data
+  }
+
+  return null
+}
+
+const buildNavLabels = (datasets) => {
+  const flag = chartNavLabels.value === null
+
+  chartNavLabels.value = datasets.reduce((acc, dataset, index) => {
+    if (dataset.label) {
+      if (props.active === 'last') {
+        acc[dataset.label] = {
+          active: flag ? index === datasets.length - 1 : isDatasetActive(dataset.label),
+        }
+      }
+      else if (props.active === 'all'){
+        acc[dataset.label] = {
+          active: true,
+        }
+      }
+    }
+    return acc
+  }, {})
+}
+    
+onMounted(async () => { 
   await nextTick()
-  labels.value = props.data.datasets.map(dataset => ({ value: dataset.label, visible: true }))
-  chartData.value = injectDatasetsProperties(props.data)
+  chartData.value = buildChartData(props.data)
 })
 
-watch(() => chartColors.value, async () => {
-  chartData.value = { labels: [], datasets: [] }
-  await nextTick()
-  chartData.value = injectDatasetsProperties(props.data)
+watch(() => props.data, () => { 
+  chartData.value = buildChartData(props.data) 
 })
 </script>
 
