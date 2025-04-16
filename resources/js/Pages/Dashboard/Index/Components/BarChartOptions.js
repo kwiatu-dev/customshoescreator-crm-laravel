@@ -1,4 +1,4 @@
-export const options = ({ local, currency, theme }) => ({
+export const options = ({ local, currency, theme, showTicks, showGrid }) => ({
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
@@ -41,18 +41,21 @@ export const options = ({ local, currency, theme }) => ({
   scales: {
     x: {
       ticks: {
+        display: showTicks,
         color: theme === 'dark' ? 'rgb(156 163 175)' : 'black',
         font: {
           size: 10,
         },
       },
       grid: {
+        display: showGrid,
         color: theme === 'dark' ? 'rgb(55 65 81)' : 'rgb(229 231 235)', 
       },
     },
     y: {
       beginAtZero: true,
       ticks: {
+        display: showTicks,
         color: theme === 'dark' ? 'rgb(156 163 175)' : 'black',
         font: {
           size: 10,
@@ -71,6 +74,7 @@ export const options = ({ local, currency, theme }) => ({
         },
       },
       grid: {
+        display: showGrid,
         color: theme === 'dark' ? 'rgb(55 65 81)' : 'rgb(229 231 235)', 
       },
     },

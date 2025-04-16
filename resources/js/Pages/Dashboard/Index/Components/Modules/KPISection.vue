@@ -7,7 +7,7 @@
     class="col-span-12 md:col-span-4"
     :icon="['fas', 'sack-dollar']"
     :data="kpi?.['financial'] || null"
-    :labels="{ income: 'Przychód', expenses: 'Wydatki', profit: 'Zysk' }"
+    :labels="{ income: 'Przychód', expenses: 'Wydatki', profit: 'Dochód' }"
     :units="{ income: ' zł', expenses: ' zł', profit: ' zł' }"
   >
     Finanse

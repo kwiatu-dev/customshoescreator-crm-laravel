@@ -1,13 +1,11 @@
 <template>
   <BarChart 
-    :key="barChartKey"
-    :data="barChartData" 
+    :data="chartData" 
     :options="options" 
-    :has-nav="false"
   >
-    <template #header>
+    <template #nav>
       <ChartNavButtons 
-        :labels="barChartLabels" 
+        :labels="chartNavLabels" 
         @label_click="toggleDataset($event)"
       />
     </template>
@@ -15,14 +13,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import BarChart from '@/Pages/Dashboard/Index/Components/BarChart.vue'
 import ChartNavButtons from '@/Pages/Dashboard/Index/Components/ChartNavButtons.vue'
+import { nextTick, onMounted, ref, watch } from 'vue'
+
+const chartData = ref(null)
+const chartNavLabels = ref(null)
 
 const props = defineProps({
   data: { 
     required: true, 
-    type: Object, 
+    type: [Object, null], 
   },
   options: { 
     required: true, 
@@ -30,24 +31,64 @@ const props = defineProps({
   },
 })
 
-const barChartKey = ref(0)
-
-const toggleDataset = (index) => {
-  const year = Object.keys(props.data)[index]
-  const data = Object.values(props.data)[index]
-
-  if (year === barChartLabels.value.find(label => label.visible).value)
-    return 
-
-  barChartData.value = data
-  barChartKey.value++
-
-  barChartLabels.value.forEach((label, i) => {
-    label.visible = i === index
+const toggleDataset = (label) => {
+  Object.keys(chartNavLabels.value).forEach((label) => {
+    chartNavLabels.value[label].active = false
   })
+
+  chartNavLabels.value[label].active = true
+  chartData.value = buildChartData(props.data)
 }
 
-const lastElement = Object.keys(props.data).slice(-1)[0]
-const barChartData = ref(props.data[lastElement])
-const barChartLabels = ref(Object.keys(props.data).map(year => ({ value: year, visible: year == lastElement })))
+const isDatasetActive = (label) => {
+  if (chartNavLabels.value && typeof chartNavLabels.value === 'object') {
+    return chartNavLabels.value[label]?.active === true
+  }
+
+  return false
+}
+
+const getActiveNavLabel = () => {
+  if (chartNavLabels.value && typeof chartNavLabels.value === 'object') {
+    const entry = Object.entries(chartNavLabels.value).find(
+      ([_, data]) => data.active === true,
+    )
+    return entry ? entry[0] : null 
+  }
+
+  return null
+}
+
+const buildChartData = (data) => {
+  if (data) {
+    buildNavLabels(Object.keys(data))
+    return data[getActiveNavLabel()]
+  }
+
+  return null
+}
+
+const buildNavLabels = (years) => {
+  const flag = chartNavLabels.value === null
+
+  chartNavLabels.value = years.reduce((acc, year, index) => {
+    acc[year] = {
+      active: flag ? index === years.length - 1 : isDatasetActive(year),
+    }
+    return acc
+  }, {})
+}
+
+onMounted(async () => { 
+  await nextTick()
+  chartData.value = buildChartData(props.data)
+})
+
+watch(() => props.data, () => { 
+  chartData.value = buildChartData(props.data) 
+})
+
+
+
+
 </script>

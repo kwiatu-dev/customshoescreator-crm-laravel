@@ -124,7 +124,7 @@
     }
 
     .card {
-        @apply bg-gray-100 shadow-sm rounded-md p-4 transition-all duration-200 ease-in-out dark:bg-gray-800;
+        @apply bg-gray-100 shadow-sm rounded-md p-4 transition-all duration-200 ease-in-out dark:bg-gray-800 overflow-hidden;
       }
       
       .card:hover {

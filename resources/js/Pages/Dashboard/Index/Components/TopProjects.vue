@@ -158,10 +158,8 @@ const view = ref(0)
 
 const range = computed(() => {
   if (view.value === 0) {
-    // const startOfLastMonth = dayjs().subtract(1, 'month').startOf('month')
-    // const endOfLastMonth = dayjs().subtract(1, 'month').endOf('month')
-    const startOfLastMonth = dayjs().startOf('month')
-    const endOfLastMonth = dayjs().endOf('month')
+    const startOfLastMonth = dayjs().subtract(1, 'month').startOf('month')
+    const endOfLastMonth = dayjs().subtract(1, 'month').endOf('month')
     return { from: startOfLastMonth.format('YYYY-MM-DD'), to: endOfLastMonth.format('YYYY-MM-DD') }
   }
   else if (view.value === 1) {

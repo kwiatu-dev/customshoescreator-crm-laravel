@@ -34,6 +34,162 @@ class DashboardController extends Controller
         );
     }
 
+    public function monthlyFinancialStats(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'year' => 'required|integer|min:2000|max:' . date('Y'),
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        $year = $request->input('year');
+
+        $labels = $this->getPolishMonthLabels();
+        $incomeData = $this->getMonthlyIncome($year);
+        $costsData = $this->getMonthlyCosts($year);
+        $netData = $this->calculateMonthlyNet($incomeData, $costsData);
+
+        return response()->json([
+            'labels' => $labels,
+            'datasets' => [
+                [
+                    'label' => 'Przychód',
+                    'data' => $incomeData,
+                ],
+                [
+                    'label' => 'Wydatki',
+                    'data' => $costsData,
+                ],
+                [
+                    'label' => 'Dochód',
+                    'data' => $netData,
+                ],
+            ],
+        ]);
+    }
+
+    private function getPolishMonthLabels(): array
+    {
+        return [
+            'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
+            'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'
+        ];
+    }
+
+    private function getMonthlyIncome(int $year): array
+    {
+        $data = array_fill(0, 12, 0);
+
+        $rows = DB::table('incomes')
+            ->selectRaw('MONTH(date) as month, SUM(price * costs / 100) as income')
+            ->whereNull('deleted_at')
+            ->whereYear('date', $year)
+            ->where('status_id', 2)
+            ->groupBy(DB::raw('MONTH(date)'))
+            ->get();
+
+        foreach ($rows as $row) {
+            $index = (int) $row->month - 1;
+            $data[$index] = round((float) $row->income, 2);
+        }
+
+        return $data;
+    }
+
+    private function getMonthlyCosts(int $year): array
+    {
+        $data = array_fill(0, 12, 0);
+
+        $rows = DB::table('expenses')
+            ->selectRaw('MONTH(date) as month, SUM(price) as costs')
+            ->whereNull('deleted_at')
+            ->whereYear('date', $year)
+            ->groupBy(DB::raw('MONTH(date)'))
+            ->get();
+
+        foreach ($rows as $row) {
+            $index = (int) $row->month - 1;
+            $data[$index] = round((float) $row->costs, 2);
+        }
+
+        return $data;
+    }
+
+    private function calculateMonthlyNet(array $income, array $costs): array
+    {
+        $profit = [];
+        for ($i = 0; $i < 12; $i++) {
+            $profit[] = round($income[$i] - $costs[$i], 2);
+        }
+        return $profit;
+    }
+
+    public function projectYears()
+    {
+        $years = DB::table('projects')
+            ->whereNull('deleted_at')
+            ->whereNotNull('created_at')
+            ->select(DB::raw('DISTINCT YEAR(created_at) as year'))
+            ->orderBy('year')
+            ->pluck('year');
+
+        return response()->json($years);
+    }
+
+    public function projectTypeBreakdown(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'from' => 'sometimes|date_format:Y-m-d',
+            'to'   => 'sometimes|date_format:Y-m-d|after_or_equal:from',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        $from = $request->input('from');
+        $to = $request->input('to');
+
+        $query = DB::table('projects')
+            ->select('type_id', DB::raw('COUNT(*) as count'))
+            ->whereNull('deleted_at');
+
+        if ($from) {
+            $query->where('created_at', '>=', $from);
+        }
+
+        if ($to) {
+            $query->where('created_at', '<=', $to);
+        }
+
+        $rawData = $query
+            ->groupBy('type_id')
+            ->get()
+            ->keyBy('type_id');
+
+        $labels = [
+            1 => 'Renowacja butów',
+            2 => 'Personalizacja butów',
+            3 => 'Personalizacja ubrań',
+            4 => 'Haft ręczny',
+            5 => 'Haft komputerowy',
+            6 => 'Inne',
+        ];
+
+        $result = [
+            'labels' => array_values($labels),
+            'data' => [],
+        ];
+
+        foreach ($labels as $typeId => $label) {
+            $result['data'][] = isset($rawData[$typeId]) ? (int) $rawData[$typeId]->count : 0;
+        }
+
+        return response()->json($result);
+    }
+
     public function topProjectsByIncome(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -55,15 +211,14 @@ class DashboardController extends Controller
             ->leftJoin('project_images', 'projects.id', '=', 'project_images.project_id')
             ->whereNull('projects.deleted_at')
             ->whereNull('incomes.deleted_at')
-            ->where('projects.status_id', '>=', 1) 
             ->where('incomes.status_id', 2); 
 
         if ($from) {
-            $query->where('incomes.created_at', '>=', $from);
+            $query->where('incomes.date', '>=', $from);
         }
 
         if ($to) {
-            $query->where('incomes.created_at', '<=', $to);
+            $query->where('incomes.date', '<=', $to);
         }
 
         $topProjects = $query
@@ -118,11 +273,11 @@ class DashboardController extends Controller
             ->where('incomes.status_id', 2);
     
         if ($from) {
-            $query->where('incomes.created_at', '>=', $from);
+            $query->where('incomes.date', '>=', $from);
         }
     
         if ($to) {
-            $query->where('incomes.created_at', '<=', $to);
+            $query->where('incomes.date', '<=', $to);
         }
     
         $topUsers = $query
@@ -210,8 +365,8 @@ class DashboardController extends Controller
 
     private function calculateStatsInPeriod($from, $to)
     {
-        $income = Income::whereBetween('created_at', [$from, $to])->where('status_id', 2)->sum(\DB::raw('price * (costs / 100)'));
-        $expenses = Expenses::whereBetween('created_at', [$from, $to])->sum('price');
+        $income = Income::whereBetween('date', [$from, $to])->where('status_id', 2)->sum(\DB::raw('price'));
+        $expenses = Expenses::whereBetween('date', [$from, $to])->sum('price');
         $profit = $income - $expenses;
 
         return [

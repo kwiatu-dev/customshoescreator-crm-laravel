@@ -222,6 +222,17 @@ Route::prefix('api')->group(function () {
 
         Route::get('top-projects', [DashboardController::class, 'topProjectsByIncome'])
             ->name('dashboard.top-projects');
+
+        Route::get('projects-type-breakdown', [DashboardController::class, 'projectTypeBreakdown'])
+            ->name('dashboard.projects-type-breakdown');
+
+        Route::get('project-years', [DashboardController::class, 'projectYears'])
+            ->name('dashboard.project-years');
+
+        Route::get('monthly-financial-stats', [DashboardController::class, 'monthlyFinancialStats'])
+            ->name('dashboard.monthly-financial-stats');
+
+            
     });
 });
 

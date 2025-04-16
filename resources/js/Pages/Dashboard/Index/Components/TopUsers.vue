@@ -11,7 +11,7 @@
           <div v-if="data?.[1]">
             <font-awesome-icon :icon="['fas', 'user']" class="p-3 bg-gray-300 dark:bg-gray-400 rounded-full shadow-sm text-white" style="font-size: 20px;" />
           </div>
-          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">{{ data?.[1]?.['full_name'] || 'BRAK' }}</div>
+          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium whitespace-nowrap">{{ data?.[1]?.['full_name'] || 'BRAK' }}</div>
         </div>
         <div 
           style="height: 150px;"
@@ -29,7 +29,7 @@
           <div v-if="data?.[0]">
             <font-awesome-icon :icon="['fas', 'user']" class="p-3 bg-gray-300 dark:bg-gray-400  rounded-full shadow-sm text-white" style="font-size: 20px;" />
           </div>
-          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">{{ data?.[0]?.['full_name'] || 'BRAK' }}</div>
+          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium whitespace-nowrap">{{ data?.[0]?.['full_name'] || 'BRAK' }}</div>
         </div>
         <div 
           style="height: 200px;"
@@ -47,7 +47,7 @@
           <div v-if="data?.[2]">
             <font-awesome-icon :icon="['fas', 'user']" class="p-3 bg-gray-300 dark:bg-gray-400 rounded-full shadow-sm text-white" style="font-size: 20px;" />
           </div>
-          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">{{ data?.[2]?.['full_name'] || 'BRAK' }}</div>
+          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium whitespace-nowrap">{{ data?.[2]?.['full_name'] || 'BRAK' }}</div>
         </div>
         <div 
           style="height: 100px;"
@@ -67,14 +67,14 @@
           <div class="p-2 bg-rose-300 dark:bg-rose-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', 'trophy']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
-          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">{{ data?.[0]?.['full_name'] || 'BRAK' }}</div>
+          <div class="text-gray-500 dark:text-gray-400 text-md font-medium whitespace-nowrap">{{ data?.[0]?.['full_name'] || 'BRAK' }}</div>
         </div>
         <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
             <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
-              <th class="py-2 px-4 border-b">Przychód</th>
-              <th class="py-2 px-4 border-b">Zakończone projekty</th>
-              <th class="py-2 px-4 border-b">Średni czas realizacji</th>
+              <th class="py-2 px-4 border-b whitespace-nowrap">Przychód</th>
+              <th class="py-2 px-4 border-b whitespace-nowrap">Zakończone projekty</th>
+              <th class="py-2 px-4 border-b whitespace-nowrap">Średni czas realizacji</th>
             </tr>
           </thead>
           <tbody>
@@ -92,14 +92,14 @@
           <div class="p-2 bg-green-300 dark:bg-green-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '2']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
-          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">{{ data?.[1]?.['full_name'] || 'BRAK' }}</div>
+          <div class="text-gray-500 dark:text-gray-400 text-md font-medium whitespace-nowrap">{{ data?.[1]?.['full_name'] || 'BRAK' }}</div>
         </div>
         <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
             <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
-              <th class="py-2 px-4 border-b">Przychód</th>
-              <th class="py-2 px-4 border-b">Zakończone projekty</th>
-              <th class="py-2 px-4 border-b">Średni czas realizacji</th>
+              <th class="py-2 px-4 border-b whitespace-nowrap">Przychód</th>
+              <th class="py-2 px-4 border-b whitespace-nowrap">Zakończone projekty</th>
+              <th class="py-2 px-4 border-b whitespace-nowrap">Średni czas realizacji</th>
             </tr>
           </thead>
           <tbody>
@@ -117,14 +117,14 @@
           <div class="p-2 bg-sky-300 dark:bg-sky-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '3']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
-          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">{{ data?.[2]?.['full_name'] || 'BRAK' }}</div>
+          <div class="text-gray-500 dark:text-gray-400 text-md font-medium whitespace-nowrap">{{ data?.[2]?.['full_name'] || 'BRAK' }}</div>
         </div>
         <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
             <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
-              <th class="py-2 px-4 border-b">Przychód</th>
-              <th class="py-2 px-4 border-b">Zakończone projekty</th>
-              <th class="py-2 px-4 border-b">Średni czas realizacji</th>
+              <th class="py-2 px-4 border-b whitespace-nowrap">Przychód</th>
+              <th class="py-2 px-4 border-b whitespace-nowrap">Zakończone projekty</th>
+              <th class="py-2 px-4 border-b whitespace-nowrap">Średni czas realizacji</th>
             </tr>
           </thead>
           <tbody>
