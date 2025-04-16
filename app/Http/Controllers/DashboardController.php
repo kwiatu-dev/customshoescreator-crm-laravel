@@ -402,14 +402,6 @@ class DashboardController extends Controller
             return (int) floor(abs($change));
         };
 
-        // dd([
-        //     'current' => $currentStatus,
-        //     'previous' => $previousStats,
-        //     'financial' => $this->formatFinancialKPI($currentStatus, $previousStats, $getPercentageChange),
-        //     'projects' => $this->formatProjectKPI($currentStatus, $previousStats, $getPercentageChange),
-        //     'clients' => $this->formatClientKPI($currentStatus, $previousStats, $getPercentageChange),
-        // ]);
-
         return [
             'financial' => $this->formatFinancialKPI($currentStatus, $previousStats, $getPercentageChange),
             'projects' => $this->formatProjectKPI($currentStatus, $previousStats, $getPercentageChange),

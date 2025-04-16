@@ -7,7 +7,7 @@
           <span class="">Rola: </span><span class="font-medium">{{ user.is_admin == true ? 'Admin' : 'Użytkownik' }}</span>
         </div>
         <div>
-          <span class="">Weryfikacja emaila: </span><span class="font-medium">{{ user.email_verified_at === null ? 'BRAK' : user.email_verified_at }}</span>
+          <span class="">Weryfikacja emaila: </span><span class="font-medium">{{ user.email_verified_at === null ? 'BRAK' : dayjs(user.email_verified_at).format('YYYY-MM-DD') }}</span>
         </div>
         <div>
           <span class="">Data rozpoczęcia współpracy: </span><span class="font-medium">{{ dayjs(user.created_at).format('YYYY-MM-DD') }}</span>
@@ -32,34 +32,15 @@
       :actions="Actions"
     />
   </div>
-  <!-- <div v-if="user.projects.length" class="mb-4">
-    <div class="text-gray-500 font-medium mb-1">Zlecenia</div>
-    <div class="grid md:grid-cols-2 grid-cols-1 gap-2">
-      <Cards 
-        :cards="projectCards"
-        :objects="user.projects" 
-      />
-    </div>
-  </div> -->
-  <Box>
-    <template #header>Statystyki</template>
-    <div class="grid grid-cols-12 gap-2">
-      <LineChart :data="data" title="Wykres - podsumowanie dochodu" class="col-span-12" />
-    </div>
-  </Box>
 </template>
 
 <script setup>
-import '@/Pages/Dashboard/Index/Components/ChartRegister.js'
-import LineChart from '@/Pages/Dashboard/Index/Components/LineChart.vue'
-import DropdownList from '@/Components/UI/Buttons/DropdownList.vue'
 import Box from '@/Components/UI/List/Box.vue'
 import Actions from '@/Pages/User/Index/Components/Actions.vue'
 import Cards from '@/Components/UI/List/Cards.vue'
 import AdminDistribution from '@/Components/UI/List/AdminDistribution.vue'
 import dayjs from 'dayjs'
-import { provide, ref } from 'vue'
-import HiddenSection from '@/Components/UI/Form/HiddenSection.vue'
+import { provide } from 'vue'
 
 const props = defineProps({
   user: Object,
@@ -77,44 +58,9 @@ const userCard = {
   distribution: { admin: true, component: AdminDistribution, fullWidth: true },
 }
 
-const projectCards = {
-  title: { title: true },
-  client: { label: 'Klient', columns: ['first_name', 'last_name'], link: {column: 'client', field: 'id', prefix: route('client.show', { client: '' }) + '/'} },
-  user: { blank: true },
-  price: { suffix: ' zł', concat: ['visualization'], separator: ' + ' },
-  status: { columns: ['name'] },
-  start: { },
-  deadline: { },
-  end: {},
-}
-
 provide('disable_show_button', true)
 provide('disable_remember_state', true)
 provide('users', props.admins)
-
-const charts = [
-  { label: 'Dochód', endpoint: ' ' },
-  { label: 'Ilość zleceń', endpoint: ' ' },
-  { label: 'Czas realizacji', endpoint: ' ' },
-]
-
-const selectedChart = ref(null)
-
-const data = {
-  labels: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
-  datasets: [
-    {
-      label: '2024',
-      data: [60, 55, 32, 10, 2, 12, 53, 23, 40, 55, 13, 100],
-    },
-    {
-      label: '2023',
-      data: [40, 39, 10, 40, 45, 80, 40, 72, 88, 105, 13, 0],
-    },
-  ],
-}
-
-//todo 1. Do dokończenia wykresy po skończeniu wszystkich zakładek
 </script>
 
 <style scoped>
