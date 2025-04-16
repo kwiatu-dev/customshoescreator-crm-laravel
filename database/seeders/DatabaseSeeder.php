@@ -55,9 +55,9 @@ class DatabaseSeeder extends Seeder
 
             \App\Models\Income::factory()->create([
                 'project_id' => $project->id,
-                'created_by_user_id' => null,
-                'costs' => null,
-                'distribution' => null,
+                'costs' => $project->costs,
+                'price' => $project->price,
+                'distribution' => $project->distribution,
                 'date' => fake()->dateTimeBetween($project->start, $endDate->modify('+1 month')),
                 'created_at' => fake()->dateTimeBetween($project->start, $project->end),
             ]);

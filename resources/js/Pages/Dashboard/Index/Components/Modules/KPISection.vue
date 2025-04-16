@@ -10,7 +10,7 @@
     :labels="{ income: 'Przychód', expenses: 'Wydatki', profit: 'Zysk' }"
     :units="{ income: ' zł', expenses: ' zł', profit: ' zł' }"
   >
-    Pieniądze
+    Finanse
   </IconStatsCard>
   <IconStatsCard 
     class="col-span-12 md:col-span-4"
@@ -28,7 +28,7 @@
     :labels="{ new: 'Nowi', returning: 'Powracający' }"
     :units="{}"
   >
-    Projekty
+    Klienci
   </IconStatsCard>
   <StatsCard 
     class="col-span-6 sm:col-span-4 md:col-span-2"

@@ -317,6 +317,8 @@ class ProjectController extends Controller
             if (count($errors) > 0) {
                 return redirect()->back()->withErrors($errors);
             }
+
+            $project->end = now();
         }
 
         $project->status_id = $status_id;

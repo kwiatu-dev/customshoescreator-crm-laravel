@@ -1,21 +1,21 @@
 <template>
   <div class="col-span-12 md:col-span-6 card flex flex-col justify-between">
-    <ViewToggle v-model="top3ProjectSelectedView" :options="['Ostatni miesiąc', 'Od zawsze']" />
+    <ViewToggle v-model="view" :options="['Ostatni miesiąc', 'Od zawsze']" />
     <div class="flex flex-col flex-nowrap justify-center items-center my-4">
       <h2 class="!text-xl !text-gray-700 dark:!text-gray-500">Projekty</h2>
       <p class="text-center -mt-2 text-sm text-gray-400">Wygenerowany przychód</p>
     </div>
-    <div class="grid grid-cols-12 gap-2 mt-8">
+    <div class="grid grid-cols-12 gap-2 mt-8" style="min-height: 356px;">
       <div class="col-span-4 flex flex-col items-center justify-end">
         <div class="mb-4 flex flex-col flex-nowrap justify-center items-center w-full">
-          <div>
+          <div v-if="data?.[1]?.preview_image_url">
             <img
-              src="https://customshoescreator.pl/wp-content/uploads/2022/04/malowanie-butow-na-zamowienie-custom-shoes-creator.webp" 
+              :src="data?.[1]?.preview_image_url" 
               alt="" 
               class="p-1 bg-gray-300 dark:bg-gray-600 rounded-full shadow-sm text-white top-3-img top-3-img-level-2"
             />
           </div>
-          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">Projekt #11</div>
+          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">{{ data?.[1]?.['id'] ? `Projekt #${data?.[1]?.['id']}` : 'BRAK' }}</div>
         </div>
         <div 
           style="height: 150px;"
@@ -30,14 +30,14 @@
       </div>
       <div class="col-span-4 flex flex-col items-center justify-end">
         <div class="mb-4 flex flex-col flex-nowrap justify-center items-center w-full">
-          <div>
+          <div v-if="data?.[0]?.preview_image_url">
             <img
-              src="https://customshoescreator.pl/wp-content/uploads/2022/12/malowanie-ubran-2-edited-1.jpg" 
+              :src="data?.[0]?.preview_image_url" 
               alt="" 
               class="p-1 bg-gray-300 dark:bg-gray-600 rounded-full shadow-sm text-white top-3-img top-3-img-level-1"
             />
           </div>
-          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">Projekt #33</div>
+          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">{{ data?.[0]?.['id'] ? `Projekt #${data?.[0]?.['id']}` : 'BRAK' }}</div>
         </div>
         <div 
           style="height: 200px;"
@@ -52,14 +52,14 @@
       </div>
       <div class="col-span-4 flex flex-col items-center justify-end">
         <div class="mb-4 flex flex-col flex-nowrap justify-center items-center w-full">
-          <div>
+          <div v-if="data?.[2]?.preview_image_url">
             <img
-              src="https://customshoescreator.pl/wp-content/uploads/2022/04/sneaker-custom-malowanie-butow-custom-butow-customshoescreator-but-sm-1.webp" 
+              :src="data?.[2]?.preview_image_url" 
               alt="" 
               class="p-1 bg-gray-300 dark:bg-gray-600 rounded-full shadow-sm text-white top-3-img top-3-img-level-3"
             />
           </div>
-          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">Projekt #23</div>
+          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">{{ data?.[2]?.['id'] ? `Projekt #${data?.[2]?.['id']}` : 'BRAK' }}</div>
         </div>
         <div 
           style="height: 100px;"
@@ -79,7 +79,7 @@
           <div class="p-2 bg-rose-300 dark:bg-rose-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', 'trophy']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
-          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Projekt #33</div>
+          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">{{ data?.[0]?.['id'] ? `Projekt #${data?.[0]?.['id']}` : 'BRAK' }}</div>
         </div>
         <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
@@ -90,8 +90,8 @@
           </thead>
           <tbody>
             <tr class="text-gray-700 text-sm">
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
+              <td class="py-2 px-4 border-b">{{ data?.[0]?.['total_income'] ? `${data?.[0]?.['total_income']} zł` : '-' }}</td>
+              <td class="py-2 px-4 border-b">{{ data?.[0]?.['duration_days'] ? `${data?.[0]?.['duration_days']} dni` : '-' }}</td>
             </tr>
           </tbody>
         </table>
@@ -102,7 +102,7 @@
           <div class="p-2 bg-green-300 dark:bg-green-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '2']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
-          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Projekt #11</div>
+          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">{{ data?.[1]?.['id'] ? `Projekt #${data?.[1]?.['id']}` : 'BRAK' }}</div>
         </div>
         <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
@@ -113,8 +113,8 @@
           </thead>
           <tbody>
             <tr class="text-gray-700 text-sm">
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
+              <td class="py-2 px-4 border-b">{{ data?.[1]?.['total_income'] ? `${data?.[1]?.['total_income']} zł` : '-' }}</td>
+              <td class="py-2 px-4 border-b">{{ data?.[1]?.['duration_days'] ? `${data?.[1]?.['duration_days']} dni` : '-' }}</td>
             </tr>
           </tbody>
         </table>
@@ -125,7 +125,7 @@
           <div class="p-2 bg-sky-300 dark:bg-sky-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '3']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
-          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Projekt #23</div>
+          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">{{ data?.[2]?.['id'] ? `Projekt #${data?.[2]?.['id']}` : 'BRAK' }}</div>
         </div>
         <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
@@ -136,8 +136,8 @@
           </thead>
           <tbody>
             <tr class="text-gray-700 text-sm">
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
+              <td class="py-2 px-4 border-b">{{ data?.[2]?.['total_income'] ? `${data?.[2]?.['total_income']} zł` : '-' }}</td>
+              <td class="py-2 px-4 border-b">{{ data?.[2]?.['duration_days'] ? `${data?.[2]?.['duration_days']} dni` : '-' }}</td>
             </tr>
           </tbody>
         </table>
@@ -148,9 +148,36 @@
 
 <script setup>
 import ViewToggle from '@/Pages/Dashboard/Index/Components/ViewToggle.vue'
-import { ref } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
+import dayjs from 'dayjs'
+import { debounce } from 'lodash'
+import { useTopProjects } from '@/Composables/useTopProjects.js'
 
-const top3ProjectSelectedView = ref(0)
+const data = ref([])
+const view = ref(0)
+
+const range = computed(() => {
+  if (view.value === 0) {
+    // const startOfLastMonth = dayjs().subtract(1, 'month').startOf('month')
+    // const endOfLastMonth = dayjs().subtract(1, 'month').endOf('month')
+    const startOfLastMonth = dayjs().startOf('month')
+    const endOfLastMonth = dayjs().endOf('month')
+    return { from: startOfLastMonth.format('YYYY-MM-DD'), to: endOfLastMonth.format('YYYY-MM-DD') }
+  }
+  else if (view.value === 1) {
+    return null
+  }
+
+  return null
+})
+
+onMounted(async () => {
+  data.value = await useTopProjects(range.value)
+})
+
+watch(range, debounce(async () => {
+  data.value = await useTopProjects(range.value)
+}, 1000))
 </script>
 
 <style scoped>

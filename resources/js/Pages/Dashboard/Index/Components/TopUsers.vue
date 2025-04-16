@@ -1,6 +1,6 @@
 <template>
   <div class="col-span-12 md:col-span-6 card flex flex-col justify-between">
-    <ViewToggle v-model="top3UsersSelectedView" :options="['Ostatni miesiąc', 'Od zawsze']" />
+    <ViewToggle v-model="view" :options="['Ostatni miesiąc', 'Od zawsze']" />
     <div class="flex flex-col flex-nowrap justify-center items-center my-4">
       <h2 class="!text-xl !text-gray-700 dark:!text-gray-500">Użytkownicy</h2>
       <p class="text-center -mt-2 text-sm text-gray-400">Wygenerowany przychód</p>
@@ -8,10 +8,10 @@
     <div class="grid grid-cols-12 gap-2 mt-8" style="min-height: 356px;">
       <div class="col-span-4 flex flex-col items-center justify-end">
         <div class="mb-4 flex flex-col flex-nowrap justify-center items-center w-full">
-          <div>
+          <div v-if="data?.[1]">
             <font-awesome-icon :icon="['fas', 'user']" class="p-3 bg-gray-300 dark:bg-gray-400 rounded-full shadow-sm text-white" style="font-size: 20px;" />
           </div>
-          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">Filip</div>
+          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">{{ data?.[1]?.['full_name'] || 'BRAK' }}</div>
         </div>
         <div 
           style="height: 150px;"
@@ -26,10 +26,10 @@
       </div>
       <div class="col-span-4 flex flex-col items-center justify-end">
         <div class="mb-4 flex flex-col flex-nowrap justify-center items-center w-full">
-          <div>
+          <div v-if="data?.[0]">
             <font-awesome-icon :icon="['fas', 'user']" class="p-3 bg-gray-300 dark:bg-gray-400  rounded-full shadow-sm text-white" style="font-size: 20px;" />
           </div>
-          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">Aleksandra</div>
+          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">{{ data?.[0]?.['full_name'] || 'BRAK' }}</div>
         </div>
         <div 
           style="height: 200px;"
@@ -44,10 +44,10 @@
       </div>
       <div class="col-span-4 flex flex-col items-center justify-end">
         <div class="mb-4 flex flex-col flex-nowrap justify-center items-center w-full">
-          <div>
+          <div v-if="data?.[2]">
             <font-awesome-icon :icon="['fas', 'user']" class="p-3 bg-gray-300 dark:bg-gray-400 rounded-full shadow-sm text-white" style="font-size: 20px;" />
           </div>
-          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">Weronika</div>
+          <div class="text-sm text-gray-900 dark:text-gray-500 font-medium">{{ data?.[2]?.['full_name'] || 'BRAK' }}</div>
         </div>
         <div 
           style="height: 100px;"
@@ -67,7 +67,7 @@
           <div class="p-2 bg-rose-300 dark:bg-rose-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', 'trophy']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
-          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Aleksandra</div>
+          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">{{ data?.[0]?.['full_name'] || 'BRAK' }}</div>
         </div>
         <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
@@ -79,9 +79,9 @@
           </thead>
           <tbody>
             <tr class="text-gray-700 text-sm">
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
+              <td class="py-2 px-4 border-b">{{ data?.[0]?.['total_income'] ? `${data?.[0]?.['total_income']} zł` : '-' }}</td>
+              <td class="py-2 px-4 border-b">{{ data?.[0]?.['project_count'] ? data?.[0]?.['project_count'] : '-' }}</td>
+              <td class="py-2 px-4 border-b">{{ data?.[0]?.['avg_completion_days'] ? `${data?.[0]?.['avg_completion_days']} dni` : '-' }}</td>
             </tr>
           </tbody>
         </table>
@@ -92,7 +92,7 @@
           <div class="p-2 bg-green-300 dark:bg-green-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '2']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
-          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Filip</div>
+          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">{{ data?.[1]?.['full_name'] || 'BRAK' }}</div>
         </div>
         <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
@@ -104,9 +104,9 @@
           </thead>
           <tbody>
             <tr class="text-gray-700 text-sm">
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
+              <td class="py-2 px-4 border-b">{{ data?.[1]?.['total_income'] ? `${data?.[1]?.['total_income']} zł` : '-' }}</td>
+              <td class="py-2 px-4 border-b">{{ data?.[1]?.['project_count'] ? data?.[1]?.['project_count'] : '-' }}</td>
+              <td class="py-2 px-4 border-b">{{ data?.[1]?.['avg_completion_days'] ? `${data?.[1]?.['avg_completion_days']} dni` : '-' }}</td>
             </tr>
           </tbody>
         </table>
@@ -117,7 +117,7 @@
           <div class="p-2 bg-sky-300 dark:bg-sky-800 rounded-full h-8 w-8 flex flex-row justify-center items-center">
             <font-awesome-icon :icon="['fas', '3']" style="font-size: 16px;" class="font-medium text-white" />
           </div>
-          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">Weronika</div>
+          <div class="text-gray-500 dark:text-gray-400 text-md font-medium">{{ data?.[2]?.['full_name'] || 'BRAK' }}</div>
         </div>
         <table class="text-left border-collapse md:w-3/4 w-full">
           <thead>
@@ -129,9 +129,9 @@
           </thead>
           <tbody>
             <tr class="text-gray-700 text-sm">
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
-              <td class="py-2 px-4 border-b">10</td>
+              <td class="py-2 px-4 border-b">{{ data?.[2]?.['total_income'] ? `${data?.[2]?.['total_income']} zł` : '-' }}</td>
+              <td class="py-2 px-4 border-b">{{ data?.[2]?.['project_count'] ? data?.[2]?.['project_count'] : '-' }}</td>
+              <td class="py-2 px-4 border-b">{{ data?.[2]?.['avg_completion_days'] ? `${data?.[2]?.['avg_completion_days']} dni` : '-' }}</td>
             </tr>
           </tbody>
         </table>
@@ -141,10 +141,35 @@
 </template>
 
 <script setup>
+import { useTopUsers } from '@/Composables/useTopUsers'
 import ViewToggle from '@/Pages/Dashboard/Index/Components/ViewToggle.vue'
-import { ref } from 'vue'
+import dayjs from 'dayjs'
+import { computed, onMounted, ref, watch } from 'vue'
+import { debounce } from 'lodash'
 
-const top3UsersSelectedView = ref(0)
+const data = ref([])
+const view = ref(0)
+
+const range = computed(() => {
+  if (view.value === 0) {
+    const startOfLastMonth = dayjs().subtract(1, 'month').startOf('month')
+    const endOfLastMonth = dayjs().subtract(1, 'month').endOf('month')
+    return { from: startOfLastMonth.format('YYYY-MM-DD'), to: endOfLastMonth.format('YYYY-MM-DD') }
+  }
+  else if (view.value === 1) {
+    return null
+  }
+
+  return null
+})
+
+onMounted(async () => {
+  data.value = await useTopUsers(range.value)
+})
+
+watch(range, debounce(async () => {
+  data.value = await useTopUsers(range.value)
+}, 1000))
 </script>
 
 <style scoped>

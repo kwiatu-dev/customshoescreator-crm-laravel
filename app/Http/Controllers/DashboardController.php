@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class DashboardController extends Controller
@@ -33,8 +34,119 @@ class DashboardController extends Controller
         );
     }
 
+    public function topProjectsByIncome(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'limit' => 'sometimes|integer|min:1',
+            'from'  => 'sometimes|date_format:Y-m-d',
+            'to'    => 'sometimes|date_format:Y-m-d|after_or_equal:from',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        $limit = (int) $request->input('limit', 3);
+        $from = $request->input('from'); 
+        $to = $request->input('to');    
+
+        $query = DB::table('projects')
+            ->join('incomes', 'projects.id', '=', 'incomes.project_id')
+            ->leftJoin('project_images', 'projects.id', '=', 'project_images.project_id')
+            ->whereNull('projects.deleted_at')
+            ->whereNull('incomes.deleted_at')
+            ->where('projects.status_id', '>=', 1) 
+            ->where('incomes.status_id', 2); 
+
+        if ($from) {
+            $query->where('incomes.created_at', '>=', $from);
+        }
+
+        if ($to) {
+            $query->where('incomes.created_at', '<=', $to);
+        }
+
+        $topProjects = $query
+            ->select(
+                'projects.id',
+                'projects.title',
+                DB::raw('incomes.price as total_income'),
+                DB::raw('DATEDIFF(projects.end, projects.start) as duration_days'),
+                DB::raw('SUBSTRING_INDEX(GROUP_CONCAT(project_images.file ORDER BY RAND()), ",", 1) as preview_image')
+            )
+            ->groupBy('projects.id', 'projects.title', 'projects.start', 'projects.end', 'incomes.price')
+            ->orderByDesc('total_income')
+            ->limit($limit)
+            ->get();
+
+        $topProjects->transform(function ($project) {
+            if (!empty($project->preview_image)) {
+                $project->preview_image_url = route('private.files', [
+                    'catalog' => 'projects',
+                    'file' => $project->preview_image,
+                ]);
+            } else {
+                $project->preview_image_url = null;
+            }
+            return $project;
+        });
+
+        return response()->json($topProjects);
+    }
+
+    public function topUsersByIncome(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'limit' => 'sometimes|integer|min:1',
+            'from'  => 'sometimes|date_format:Y-m-d',
+            'to'    => 'sometimes|date_format:Y-m-d|after_or_equal:from',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+    
+        $limit = (int) $request->input('limit', 3);
+        $from = $request->input('from'); 
+        $to = $request->input('to');    
+    
+        $query = DB::table('incomes')
+            ->join('projects', 'incomes.project_id', '=', 'projects.id')
+            ->join('users', 'projects.created_by_user_id', '=', 'users.id')
+            ->whereNull('incomes.deleted_at')
+            ->whereNull('projects.deleted_at')
+            ->where('incomes.status_id', 2);
+    
+        if ($from) {
+            $query->where('incomes.created_at', '>=', $from);
+        }
+    
+        if ($to) {
+            $query->where('incomes.created_at', '<=', $to);
+        }
+    
+        $topUsers = $query
+            ->select(
+                'users.id',
+                DB::raw("CONCAT(users.first_name, ' ', users.last_name) as full_name"),
+                DB::raw('SUM(incomes.price) as total_income'),
+                DB::raw('COUNT(DISTINCT projects.id) as project_count'),
+                DB::raw('ROUND(AVG(DATEDIFF(projects.end, projects.start)), 2) as avg_completion_days')
+            )
+            ->groupBy('users.id', 'users.first_name', 'users.last_name')
+            ->orderByDesc('total_income')
+            ->limit($limit)
+            ->get();
+    
+        return response()->json($topUsers);
+    }
+
     public function kpi(Request $request)
     {
+        if (!Auth::check() || !Auth::user()->is_admin) {
+            return response()->json(['error' => 'Brak dostępu'], 403);
+        }
+
         $validator = Validator::make($request->all(), [
             'from' => ['required', 'date_format:Y-m'],
             'to'   => ['required', 'date_format:Y-m', 'after_or_equal:from'],

@@ -4,7 +4,7 @@
       <div class="p-2 bg-indigo-400 dark:bg-indigo-500 w-16 h-16 rounded-xl flex items-center justify-center">
         <font-awesome-icon :icon="icon" class="text-gray-50 dark:text-gray-200" style="font-size: 30px;" />
       </div>
-      <div class="text-gray-800 font-medium text-xl dark:text-gray-400">Pieniądze</div>
+      <div class="text-gray-800 font-medium text-xl dark:text-gray-400"><slot /></div>
     </div>
     <div v-if="data" class="flex md:flex-col md:gap-2 gap-8 flex-wrap">
       <div v-for="(item, name) in data" :key="name">

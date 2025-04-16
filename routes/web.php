@@ -216,6 +216,12 @@ Route::prefix('api')->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::get('kpi', [DashboardController::class, 'kpi'])
             ->name('dashboard.kpi');
+
+        Route::get('top-users', [DashboardController::class, 'topUsersByIncome'])
+            ->name('dashboard.top-users');
+
+        Route::get('top-projects', [DashboardController::class, 'topProjectsByIncome'])
+            ->name('dashboard.top-projects');
     });
 });
 
