@@ -28,5 +28,7 @@ return [
     'total_related_after_date_investments_count' => 'total_related_after_date_investments_count',
     'total_related_active_investments_count' => 'total_related_active_investments_count',
     'total_related_completed_investments_count' => 'total_related_completed_investments_count',
+    'total_investor_awaiting_repayment_sum' => 'total_investor_awaiting_repayment_sum',
+    'total_user_awaiting_income_sum' => 'total_user_awaiting_income_sum',
     'wallet' => 'wallet',
 ];

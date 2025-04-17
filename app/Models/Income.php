@@ -115,7 +115,9 @@ class Income extends Model
             function ($query, $value){
                 $query->whereHas('project', function ($query) use ($value) {
                     $query->where('created_by_user_id', $value);
-                })->orWhere($this->table_name . '.created_by_user_id', $value);
+                })
+                ->orWhere($this->table_name . '.created_by_user_id', $value)
+                ->orWhereRaw("JSON_EXTRACT({$this->table_name } .distribution, '$.{$value}') IS NOT NULL");
             }
         );
     }

@@ -50,24 +50,26 @@ class ProjectController extends Controller
             $request->merge(['created_by_user' => true]);
         }
 
-        $projects = Project::query()
-        ->with([
-            'status',
-            'type',
-            'client' => function ($query) {
-                $query->withTrashed();
-            },
-            'user' => function ($query) {
-                $query->withTrashed();
-            },
-            'images',
-        ])
-        ->filter($request)
-        ->sort($request)
-        ->latest()
-        ->pagination();
+        $query = Project::query()
+            ->with([
+                'status',
+                'type',
+                'client' => function ($query) {
+                    $query->withTrashed();
+                },
+                'user' => function ($query) {
+                    $query->withTrashed();
+                },
+                'images',
+            ]);
 
-        $footer = Project::query()
+        $projects = $query
+            ->filter($request)
+            ->sort($request)
+            ->latest()
+            ->pagination();
+
+        $footer = $query
             ->filter($request)
             ->footer();
 

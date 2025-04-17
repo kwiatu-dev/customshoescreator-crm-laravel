@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('incomes', function (Blueprint $table) {
             $table->unsignedTinyInteger('costs')->nullable();
             $table->json('distribution')->nullable();
+            $table->unsignedTinyInteger('commission')->nullable();
         });
     }
 
@@ -25,6 +26,7 @@ return new class extends Migration
         Schema::table('incomes', function (Blueprint $table) {
             $table->dropColumn('costs');
             $table->dropColumn('distribution');
+            $table->dropColumn('commission');
         });
     }
 };

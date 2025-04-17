@@ -23,6 +23,8 @@ class Metrics
             'total_active_investments_count' => self::getTotalRelatedActiveInvestmentsCount($user),
             'total_after_date_investments_count' => self::getTotalRelatedAfterDateInvestmentsCount($user),
             'total_completed_investments_count' => self::getTotalRelatedCompletedInvestmentsCount($user),
+            'total_investor_awaiting_repayment_sum' => self::getTotalInvestorAwaitingRepaymentSum($user),
+            'total_user_awaiting_income_sum' => self::getTotalUserAwaitingIncomeSum($user),
 
             // 'total_projects_count' => self::getTotalProjectsCount(),
             // 'total_clients_count' => self::getTotalClientsCount(),
@@ -215,6 +217,52 @@ class Metrics
                 ? round(Income::where('created_by_user_id', $user->id)
                     ->sum(\DB::raw('price * (costs / 100)'), 2))
                 : round(Income::sum(\DB::raw('price * (costs / 100)')), 2)
+        );
+    }
+
+    private static function getTotalUserAwaitingIncomeSum(User $user)
+    {
+        $cacheTag = config('cache_tags.incomes');
+        $cacheKeyBase = config('cache_keys.total_user_awaiting_income_sum');
+        $cacheKey = $cacheKeyBase . '_user_' . $user->id;
+    
+        return Cache::tags([$cacheTag])->remember(
+            $cacheKey,
+            self::cacheTTL(),
+            function () use ($user) {
+                $incomes = Income::where('status_id', 1)
+                    ->where(function ($query) use ($user) {
+                        $query->whereHas('project', function ($query) use ($user) {
+                            $query->where('created_by_user_id', $user->id);
+                        })
+                        ->orWhereRaw("JSON_EXTRACT(distribution, '$.\"{$user->id}\"') IS NOT NULL");
+                    })
+                    ->get();
+
+                $total = 0;
+
+                foreach ($incomes as $income) {
+                    $price = (float) $income->price;
+                    $costs = (float) $income->costs;
+                    $commission = (float) $income->commission;
+                    $creator = 0;
+                    $participant = 0;
+            
+                    $base = $price - ($price * ($costs / 100));
+                    
+                    if ($commission) {
+                        $creator = round($base * ($commission / 100), 2);
+                    }
+
+                    if (is_array($income->distribution) && array_key_exists($user->id, $income->distribution)) {
+                        $participant = round(($base - $creator) * (($income->distribution[$user->id] ?? 0) / 100), 2);
+                    }
+
+                    $total = $creator + $participant;
+                }
+            
+                return round($total, 2);
+            }
         );
     }
 
@@ -412,6 +460,18 @@ class Metrics
         );
     }
 
+    private static function getTotalInvestorAwaitingRepaymentSum(User $investor) {
+        $cacheTag = config('cache_tags.investments');
+        $cacheKeyBase = config('cache_keys.total_investor_awaiting_repayment_sum');
+        $cacheKey = $cacheKeyBase . '_user_' . $investor->id;
+
+        return Cache::tags([$cacheTag])->remember(
+            $cacheKey,
+            self::cacheTTL(),
+            fn () => round(Investment::where('user_id', $investor->id)
+                        ->sum(\DB::raw('(amount + amount * (interest_rate / 100)) - total_repayment')), 2));
+    }
+
     private static function getTotalAwaitingProjectsCount(?User $user = null)
     {
         $cacheTag = config('cache_tags.projects');
@@ -536,7 +596,8 @@ class Metrics
                         $query->whereHas('project', function ($query) use ($user) {
                             $query->where('created_by_user_id', $user->id);
                         })
-                        ->orWhere('created_by_user_id', $user->id);
+                        ->orWhere('created_by_user_id', $user->id)
+                        ->orWhereRaw("JSON_EXTRACT(distribution, '$.{$user->id}') IS NOT NULL");
                     })
                     ->count()
                 : Income::where('status_id', '1')->count()
@@ -581,7 +642,8 @@ class Metrics
                         $query->whereHas('project', function ($query) use ($user) {
                             $query->where('created_by_user_id', $user->id);
                         })
-                        ->orWhere('created_by_user_id', $user->id);
+                        ->orWhere('created_by_user_id', $user->id)
+                        ->orWhereRaw("JSON_EXTRACT(distribution, '$.{$user->id}') IS NOT NULL");
                     })
                     ->count()
                 : Income::where('status_id', '2')->count()

@@ -35,7 +35,7 @@ class ProjectFactory extends Factory
             'end' => $end,
             'commission' => 65,
             'costs' => 30,
-            'distribution' => json_encode(['1' => 50, '2' => 50]),
+            'distribution' => ['1' => 50, '2' => 50],
             'visualization' => fake()->randomFloat(2, 0, 100),
             'created_by_user_id' => $this->user(),
             'client_id' => $this->client(),

@@ -33,7 +33,7 @@ class UserFactory extends Factory
             'country' => 'Polska',
             'commission' => 65,
             'costs' => 30,
-            'distribution' => json_encode(['1' => 50, '2' => 50])
+            'distribution' => ['1' => 50, '2' => 50]
         ];
     }
 

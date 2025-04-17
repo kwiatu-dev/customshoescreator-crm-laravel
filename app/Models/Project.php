@@ -239,6 +239,9 @@ class Project extends Model
             $income->title = $this->title;
             $income->price = $this->price;
             $income->project_id = $this->id;
+            $income->costs = $this->costs;
+            $income->commission = $this->commission;
+            $income->distribution = $this->distribution;
             $income->status_id = 1;
             $income->save();
 
@@ -254,6 +257,9 @@ class Project extends Model
         if ($income) {
             $income->price = $this->price;
             $income->title = $this->title;
+            $income->costs = $this->costs;
+            $income->commission = $this->commission;
+            $income->distribution = $this->distribution;
             $income->save();
 
             return $income;

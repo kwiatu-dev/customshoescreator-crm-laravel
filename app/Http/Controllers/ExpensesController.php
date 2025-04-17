@@ -30,13 +30,15 @@ class ExpensesController extends Controller
      */
     public function index(Request $request)
     {
-        $expenses = Expenses::query()
+        $query = Expenses::query();
+
+        $expenses = $query
             ->filter($request)
             ->sort($request)
             ->latest()
             ->pagination();
 
-        $footer = Expenses::query()
+        $footer = $query
             ->filter($request)
             ->footer();
 

@@ -36,20 +36,20 @@ class IncomeController extends Controller
     public function index(Request $request)
     {
         $query = Income::query()
-        ->with([
-            'status',
-            'user' => function ($query) {
-                $query->withTrashed();
-            },
-            'project' => function ($query) {
-                $query->withTrashed();
-            }
-        ])
-        ->leftJoinRelation('status as status')
-        ->leftJoinRelation('project as project')
-        ->addSelect([
-            'incomes.*',
-        ]);
+            ->with([
+                'status',
+                'user' => function ($query) {
+                    $query->withTrashed();
+                },
+                'project' => function ($query) {
+                    $query->withTrashed();
+                }
+            ])
+            ->leftJoinRelation('status as status')
+            ->leftJoinRelation('project as project')
+            ->addSelect([
+                'incomes.*',
+            ]);
 
         $incomes = $query
             ->filter($request)

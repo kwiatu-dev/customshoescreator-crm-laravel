@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\Project::factory(100)->create();
 
-        $projects = \App\Models\Project::where('status_id', 3)->get();
+        $projects = \App\Models\Project::where('status_id', '>', '1')->get();
 
         foreach ($projects as $project) {
             $endDate = new \DateTime($project->end);
@@ -58,6 +58,7 @@ class DatabaseSeeder extends Seeder
                 'costs' => $project->costs,
                 'price' => $project->price,
                 'distribution' => $project->distribution,
+                'commission' => $project->commission,
                 'date' => fake()->dateTimeBetween($project->start, $endDate->modify('+1 month')),
                 'created_at' => fake()->dateTimeBetween($project->start, $project->end),
             ]);
