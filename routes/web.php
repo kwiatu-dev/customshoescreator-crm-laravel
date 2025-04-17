@@ -1,31 +1,24 @@
 <?php
 
-use App\Notifications\UserCreate;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ForgotPassword;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\ListingController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\FilePondController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PageSpeedController;
 use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\InvestmentController;
 use App\Http\Controllers\InvestmentRepaymentController;
-use App\Http\Controllers\ListingOfferController;
 use App\Http\Controllers\OrganizerController;
 use App\Http\Controllers\PrivateFilesController;
 use App\Http\Controllers\RestoreStateController;
 use App\Http\Controllers\RememberStateController;
-use App\Http\Controllers\RealtorListingController;
-use App\Http\Controllers\RealtorListingImageController;
 use App\Http\Controllers\UserEventsController;
-use App\Models\UserEvents;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,21 +31,14 @@ use App\Models\UserEvents;
 |
 */
 
-//IndexController
+
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
 
-//ListingController
-Route::resource('listing', ListingController::class)->only('index', 'show');
-
-//ListingOfferController
-Route::resource('listing.offer', ListingOfferController::class)->only(['store']);
-
-//AuthController
 Route::get('login', [AuthController::class, 'create'])->name('login');
 Route::post('login', [AuthController::class, 'store'])->name('login.store');
 Route::delete('logout', [AuthController::class, 'destroy'])->name('logout');
 
-//UserAccountController
+
 Route::resource('user', UserController::class)
     ->only(['create', 'store', 'index', 'edit', 'destroy', 'update']);
 
@@ -64,27 +50,6 @@ Route::put('user/{user}/restore', [UserController::class, 'restore'])
     ->name('user.restore')
     ->withTrashed();
 
-//PageSpeedController & RealtorListingImageController
-Route::get('/audit', [PageSpeedController::class, 'index']);
-Route::post('/audit', [PageSpeedController::class, 'audit']);
-
-//RealtorListingController
-Route::prefix('realtor')->name('realtor.')->group(function() {
-    Route::name('listing.restore')
-        ->put(
-            'listing/{listing}/restore',
-            [RealtorListingController::class, 'restore']
-        )->withTrashed();
-
-    Route::resource('listing', RealtorListingController::class)
-        ->only(['index', 'destroy', 'edit', 'update', 'create', 'store', 'show'])
-        ->withTrashed();
-
-    Route::resource('listing.image', RealtorListingImageController::class)
-        ->only(['create', 'store', 'destroy']);
-});
-
-//ClientController
 Route::resource('client', ClientController::class)->except(['show']);
 
 Route::get('client/{client}', [ClientController::class, 'show'])
@@ -94,7 +59,6 @@ Route::get('client/{client}', [ClientController::class, 'show'])
 Route::name('client.restore')->put('client/{client}/restore',
         [ClientController::class, 'restore'])->withTrashed();
 
-//Email Verification
 Route::get('/email/verify', function () {
     if(!Auth::user() || !Auth::user()->hasVerifiedEmail()){
         return inertia('Auth/Verify');
@@ -103,13 +67,10 @@ Route::get('/email/verify', function () {
     return redirect()->intended();
 })->middleware('auth')->name('verification.notice');
 
-//Password Reset
-//Route::get('/forgot-password', [ResetPassword::class, 'create'])->name('password.request');
 Route::post('/forgot-password', [ForgotPassword::class, 'store'])->name('password.email');
 Route::get('/reset-password/{token}', [ResetPassword::class, 'edit'])->name('password.reset');
 Route::post('/reset-password', [ResetPassword::class, 'update'])->name('password.update');
 
-//ExpansesController
 Route::resource('expenses', ExpensesController::class)
     ->only(['index', 'create', 'edit', 'destroy', 'store']);
 
@@ -123,12 +84,9 @@ Route::delete('expenses/{expense}/file', [ExpensesController::class, 'remove'])
 Route::post('expenses/{expense}', [ExpensesController::class, 'update'])
     ->name('expenses.update');
 
-
-//PrivateFilesController
 Route::get('private/files/{catalog}/{file}', PrivateFilesController::class)
     ->name('private.files');
 
-//ProjectController
 Route::resource('projects', ProjectController::class)
     ->except(['show']);
 
@@ -146,14 +104,9 @@ Route::post('projects/{project}/status', [ProjectController::class, 'status'])
 Route::post('projects/{project}/upload', [ProjectController::class, 'upload'])
     ->name('projects.upload');
 
-// Route::delete('projects/{project}/images/{image}', [ProjectController::class, 'images_delete'])
-//     ->name('projects.images.destroy');
-
-//DictionaryController
 Route::get('dictionary/{table}', [DictionaryController::class, 'index'])
     ->name('dictionary.index');
 
-//FilePondController
 Route::resource('filepond', FilePondController::class)
     ->only(['store', 'destroy']);
 

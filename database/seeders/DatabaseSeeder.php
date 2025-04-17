@@ -31,15 +31,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'test2@example.com',
         ]);
 
-        \App\Models\Listing::factory(10)->create([
-            'by_user_id' => 1,
-        ]);
-
-        
-        \App\Models\Listing::factory(10)->create([
-            'by_user_id' => 2,
-        ]);
-
         \App\Models\User::factory(10)->create();
 
         \App\Models\Client::factory(20)->create();
