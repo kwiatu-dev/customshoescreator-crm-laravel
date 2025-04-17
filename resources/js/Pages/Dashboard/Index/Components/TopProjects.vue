@@ -1,5 +1,5 @@
 <template>
-  <div class="col-span-12 md:col-span-6 card flex flex-col justify-between">
+  <div ref="el" class="col-span-12 md:col-span-6 card flex flex-col justify-between">
     <ViewToggle v-model="view" :options="['Ostatni miesiąc', 'Od zawsze']" />
     <div class="flex flex-col flex-nowrap justify-center items-center my-4">
       <h2 class="!text-xl !text-gray-700 dark:!text-gray-500">Projekty</h2>
@@ -152,7 +152,9 @@ import { ref, computed, onMounted, watch } from 'vue'
 import dayjs from 'dayjs'
 import { debounce } from 'lodash'
 import { useTopProjects } from '@/Composables/useTopProjects.js'
+import { useIntersectionObserver } from '@vueuse/core'
 
+const el = ref(null)
 const data = ref([])
 const view = ref(0)
 
@@ -169,9 +171,14 @@ const range = computed(() => {
   return null
 })
 
-onMounted(async () => {
-  data.value = await useTopProjects(range.value)
-})
+useIntersectionObserver(
+  el,
+  async ([{ isIntersecting }]) => {
+    if (isIntersecting) {
+      data.value = await useTopProjects(range.value)
+    }
+  }
+)
 
 watch(range, debounce(async () => {
   data.value = await useTopProjects(range.value)

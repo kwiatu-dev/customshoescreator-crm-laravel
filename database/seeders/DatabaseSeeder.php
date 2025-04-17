@@ -31,11 +31,11 @@ class DatabaseSeeder extends Seeder
             'email' => 'test2@example.com',
         ]);
 
-        \App\Models\User::factory(10)->create();
+        \App\Models\User::factory(5)->create();
 
-        \App\Models\Client::factory(20)->create();
+        \App\Models\Client::factory(40)->create();
 
-        \App\Models\Expenses::factory(10)->create();
+        \App\Models\Expenses::factory(20)->create();
 
         \App\Models\Project::factory(100)->create();
 
@@ -50,8 +50,8 @@ class DatabaseSeeder extends Seeder
                 'price' => $project->price,
                 'distribution' => $project->distribution,
                 'commission' => $project->commission,
-                'date' => fake()->dateTimeBetween($project->start, $endDate->modify('+1 month')),
-                'created_at' => fake()->dateTimeBetween($project->start, $project->end),
+                'date' => fake()->dateTimeBetween($endDate->modify('-14 days'), $endDate->modify('+14 days')),
+                'created_at' => fake()->dateTimeBetween($project->start, $project->deadline),
             ]);
         }
 

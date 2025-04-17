@@ -182,7 +182,7 @@ Route::prefix('api')->group(function () {
         Route::get('project-years', [DashboardController::class, 'projectYears'])
             ->name('dashboard.project-years');
 
-        Route::get('monthly-financial-stats', [DashboardController::class, 'monthlyFinancialStats'])
+        Route::get('monthly-financial-stats', [DashboardController::class, 'getMonthlyFinancialStats'])
             ->name('dashboard.monthly-financial-stats');
 
         Route::get('monthly-completed-projects-count', [DashboardController::class, 'getMonthlyCompletedProjectsCount'])

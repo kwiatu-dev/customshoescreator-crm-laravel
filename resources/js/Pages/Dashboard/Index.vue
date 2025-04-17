@@ -8,6 +8,7 @@
     <UserStatusSection />
     <UserActualSection />
     <Top3Section />
+    <UserChartsSection />
   </div>
 
   <div v-show="view === 1" v-if="auth?.is_admin" class="grid grid-cols-12 gap-2">
@@ -23,6 +24,7 @@
 <script setup>
 import UserStatusSection from '@/Pages/Dashboard/Index/Components/Modules/User/StatusSection.vue'
 import UserActualSection from '@/Pages/Dashboard/Index/Components/Modules/User/ActualSection.vue'
+import UserChartsSection from '@/Pages/Dashboard/Index/Components/Modules/User/ChartsSection.vue'
 
 import OverallStatusSection from '@/Pages/Dashboard/Index/Components/Modules/Overall/StatusSection.vue'
 import OverallKPISection from '@/Pages/Dashboard/Index/Components/Modules/Overall/KPISection.vue'

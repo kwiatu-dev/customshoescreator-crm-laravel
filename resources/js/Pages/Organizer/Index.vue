@@ -219,4 +219,8 @@ watch(events, (_) => reload())
 .fc-event {
   @apply cursor-pointer;
 }
+
+.fc .fc-event {
+  margin-bottom: 1px !important;
+}
 </style>

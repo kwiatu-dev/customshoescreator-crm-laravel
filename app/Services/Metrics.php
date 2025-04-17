@@ -25,23 +25,6 @@ class Metrics
             'total_completed_investments_count' => self::getTotalRelatedCompletedInvestmentsCount($user),
             'total_investor_awaiting_repayment_sum' => self::getTotalInvestorAwaitingRepaymentSum($user),
             'total_user_awaiting_income_sum' => self::getTotalUserAwaitingIncomeSum($user),
-
-            // 'total_projects_count' => self::getTotalProjectsCount(),
-            // 'total_clients_count' => self::getTotalClientsCount(),
-            // 'total_users_count' => self::getTotalUsersCount(),
-            // 'total_income_count' => self::getTotalIncomeCount(),
-            // 'total_expenses_count' => self::getTotalExpensesCount(),
-            // 'total_expenses_sum' => self::getTotalExpensesSum(),
-            // 'total_gross_income_sum' => self::getTotalGrossIncomeSum(),
-            // 'total_net_income_sum' => self::getTotalNetIncomeSum(),
-            // 'total_investments_sum' => self::getTotalInvestmentsSum(),
-
-            // 'total_awaiting_repayment_sum' => self::getTotalAwaitingRepaymentSum(),
-
-
-
-            // 'total_awaiting_income_sum' => self::getTotalAwaitingIncomeSum(),
-            // 'wallet' => self::getWallet(),
         ];
     }
 
@@ -255,10 +238,12 @@ class Metrics
                     }
 
                     if (is_array($income->distribution) && array_key_exists($user->id, $income->distribution)) {
-                        $participant = round(($base - $creator) * (($income->distribution[$user->id] ?? 0) / 100), 2);
-                    }
+                        $participant = round(($base - $creator) * (((int) $income->distribution[$user->id] ?? 0) / 100), 2);
 
-                    $total = $creator + $participant;
+                    }
+                        
+
+                    $total += $creator + $participant;
                 }
             
                 return round($total, 2);

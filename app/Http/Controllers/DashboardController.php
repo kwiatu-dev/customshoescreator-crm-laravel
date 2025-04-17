@@ -8,6 +8,8 @@ use App\Models\Income;
 use App\Models\Investment;
 use App\Models\Project;
 use App\Models\User;
+use App\Services\CacheService;
+use App\Services\ChartService;
 use App\Services\Metrics;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -58,30 +60,24 @@ class DashboardController extends Controller
         }
 
         $year = (int) $request->input('year');
-        $data = array_fill(0, 12, 0);
+        $user_id = $request->input('user_id');
 
-        $rows = DB::table('projects')
-            ->selectRaw('MONTH(end) as month, COUNT(*) as count')
-            ->whereNull('deleted_at')
-            ->whereYear('end', $year)
-            ->groupBy(DB::raw('MONTH(end)'))
-            ->get();
+        $args = ['year' => $year];
 
-        foreach ($rows as $row) {
-            $index = (int) $row->month - 1;
-            $data[$index] = (int) $row->count;
+        if (!empty($user_id)) {
+            $args['user'] = $user_id;
         }
+        
+        $data = CacheService::remember(['projects'], $args, fn () => ChartService::monthlyCompletedProjectsCount($year, $user_id));
 
-        return response()->json([
-            'labels' => $this->getPolishMonthLabels(),
-            'data' => $data,
-        ]);
+        return response()->json($data);
     }
 
     public function getMonthlyNewProjectsCount(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'year' => 'required|integer|min:2000|max:' . date('Y'),
+            'user_id' => 'nullable|integer|exists:users,id',
         ]);
     
         if ($validator->fails()) {
@@ -89,116 +85,42 @@ class DashboardController extends Controller
         }
     
         $year = (int) $request->input('year');
-        $data = array_fill(0, 12, 0);
-    
-        $rows = DB::table('projects')
-            ->selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-            ->whereNull('deleted_at')
-            ->whereYear('created_at', $year)
-            ->groupBy(DB::raw('MONTH(created_at)'))
-            ->get();
-    
-        foreach ($rows as $row) {
-            $index = (int) $row->month - 1;
-            $data[$index] = (int) $row->count;
+        $user_id = $request->input('user_id');
+
+        $args = ['year' => $year];
+
+        if (!empty($user_id)) {
+            $args['user'] = $user_id;
         }
+        
+        $data = CacheService::remember(['projects'], $args, fn () => ChartService::monthlyNewProjectsCount($year, $user_id));
     
-        return response()->json([
-            'labels' => $this->getPolishMonthLabels(),
-            'data' => $data,
-        ]);
+        return response()->json($data);
     }
 
-    public function monthlyFinancialStats(Request $request)
+    public function getMonthlyFinancialStats(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'year' => 'required|integer|min:2000|max:' . date('Y'),
+            'user_id' => 'nullable|integer|exists:users,id',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
+    
+        $year = (int) $request->input('year');
+        $user_id = $request->input('user_id');
 
-        $year = $request->input('year');
+        $args = ['year' => $year];
 
-        $labels = $this->getPolishMonthLabels();
-        $incomeData = $this->getMonthlyIncome($year);
-        $costsData = $this->getMonthlyCosts($year);
-        $netData = $this->calculateMonthlyNet($incomeData, $costsData);
-
-        return response()->json([
-            'labels' => $labels,
-            'datasets' => [
-                [
-                    'label' => 'Przychód',
-                    'data' => $incomeData,
-                ],
-                [
-                    'label' => 'Wydatki',
-                    'data' => $costsData,
-                ],
-                [
-                    'label' => 'Dochód',
-                    'data' => $netData,
-                ],
-            ],
-        ]);
-    }
-
-    private function getPolishMonthLabels(): array
-    {
-        return [
-            'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
-            'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'
-        ];
-    }
-
-    private function getMonthlyIncome(int $year): array
-    {
-        $data = array_fill(0, 12, 0);
-
-        $rows = DB::table('incomes')
-            ->selectRaw('MONTH(date) as month, SUM(price * costs / 100) as income')
-            ->whereNull('deleted_at')
-            ->whereYear('date', $year)
-            ->where('status_id', 2)
-            ->groupBy(DB::raw('MONTH(date)'))
-            ->get();
-
-        foreach ($rows as $row) {
-            $index = (int) $row->month - 1;
-            $data[$index] = round((float) $row->income, 2);
+        if (!empty($user_id)) {
+            $args['user'] = $user_id;
         }
 
-        return $data;
-    }
+        $data = CacheService::remember(['incomes', 'projects', 'expenses'], $args, fn () => ChartService::monthlyFinancialStats($year, $user_id));
 
-    private function getMonthlyCosts(int $year): array
-    {
-        $data = array_fill(0, 12, 0);
-
-        $rows = DB::table('expenses')
-            ->selectRaw('MONTH(date) as month, SUM(price) as costs')
-            ->whereNull('deleted_at')
-            ->whereYear('date', $year)
-            ->groupBy(DB::raw('MONTH(date)'))
-            ->get();
-
-        foreach ($rows as $row) {
-            $index = (int) $row->month - 1;
-            $data[$index] = round((float) $row->costs, 2);
-        }
-
-        return $data;
-    }
-
-    private function calculateMonthlyNet(array $income, array $costs): array
-    {
-        $profit = [];
-        for ($i = 0; $i < 12; $i++) {
-            $profit[] = round($income[$i] - $costs[$i], 2);
-        }
-        return $profit;
+        return response()->json($data);
     }
 
     public function projectYears()
@@ -286,7 +208,8 @@ class DashboardController extends Controller
             ->leftJoin('project_images', 'projects.id', '=', 'project_images.project_id')
             ->whereNull('projects.deleted_at')
             ->whereNull('incomes.deleted_at')
-            ->where('incomes.status_id', 2); 
+            ->where('incomes.status_id', 2)
+            ->whereNotNull('projects.end'); 
 
         if ($from) {
             $query->where('incomes.date', '>=', $from);
@@ -345,7 +268,8 @@ class DashboardController extends Controller
             ->join('users', 'projects.created_by_user_id', '=', 'users.id')
             ->whereNull('incomes.deleted_at')
             ->whereNull('projects.deleted_at')
-            ->where('incomes.status_id', 2);
+            ->where('incomes.status_id', 2)
+            ->whereNotNull('projects.end');
     
         if ($from) {
             $query->where('incomes.date', '>=', $from);

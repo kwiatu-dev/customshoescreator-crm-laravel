@@ -14,7 +14,7 @@
     :icon="['far', 'hourglass-half']"
     :value="metrics['total_awaiting_income_sum'] + ' zł'"
   >
-    Oczekujące na realizację
+    Oczekujące
   </IconCard>
   <IconCard 
     class="col-span-12 md:col-span-6 " 

@@ -17,7 +17,7 @@ class ExpensesFactory extends Factory
      */
     public function definition(): array
     {
-        $date = fake()->dateTimeBetween('-1 year', 'now');
+        $date = fake()->dateTimeBetween('-1 year', '-1 days');
 
         return [
             'title' => fake()->text(50),

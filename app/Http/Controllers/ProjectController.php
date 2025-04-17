@@ -234,7 +234,7 @@ class ProjectController extends Controller
     {
         $this->authorize('update', $project);
 
-        $before_update_status_id = $project->id;
+        $before_update_status_id = $project->status_id;
 
         $fields = RequestProcessor::validation($request, $this->fields, new Project(), [
             'type_id' => 'required|exists:project_types,id',
@@ -251,6 +251,12 @@ class ProjectController extends Controller
                 'commission' => $user->commission,
                 'costs' => $user->costs,
                 'distribution' => $user->distribution,
+            ]);
+        }
+
+        if ($project->status_id != $fields['status_id']) {
+            array_merge($fields, [
+                'end' => $fields['status_id'] == 3 ? now() : null
             ]);
         }
 

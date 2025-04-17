@@ -1,4 +1,4 @@
-export const options = ({ local, currency, theme, showTicks, showGrid }) => ({
+export const options = ({ local, currency, theme, showTicks, showGrid, stepSize }) => ({
   responsive: true,
   maintainAspectRatio: false,
   pointBackgroundColor: theme === 'dark' ? 'rgb(209 213 219)' : 'rgb(107 114 128)',
@@ -51,6 +51,7 @@ export const options = ({ local, currency, theme, showTicks, showGrid }) => ({
         font: {
           size: 10,
         },
+        stepSize: stepSize,
       },
       grid: {
         display: showGrid,
@@ -65,6 +66,7 @@ export const options = ({ local, currency, theme, showTicks, showGrid }) => ({
         font: {
           size: 10,
         },
+        stepSize: stepSize,
         callback: (value, index) => {
           if (index === 0) {
             return ''

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Client;
 use App\Models\ProjectType;
 use App\Models\ProjectStatus;
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,11 +21,14 @@ class ProjectFactory extends Factory
      */
     public function definition(): array
     {
-        $createdAt = fake()->dateTimeBetween('-1 year', 'now'); 
-        $start = fake()->dateTimeBetween($createdAt, 'now'); 
-        $deadline = fake()->dateTimeBetween($start, (clone $start)->modify('+2 months')); 
+        $createdAt = fake()->dateTimeBetween('-1 year', '-1 days'); 
+        $start = fake()->dateTimeBetween($createdAt, (clone $createdAt)->modify('+2 months'));
+        $deadline = fake()->dateTimeBetween($start, (clone $start)->modify('+1 months')); 
         $status = $this->status();
-        $end = $status->id === 3 ? fake()->dateTimeBetween($start, $deadline) : null;
+
+        $end = ($status->id === 3 && $deadline < now())
+            ? fake()->dateTimeBetween((clone $start)->modify('+14 days'), (clone $deadline)->modify('+14 days'))
+            : null;
 
         return [
             'title' => fake()->text(50),

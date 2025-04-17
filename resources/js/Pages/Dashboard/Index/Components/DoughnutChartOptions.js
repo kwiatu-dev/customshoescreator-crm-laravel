@@ -44,9 +44,10 @@ export const options = ({ local, currency, theme }) => ({
       anchor: 'center',
       align: 'center',
       display: (context) => {
+        const value = context.dataset.data[context.dataIndex]
         const meta = context.chart.getDatasetMeta(0)
         
-        if (meta.data[context.dataIndex].hidden === true) {
+        if (value === 0 || meta.data[context.dataIndex].hidden === true) {
           return false
         }
       },

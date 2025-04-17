@@ -33,7 +33,8 @@ class ClientFactory extends Factory
             'username' => fake('pl_PL')->userName(),
             'conversion_source_id' => $this->random_conversion_source(),
             'social_link' => fake('pl_PL')->url(),
-            'created_by_user_id' => $this->random_user_id()
+            'created_by_user_id' => $this->random_user_id(),
+            'created_at' => fake()->dateTimeBetween('-1 years', '-1 days')
         ];
     }
 

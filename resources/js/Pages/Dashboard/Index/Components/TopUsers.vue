@@ -1,5 +1,5 @@
 <template>
-  <div class="col-span-12 md:col-span-6 card flex flex-col justify-between">
+  <div ref="el" class="col-span-12 md:col-span-6 card flex flex-col justify-between">
     <ViewToggle v-model="view" :options="['Ostatni miesiąc', 'Od zawsze']" />
     <div class="flex flex-col flex-nowrap justify-center items-center my-4">
       <h2 class="!text-xl !text-gray-700 dark:!text-gray-500">Użytkownicy</h2>
@@ -73,7 +73,7 @@
           <thead>
             <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
               <th class="py-2 px-4 border-b whitespace-nowrap">Przychód</th>
-              <th class="py-2 px-4 border-b whitespace-nowrap">Zakończone projekty</th>
+              <th class="py-2 px-4 border-b whitespace-nowrap">Projekty</th>
               <th class="py-2 px-4 border-b whitespace-nowrap">Średni czas realizacji</th>
             </tr>
           </thead>
@@ -98,7 +98,7 @@
           <thead>
             <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
               <th class="py-2 px-4 border-b whitespace-nowrap">Przychód</th>
-              <th class="py-2 px-4 border-b whitespace-nowrap">Zakończone projekty</th>
+              <th class="py-2 px-4 border-b whitespace-nowrap">Projekty</th>
               <th class="py-2 px-4 border-b whitespace-nowrap">Średni czas realizacji</th>
             </tr>
           </thead>
@@ -123,7 +123,7 @@
           <thead>
             <tr class="bg-gray-100 text-gray-600 text-sm font-medium">
               <th class="py-2 px-4 border-b whitespace-nowrap">Przychód</th>
-              <th class="py-2 px-4 border-b whitespace-nowrap">Zakończone projekty</th>
+              <th class="py-2 px-4 border-b whitespace-nowrap">Projekty</th>
               <th class="py-2 px-4 border-b whitespace-nowrap">Średni czas realizacji</th>
             </tr>
           </thead>
@@ -146,7 +146,11 @@ import ViewToggle from '@/Pages/Dashboard/Index/Components/ViewToggle.vue'
 import dayjs from 'dayjs'
 import { computed, onMounted, ref, watch } from 'vue'
 import { debounce } from 'lodash'
+import { useIntersectionObserver } from '@vueuse/core'
 
+
+
+const el = ref(null)
 const data = ref([])
 const view = ref(0)
 
@@ -163,11 +167,17 @@ const range = computed(() => {
   return null
 })
 
-onMounted(async () => {
-  data.value = await useTopUsers(range.value)
-})
+useIntersectionObserver(
+  el,
+  async ([{ isIntersecting }]) => {
+    if (isIntersecting) {
+      data.value = await useTopUsers(range.value)
+    }
+  }
+)
 
 watch(range, debounce(async () => {
+  console.log('test2')
   data.value = await useTopUsers(range.value)
 }, 1000))
 </script>

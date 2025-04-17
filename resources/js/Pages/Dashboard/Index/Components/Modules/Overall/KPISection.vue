@@ -1,5 +1,5 @@
 <template>
-  <SectionTitle class="col-span-12">
+  <SectionTitle ref="el" class="col-span-12">
     <div>Podsumowanie KPI</div>
     <DateRangePicker v-model="range" class="ml-auto mt-4 md:ml-0 md:mt-0" />
   </SectionTitle>
@@ -77,9 +77,11 @@ import IconStatsCard from '@/Pages/Dashboard/Index/Components/IconStatsCard.vue'
 import StatsCard from '@/Pages/Dashboard/Index/Components/StatsCard.vue'
 import DateRangePicker from '@/Pages/Dashboard/Index/Components/DateRangePicker.vue'
 import SectionTitle from '@/Pages/Dashboard/Index/Components/SectionTitle.vue'
+import { useIntersectionObserver } from '@vueuse/core'
 
 const range = ref({ from: dayjs().format('YYYY-MM'), to: dayjs().format('YYYY-MM') })
 const kpi = ref(null)
+const el = ref(null)
 
 const fetch = debounce(async () => {
   if (range.value) {
@@ -93,7 +95,12 @@ watch(() => range.value, () => {
   fetch()
 }, { deep: true })
 
-onMounted(async () => {
-  kpi.value = await useKPI(range.value)
-})
+useIntersectionObserver(
+  el,
+  async ([{ isIntersecting }]) => {
+    if (isIntersecting) {
+      kpi.value = await useKPI(range.value)
+    }
+  }
+)
 </script>

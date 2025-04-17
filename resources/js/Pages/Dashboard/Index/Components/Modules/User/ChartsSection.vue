@@ -37,22 +37,24 @@
     />
   </div>
 </template>
-
+  
 <script setup>
 import '@/Pages/Dashboard/Index/Components/ChartRegister.js'
 import SectionTitle from '@/Pages/Dashboard/Index/Components/SectionTitle.vue'
 import LineChart from '@/Pages/Dashboard/Index/Components/LineChart.vue'
 import DoughnutChart from '@/Pages/Dashboard/Index/Components/DoughnutChart.vue'
 import YearlyBarChart from '@/Pages/Dashboard/Index/Components/YearlyBarChart.vue'
+import { nextTick, onMounted, ref } from 'vue'
 import { useProjectYears } from '@/Composables/useProjectYears'
 import { useProjectsTypeBreakdown } from '@/Composables/useProjectsTypeBreakdown.js'
 import { useMonthlyFinancialStats } from '@/Composables/useMonthlyFinancialStats'
-import { onMounted, ref } from 'vue'
-import dayjs from 'dayjs'
 import { useMonthlyNewProjectsCount } from '@/Composables/useMonthlyNewProjectsCount'
 import { useMonthlyCompletedProjectsCount } from '@/Composables/useMonthlyCompletedProjectsCount'
+import { useAuthUser } from '@/Composables/useAuthUser'
 import { useIntersectionObserver } from '@vueuse/core'
+import dayjs from 'dayjs'
 
+const auth = useAuthUser()
 const projectYears = ref(null)
 const doughnutChartData = ref(null)
 const doughnutChart = ref(null)
@@ -87,7 +89,7 @@ const loadYearlyBarChartData = async () => {
   const data = {}
 
   for (const year of projectYears.value) {
-    data[year] = await useMonthlyFinancialStats(year)
+    data[year] = await useMonthlyFinancialStats(year, auth.value.id)
   }
 
   yearlyBarChartData.value = data
@@ -102,7 +104,7 @@ const loadLineChartData01 = async () => {
   for (const year of projectYears.value) {
     data.datasets.push({
       label: year,
-      data: (await useMonthlyNewProjectsCount(year)).data,
+      data: (await useMonthlyNewProjectsCount(year, auth.value.id)).data,
     })
   }
 
@@ -118,7 +120,7 @@ const loadLineChartData02 = async () => {
   for (const year of projectYears.value) {
     data.datasets.push({
       label: year,
-      data: (await useMonthlyCompletedProjectsCount(year)).data,
+      data: (await useMonthlyCompletedProjectsCount(year, auth.value.id)).data,
     })
   }
 
@@ -126,6 +128,7 @@ const loadLineChartData02 = async () => {
 }
 
 onMounted(async () => {
+  await nextTick()
   projectYears.value = await useProjectYears()
 })
 
