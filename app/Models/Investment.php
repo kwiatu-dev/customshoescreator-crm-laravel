@@ -49,7 +49,8 @@ class Investment extends Model
         'others' => [
             ['deleted' => 'boolean'],
             ['created_by_user' => 'boolean'],
-            ['after_date' => 'boolean']
+            ['after_date' => 'boolean'],
+            ['related_with_user_id' => 'string']
         ],
         'pagination' => 'string',
     ];
@@ -65,6 +66,8 @@ class Investment extends Model
     ];
 
     protected $searchable = [
+        'investor' => ['first_name', 'last_name'],
+        'status' => ['name'],
         'title',
         'remarks',
     ];
@@ -94,6 +97,26 @@ class Investment extends Model
     public function getRestorableAttribute()
     {
         return $this->deleted_at !== null && $this->status_id == 1;
+    }
+
+    public function scopeUseModelFilters($query, $filters) {
+        $query->when(
+            $filters['after_date'] ?? false,
+            function ($query, $value){
+                $query->where('status_id', '1')->where($this->table_name . '.date', '<', now());
+            }
+        );
+
+        $query->when(
+            $filters['related_with_user_id'] ?? false,
+            function ($query, $value){
+                $query->where(function ($query) use ($value) {
+                    $query
+                    ->where($this->table_name . '.user_id', $value)
+                    ->orWhere($this->table_name . '.created_by_user_id', $value);
+                });
+            }
+        );
     }
 
     public function user(): BelongsTo{

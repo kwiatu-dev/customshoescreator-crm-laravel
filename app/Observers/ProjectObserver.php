@@ -52,16 +52,6 @@ class ProjectObserver
      */
     private function clearProjectAndIncomeCache(): void
     {
-        Cache::forget(config('cache_keys.total_projects_count'));
-        Cache::forget(config('cache_keys.total_income_count'));
-        Cache::forget(config('cache_keys.total_gross_income_sum'));
-        Cache::forget(config('cache_keys.total_net_income_sum'));
-        Cache::forget(config('cache_keys.total_awaiting_income_sum'));
-        Cache::forget(config('cache_keys.total_completed_income_count'));
-        Cache::forget(config('cache_keys.total_active_income_count'));
-        Cache::forget(config('cache_keys.total_awaiting_projects_count'));
-        Cache::forget(config('cache_keys.total_in_progress_projects_count'));
-        Cache::forget(config('cache_keys.total_after_deadline_projects_count'));
-        Cache::forget(config('cache_keys.total_completed_projects_count'));
+        Cache::tags(['projects'])->flush();
     }
 }

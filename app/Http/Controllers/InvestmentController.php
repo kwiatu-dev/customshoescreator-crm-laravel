@@ -57,7 +57,7 @@ class InvestmentController extends Controller
             ->latest()
             ->pagination();
 
-        $footer = Investment::query()
+        $footer = $query
             ->filter($request)
             ->footer();
 

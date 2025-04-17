@@ -47,7 +47,8 @@ class Income extends Model
         ],
         'others' => [
             ['deleted' => 'boolean'],
-            ['created_by_user' => 'boolean']
+            ['created_by_user' => 'boolean'],
+            ['related_with_user_id' => 'string']
         ],
         'pagination' => 'string',
     ];
@@ -106,5 +107,16 @@ class Income extends Model
 
     public function getSettleableAttribute() {
         return $this->deleted_at == null && $this->status_id == 1;
+    }
+
+    public function scopeUseModelFilters($query, $filters) {
+        $query->when(
+            $filters['related_with_user_id'] ?? false,
+            function ($query, $value){
+                $query->whereHas('project', function ($query) use ($value) {
+                    $query->where('created_by_user_id', $value);
+                })->orWhere($this->table_name . '.created_by_user_id', $value);
+            }
+        );
     }
 }

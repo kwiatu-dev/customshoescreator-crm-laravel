@@ -23,5 +23,10 @@ return [
     'total_active_income_count' => 'total_active_income_count',
     'total_completed_income_count' => 'total_completed_income_count',
     'total_awaiting_income_sum' => 'total_awaiting_income_sum',
+    'total_related_active_income_count' => 'total_related_active_income_count',
+    'total_related_completed_income_count' => 'total_related_completed_income_count',
+    'total_related_after_date_investments_count' => 'total_related_after_date_investments_count',
+    'total_related_active_investments_count' => 'total_related_active_investments_count',
+    'total_related_completed_investments_count' => 'total_related_completed_investments_count',
     'wallet' => 'wallet',
 ];

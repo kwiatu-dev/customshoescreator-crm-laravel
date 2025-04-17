@@ -61,6 +61,7 @@ const filterable = {
   dictionary: [ 
     { table: 'User', column: 'created_by_user_id', label: 'Użytkownik', admin: true },
     { table: 'IncomeStatus', column: 'status_id', label: 'Status' }, 
+    { table: 'User', column: 'related_with_user_id', label: 'Powiązane z', admin: true },
   ], 
   pagination: {},
   others: [ { name: 'deleted', label: 'Pokaż usunięte' }, { name: 'created_by_user', label: 'Pokaż moje', admin: true } ],

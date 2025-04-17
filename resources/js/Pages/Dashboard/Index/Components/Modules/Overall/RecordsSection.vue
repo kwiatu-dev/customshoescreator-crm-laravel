@@ -45,5 +45,5 @@ import SectionTitle from '@/Pages/Dashboard/Index/Components/SectionTitle.vue'
 import ValueCard from '@/Pages/Dashboard/Index/Components/ValueCard.vue'
 import { inject } from 'vue'
 
-const metrics = inject('metrics')
+const metrics = inject('overall_metrics')
 </script>

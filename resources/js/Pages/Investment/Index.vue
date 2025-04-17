@@ -62,6 +62,7 @@ const filterable = {
   dictionary: [ 
     { table: 'User', column: 'user_id', label: 'Inwestor', admin: true },
     { table: 'InvestmentStatus', column: 'status_id', label: 'Status' }, 
+    { table: 'User', column: 'related_with_user_id', label: 'Powiązane z', admin: true },
   ], 
   pagination: {},
   others: [ 

@@ -8,11 +8,13 @@ use App\Models\Income;
 use App\Models\Investment;
 use App\Models\Project;
 use App\Models\User;
+use App\Services\Metrics;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Validator;
 
 class DashboardController extends Controller
@@ -24,12 +26,23 @@ class DashboardController extends Controller
     
     public function index(Request $request)
     {
-        $metrics = $this->getMetrics();
+        Cache::flush();
+        $overall_metrics = null;
+        $user_metrics = null;
+    
+        if ($request->user() && $request->user()?->is_admin) {
+            $overall_metrics = Metrics::getOverallMetrics();
+        }
+
+        if ($request->user()) {
+            $user_metrics = Metrics::getUserMetrics($request->user());
+        }
 
         return inertia(
             'Dashboard/Index',
             [
-                'metrics' => $metrics,
+                'overallMetrics' => $overall_metrics,
+                'userMetrics' => $user_metrics,
             ]
         );
     }
@@ -540,197 +553,5 @@ class DashboardController extends Controller
                 'percentage' => $getPercentageChange($current['project_type:inne'], $previous['project_type:inne']),
             ],
         ];
-    }
-
-    private function getMetrics()
-    {
-        return [
-            'total_projects_count' => $this->getTotalProjectsCount(),
-            'total_clients_count' => $this->getTotalClientsCount(),
-            'total_users_count' => $this->getTotalUsersCount(),
-            'total_income_count' => $this->getTotalIncomeCount(),
-            'total_expenses_count' => $this->getTotalExpensesCount(),
-            'total_expenses_sum' => $this->getTotalExpensesSum(),
-            'total_gross_income_sum' => $this->getTotalGrossIncomeSum(),
-            'total_net_income_sum' => $this->getTotalNetIncomeSum(),
-            'total_investments_sum' => $this->getTotalInvestmentsSum(),
-            'total_investments_count' => $this->getTotalInvestmentsCount(),
-            'total_active_investments_count' => $this->getTotalActiveInvestmentsCount(),
-            'total_after_date_investments_count' => $this->getTotalAfterDateInvestmentsCount(),
-            'total_completed_investments_count' => $this->getTotalCompletedInvestmentsCount(),
-            'total_awaiting_repayment_sum' => $this->getTotalAwaitingRepaymentSum(),
-            'total_awaiting_projects_count' => $this->getTotalAwaitingProjectsCount(),
-            'total_in_progress_projects_count' => $this->getTotalInProgressProjectsCount(),
-            'total_after_deadline_projects_count' => $this->getTotalAfterDeadlineProjectsCount(),
-            'total_completed_projects_count' => $this->getTotalcompleted_projectsCount(),
-            'total_active_income_count' => $this->getTotalActiveIncomeCount(),
-            'total_completed_income_count' => $this->getTotalCompletedIncomeCount(),
-            'total_awaiting_income_sum' => $this->getTotalAwaitingIncomeSum(),
-            'wallet' => $this->getWallet(),
-        ];
-    }
-
-    private function getTotalProjectsCount()
-    {
-        return Cache::remember(config('cache_keys.total_projects_count'), now()->addHours(24), function () {
-            return Project::count();
-        });
-    }
-
-    private function getTotalClientsCount()
-    {
-        return Cache::remember(config('cache_keys.total_clients_count'), now()->addHours(24), function () {
-            return Client::count();
-        });
-    }
-
-    private function getTotalUsersCount()
-    {
-        return Cache::remember(config('cache_keys.total_users_count'), now()->addHours(24), function () {
-            return User::count();
-        });
-    }
-
-    private function getTotalIncomeCount()
-    {
-        return Cache::remember(config('cache_keys.total_income_count'), now()->addHours(24), function () {
-            return Income::count();
-        });
-    }
-
-    private function getTotalExpensesCount()
-    {
-        return Cache::remember(config('cache_keys.total_expenses_count'), now()->addHours(24), function () {
-            return Expenses::count();
-        });
-    }
-
-    private function getTotalExpensesSum()
-    {
-        return Cache::remember(config('cache_keys.total_expenses_sum'), now()->addHours(24), function () {
-            return round(Expenses::sum('price'), 2);
-        });
-    }
-
-    private function getTotalGrossIncomeSum()
-    {
-        return Cache::remember(config('cache_keys.total_gross_income_sum'), now()->addHours(24), function () {
-            return round(Income::sum('price'), 2);
-        });
-    }
-
-    private function getTotalNetIncomeSum()
-    {
-        return Cache::remember(config('cache_keys.total_net_income_sum'), now()->addHours(24), function () {
-            return round(Income::sum(\DB::raw('price * (costs / 100)')), 2);
-        });
-    }
-
-    private function getTotalInvestmentsSum()
-    {
-        return Cache::remember(config('cache_keys.total_investments_sum'), now()->addHours(24), function () {
-            return round(Investment::sum('amount'), 2);
-        });
-    }
-
-    private function getTotalInvestmentsCount()
-    {
-        return Cache::remember(config('cache_keys.total_investments_count'), now()->addHours(24), function () {
-            return Investment::count();
-        });
-    }
-
-    private function getTotalActiveInvestmentsCount()
-    {
-        return Cache::remember(config('cache_keys.total_active_investments_count'), now()->addHours(24), function () {
-            return Investment::where('status_id', '1')->count();
-        });
-    }
-
-    private function getTotalAfterDateInvestmentsCount()
-    {
-        return Cache::remember(config('cache_keys.total_after_date_investments_count'), now()->addHours(24), function () {
-            return Investment::where('status_id', '1')->where('date', '<', now())->count();
-        });
-    }
-
-    private function getTotalCompletedInvestmentsCount()
-    {
-        return Cache::remember(config('cache_keys.total_completed_investments_count'), now()->addHours(24), function () {
-            return Investment::where('status_id', '2')->count();
-        });
-    }
-
-    private function getTotalAwaitingRepaymentSum()
-    {
-        return Cache::remember(config('cache_keys.total_awaiting_repayment_sum'), now()->addHours(24), function () {
-            return round(Investment::sum(\DB::raw('(amount + amount * (interest_rate / 100)) - total_repayment')), 2);
-        });
-    }
-
-    private function getTotalAwaitingProjectsCount()
-    {
-        return Cache::remember(config('cache_keys.total_awaiting_projects_count'), now()->addHours(24), function () {
-            return Project::where('status_id', '1')->count();
-        });
-    }
-
-    private function getTotalInProgressProjectsCount()
-    {
-        return Cache::remember(config('cache_keys.total_in_progress_projects_count'), now()->addHours(24), function () {
-            return Project::where('status_id', '2')->count();
-        });
-    }
-
-    private function getTotalAfterDeadlineProjectsCount()
-    {
-        return Cache::remember(config('cache_keys.total_after_deadline_projects_count'), now()->addHours(24), function () {
-            return Project::whereNull('end')->where('deadline', '<', now())->count();
-        });
-    }
-
-    private function getTotalcompleted_projectsCount()
-    {
-        return Cache::remember(config('cache_keys.total_completed_projects_count'), now()->addHours(24), function () {
-            return Project::where('status_id', '3')->count();
-        });
-    }
-
-    private function getTotalActiveIncomeCount()
-    {
-        return Cache::remember(config('cache_keys.total_active_income_count'), now()->addHours(24), function () {
-            return Income::where('status_id', '1')->count();
-        });
-    }
-
-    private function getTotalCompletedIncomeCount()
-    {
-        return Cache::remember(config('cache_keys.total_completed_income_count'), now()->addHours(24), function () {
-            return Income::where('status_id', '2')->count();
-        });
-    }
-
-    private function getTotalAwaitingIncomeSum()
-    {
-        return Cache::remember(config('cache_keys.total_awaiting_income_sum'), now()->addHours(24), function () {
-            return round(Income::where('status_id', '1')->sum(\DB::raw('price * (costs / 100)')), 2);
-        });
-    }
-
-    private function getTotalRepaymentSum()
-    {
-        return Cache::remember(config('cache_keys.total_repayment_sum'), now()->addHours(24), function () {
-            return round(Investment::sum('total_repayment'), 2);
-        });
-    }
-
-    private function getWallet()
-    {
-        $total_net_income_sum = $this->getTotalNetIncomeSum();
-        $total_expenses_sum = $this->getTotalExpensesSum();
-        $total_investments_sum = $this->getTotalInvestmentsSum();
-        $total_repayment_sum = $this->getTotalRepaymentSum();
-
-        return round($total_net_income_sum - $total_expenses_sum + $total_investments_sum - $total_repayment_sum, 2);
     }
 }

@@ -165,6 +165,16 @@ class Project extends Model
         return true;
     }
 
+    public function scopeUseModelFilters($query, $filters) {
+        $query->when(
+            $filters['after_deadline'] ?? false,
+            function ($query, $value){
+                $query->whereNull($this->table_name . '.end')
+                      ->where($this->table_name . '.deadline', '<', now());
+            }
+        );
+    }
+
     public function addImages($images, $type_id)
     {
         foreach($images as $image){

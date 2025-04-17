@@ -42,8 +42,7 @@ class InvestmentRepaymentController extends Controller
             ->latest()
             ->pagination();
 
-        $footer = InvestmentRepayment::query()
-            ->where('investment_id', $investment->id)
+        $footer = $query
             ->filter($request)
             ->footer();
 

@@ -143,22 +143,9 @@ trait HasFilters
             }
         );
 
-        //projects
-        $query->when(
-            $filters['after_deadline'] ?? false,
-            function ($query, $value){
-                $query->whereNull($this->table_name . '.end')
-                      ->where($this->table_name . '.deadline', '<', now());
-            }
-        );
-
-        //investments
-        $query->when(
-            $filters['after_date'] ?? false,
-            function ($query, $value){
-                $query->where('status_id', '1')->where($this->table_name . '.date', '<', now());
-            }
-        );
+        if ($this && method_exists($this, 'scopeUseModelFilters')) {
+            $query->useModelFilters($filters);
+        }
         
         return $query;
     }
