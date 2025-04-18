@@ -144,14 +144,12 @@
 import { useTopUsers } from '@/Composables/useTopUsers'
 import ViewToggle from '@/Pages/Dashboard/Index/Components/ViewToggle.vue'
 import dayjs from 'dayjs'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { debounce } from 'lodash'
 import { useIntersectionObserver } from '@vueuse/core'
 
-
-
 const el = ref(null)
-const data = ref([])
+const data = ref(null)
 const view = ref(0)
 
 const range = computed(() => {
@@ -170,10 +168,10 @@ const range = computed(() => {
 useIntersectionObserver(
   el,
   async ([{ isIntersecting }]) => {
-    if (isIntersecting) {
+    if (isIntersecting && data.value === null) {
       data.value = await useTopUsers(range.value)
     }
-  }
+  },
 )
 
 watch(range, debounce(async () => {

@@ -155,7 +155,7 @@ import { useTopProjects } from '@/Composables/useTopProjects.js'
 import { useIntersectionObserver } from '@vueuse/core'
 
 const el = ref(null)
-const data = ref([])
+const data = ref(null)
 const view = ref(0)
 
 const range = computed(() => {
@@ -174,10 +174,10 @@ const range = computed(() => {
 useIntersectionObserver(
   el,
   async ([{ isIntersecting }]) => {
-    if (isIntersecting) {
+    if (isIntersecting && data.value === null) {
       data.value = await useTopProjects(range.value)
     }
-  }
+  },
 )
 
 watch(range, debounce(async () => {

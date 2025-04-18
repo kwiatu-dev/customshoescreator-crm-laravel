@@ -44,18 +44,21 @@ import SectionTitle from '@/Pages/Dashboard/Index/Components/SectionTitle.vue'
 import LineChart from '@/Pages/Dashboard/Index/Components/LineChart.vue'
 import DoughnutChart from '@/Pages/Dashboard/Index/Components/DoughnutChart.vue'
 import YearlyBarChart from '@/Pages/Dashboard/Index/Components/YearlyBarChart.vue'
-import { nextTick, onMounted, ref } from 'vue'
-import { useProjectYears } from '@/Composables/useProjectYears'
+import { ref, inject } from 'vue'
 import { useProjectsTypeBreakdown } from '@/Composables/useProjectsTypeBreakdown.js'
 import { useMonthlyFinancialStats } from '@/Composables/useMonthlyFinancialStats'
 import { useMonthlyNewProjectsCount } from '@/Composables/useMonthlyNewProjectsCount'
 import { useMonthlyCompletedProjectsCount } from '@/Composables/useMonthlyCompletedProjectsCount'
-import { useAuthUser } from '@/Composables/useAuthUser'
 import { useIntersectionObserver } from '@vueuse/core'
-import dayjs from 'dayjs'
 
-const auth = useAuthUser()
-const projectYears = ref(null)
+const props = defineProps({
+  user: {
+    type: Object,
+    required: true,
+  },
+})
+
+const projectYears = inject('project_years')
 const doughnutChartData = ref(null)
 const doughnutChart = ref(null)
 const yearlyBarChartData = ref(null)
@@ -72,13 +75,9 @@ const loadDoughnutChartData = async () => {
   }
 
   for (const year of projectYears.value) {
-    const from = dayjs(`${year}-01-01`).startOf('day').format('YYYY-MM-DD')
-    const to = dayjs(`${year}-12-31`).endOf('day').format('YYYY-MM-DD')
-    const range = { from, to }
-
     data.datasets.push({
       label: year,
-      data: (await useProjectsTypeBreakdown(range)).data,
+      data: (await useProjectsTypeBreakdown(year, props.user.value.id)).data,
     })
   }
 
@@ -89,7 +88,7 @@ const loadYearlyBarChartData = async () => {
   const data = {}
 
   for (const year of projectYears.value) {
-    data[year] = await useMonthlyFinancialStats(year, auth.value.id)
+    data[year] = await useMonthlyFinancialStats(year, props.user.value.id)
   }
 
   yearlyBarChartData.value = data
@@ -104,7 +103,7 @@ const loadLineChartData01 = async () => {
   for (const year of projectYears.value) {
     data.datasets.push({
       label: year,
-      data: (await useMonthlyNewProjectsCount(year, auth.value.id)).data,
+      data: (await useMonthlyNewProjectsCount(year, props.user.value.id)).data,
     })
   }
 
@@ -120,51 +119,47 @@ const loadLineChartData02 = async () => {
   for (const year of projectYears.value) {
     data.datasets.push({
       label: year,
-      data: (await useMonthlyCompletedProjectsCount(year, auth.value.id)).data,
+      data: (await useMonthlyCompletedProjectsCount(year, props.user.value.id)).data,
     })
   }
 
   lineChartData02.value = data
 }
 
-onMounted(async () => {
-  await nextTick()
-  projectYears.value = await useProjectYears()
-})
-
 useIntersectionObserver(
   doughnutChart,
   ([{ isIntersecting }]) => {
-    if (isIntersecting) {
+    if (isIntersecting && doughnutChartData.value === null) {
       loadDoughnutChartData()
     }
-  }
+  },
 )
 
 useIntersectionObserver(
   yearlyBarChart,
   ([{ isIntersecting }]) => {
-    if (isIntersecting) {
+    if (isIntersecting && yearlyBarChartData.value === null) {
       loadYearlyBarChartData()
     }
-  }
+  },
 )
 
 useIntersectionObserver(
   lineChart01,
   ([{ isIntersecting }]) => {
-    if (isIntersecting) {
+    if (isIntersecting && lineChartData01.value === null) {
       loadLineChartData01()
     }
-  }
+  },
 )
 
 useIntersectionObserver(
   lineChart02,
   ([{ isIntersecting }]) => {
-    if (isIntersecting) {
+    if (isIntersecting && lineChartData02.value === null) {
+      console.log(projectYears.value)
       loadLineChartData02()
     }
-  }
+  },
 )
 </script>

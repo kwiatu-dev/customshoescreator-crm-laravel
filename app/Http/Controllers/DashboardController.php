@@ -31,6 +31,7 @@ class DashboardController extends Controller
         Cache::flush();
         $overall_metrics = null;
         $user_metrics = null;
+        $users = User::query()->withTrashed()->get();
     
         if ($request->user() && $request->user()?->is_admin) {
             $overall_metrics = Metrics::getOverallMetrics();
@@ -45,6 +46,7 @@ class DashboardController extends Controller
             [
                 'overallMetrics' => $overall_metrics,
                 'userMetrics' => $user_metrics,
+                'users' => $users,
             ]
         );
     }
@@ -135,54 +137,27 @@ class DashboardController extends Controller
         return response()->json($years);
     }
 
-    public function projectTypeBreakdown(Request $request)
+    public function getProjectTypeBreakdown(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'from' => 'sometimes|date_format:Y-m-d',
-            'to'   => 'sometimes|date_format:Y-m-d|after_or_equal:from',
+            'year' => 'required|integer|min:2000|max:' . date('Y'),
+            'user_id' => 'nullable|integer|exists:users,id',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
+    
+        $year = (int) $request->input('year');
+        $user_id = $request->input('user_id');
 
-        $from = $request->input('from');
-        $to = $request->input('to');
+        $args = ['year' => $year];
 
-        $query = DB::table('projects')
-            ->select('type_id', DB::raw('COUNT(*) as count'))
-            ->whereNull('deleted_at');
-
-        if ($from) {
-            $query->where('created_at', '>=', $from);
+        if (!empty($user_id)) {
+            $args['user'] = $user_id;
         }
 
-        if ($to) {
-            $query->where('created_at', '<=', $to);
-        }
-
-        $rawData = $query
-            ->groupBy('type_id')
-            ->get()
-            ->keyBy('type_id');
-
-        $labels = [
-            1 => 'Renowacja butów',
-            2 => 'Personalizacja butów',
-            3 => 'Personalizacja ubrań',
-            4 => 'Haft ręczny',
-            5 => 'Haft komputerowy',
-            6 => 'Inne',
-        ];
-
-        $result = [
-            'labels' => array_values($labels),
-            'data' => [],
-        ];
-
-        foreach ($labels as $typeId => $label) {
-            $result['data'][] = isset($rawData[$typeId]) ? (int) $rawData[$typeId]->count : 0;
-        }
+        $result = CacheService::remember(['projects'], $args, fn () => ChartService::projectTypeBreakdown($year, $user_id));
 
         return response()->json($result);
     }

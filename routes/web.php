@@ -176,7 +176,7 @@ Route::prefix('api')->group(function () {
         Route::get('top-projects', [DashboardController::class, 'topProjectsByIncome'])
             ->name('dashboard.top-projects');
 
-        Route::get('projects-type-breakdown', [DashboardController::class, 'projectTypeBreakdown'])
+        Route::get('projects-type-breakdown', [DashboardController::class, 'getProjectTypeBreakdown'])
             ->name('dashboard.projects-type-breakdown');
 
         Route::get('project-years', [DashboardController::class, 'projectYears'])

@@ -98,9 +98,9 @@ watch(() => range.value, () => {
 useIntersectionObserver(
   el,
   async ([{ isIntersecting }]) => {
-    if (isIntersecting) {
+    if (isIntersecting && kpi.value === null) {
       kpi.value = await useKPI(range.value)
     }
-  }
+  },
 )
 </script>

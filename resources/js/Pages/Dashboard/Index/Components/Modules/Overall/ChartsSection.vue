@@ -44,16 +44,14 @@ import SectionTitle from '@/Pages/Dashboard/Index/Components/SectionTitle.vue'
 import LineChart from '@/Pages/Dashboard/Index/Components/LineChart.vue'
 import DoughnutChart from '@/Pages/Dashboard/Index/Components/DoughnutChart.vue'
 import YearlyBarChart from '@/Pages/Dashboard/Index/Components/YearlyBarChart.vue'
-import { useProjectYears } from '@/Composables/useProjectYears'
 import { useProjectsTypeBreakdown } from '@/Composables/useProjectsTypeBreakdown.js'
 import { useMonthlyFinancialStats } from '@/Composables/useMonthlyFinancialStats'
-import { onMounted, ref } from 'vue'
-import dayjs from 'dayjs'
+import { inject, ref } from 'vue'
 import { useMonthlyNewProjectsCount } from '@/Composables/useMonthlyNewProjectsCount'
 import { useMonthlyCompletedProjectsCount } from '@/Composables/useMonthlyCompletedProjectsCount'
 import { useIntersectionObserver } from '@vueuse/core'
 
-const projectYears = ref(null)
+const projectYears = inject('project_years')
 const doughnutChartData = ref(null)
 const doughnutChart = ref(null)
 const yearlyBarChartData = ref(null)
@@ -70,13 +68,9 @@ const loadDoughnutChartData = async () => {
   }
 
   for (const year of projectYears.value) {
-    const from = dayjs(`${year}-01-01`).startOf('day').format('YYYY-MM-DD')
-    const to = dayjs(`${year}-12-31`).endOf('day').format('YYYY-MM-DD')
-    const range = { from, to }
-
     data.datasets.push({
       label: year,
-      data: (await useProjectsTypeBreakdown(range)).data,
+      data: (await useProjectsTypeBreakdown(year)).data,
     })
   }
 
@@ -125,43 +119,39 @@ const loadLineChartData02 = async () => {
   lineChartData02.value = data
 }
 
-onMounted(async () => {
-  projectYears.value = await useProjectYears()
-})
-
 useIntersectionObserver(
   doughnutChart,
   ([{ isIntersecting }]) => {
-    if (isIntersecting) {
+    if (isIntersecting && doughnutChartData.value === null) {
       loadDoughnutChartData()
     }
-  }
+  },
 )
 
 useIntersectionObserver(
   yearlyBarChart,
   ([{ isIntersecting }]) => {
-    if (isIntersecting) {
+    if (isIntersecting && yearlyBarChartData.value === null) {
       loadYearlyBarChartData()
     }
-  }
+  },
 )
 
 useIntersectionObserver(
   lineChart01,
   ([{ isIntersecting }]) => {
-    if (isIntersecting) {
+    if (isIntersecting && lineChartData01.value === null) {
       loadLineChartData01()
     }
-  }
+  },
 )
 
 useIntersectionObserver(
   lineChart02,
   ([{ isIntersecting }]) => {
-    if (isIntersecting) {
+    if (isIntersecting && lineChartData02.value === null) {
       loadLineChartData02()
     }
-  }
+  },
 )
 </script>

@@ -22,6 +22,13 @@
 import SectionTitle from '@/Pages/Dashboard/Index/Components/SectionTitle.vue'
 import IconCard from '@/Pages/Dashboard/Index/Components/IconCard.vue'
 import { inject } from 'vue'
+
+defineProps({
+  user: {
+    type: Object,
+    required: true,
+  },
+})
   
 const metrics = inject('user_metrics')
 </script>

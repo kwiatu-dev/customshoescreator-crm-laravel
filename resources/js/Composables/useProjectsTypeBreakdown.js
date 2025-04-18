@@ -1,9 +1,10 @@
 import axios from 'axios'
 
-export const useProjectsTypeBreakdown = async (range) => {
+export const useProjectsTypeBreakdown = async (year, user_id) => {
   try {
     const params = {
-      ...(range && { from: range.from, to: range.to }),
+      year,
+      user_id,
     }
     const response = await axios.get(route('dashboard.projects-type-breakdown'), { params })
     return response.data

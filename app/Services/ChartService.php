@@ -6,6 +6,42 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class ChartService {
+    public static function projectTypeBreakdown($year, $user_id = null) {
+        $query = DB::table('projects')
+        ->select('type_id', DB::raw('COUNT(*) as count'))
+        ->whereNull('deleted_at')
+        ->whereYear('created_at', $year)
+        ->when($user_id, function ($query, $user_id) {
+            return $query->where('created_by_user_id', $user_id);
+        });
+
+
+        $rawData = $query
+            ->groupBy('type_id')
+            ->get()
+            ->keyBy('type_id');
+
+        $labels = [
+            1 => 'Renowacja butów',
+            2 => 'Personalizacja butów',
+            3 => 'Personalizacja ubrań',
+            4 => 'Haft ręczny',
+            5 => 'Haft komputerowy',
+            6 => 'Inne',
+        ];
+
+        $result = [
+            'labels' => array_values($labels),
+            'data' => [],
+        ];
+
+        foreach ($labels as $typeId => $label) {
+            $result['data'][] = isset($rawData[$typeId]) ? (int) $rawData[$typeId]->count : 0;
+        }
+
+        return $result;
+    }
+
     public static function monthlyNewProjectsCount($year, $user_id = null) {
         $data = array_fill(0, 12, 0);
     
