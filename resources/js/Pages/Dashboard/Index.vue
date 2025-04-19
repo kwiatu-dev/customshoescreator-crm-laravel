@@ -7,7 +7,7 @@
   </div>
   <div v-show="parseInt(view) === 0" class="grid grid-cols-12 gap-2">
     <div v-if="auth?.is_admin" class="col-span-12 rounded-md card overflow-visible">
-      <div class="label">Dane użytkownika: </div>
+      <div class="label">Statystyki użytkownika: </div>
       <Autocomplete 
         :id="(item) => item.id" 
         v-model:objectId="selectedUserId"
@@ -20,6 +20,7 @@
     </div>
     <UserStatusSection :user="selectedUser" />
     <UserActualSection :user="selectedUser" />
+    <UserKpiSection :user="selectedUser" />
     <Top3Section />
     <UserChartsSection :user="selectedUser" />
   </div>
@@ -49,6 +50,7 @@ import { provide, ref, computed, watch } from 'vue'
 import { useAuthUser } from '@/Composables/useAuthUser'
 import { router } from '@inertiajs/vue3'
 import { useQueryParams } from '@/Composables/useQueryParams'
+import UserKpiSection from './Index/Components/Modules/User/UserKpiSection.vue'
 
 const auth = useAuthUser()
 const queryParams = computed(() => useQueryParams())

@@ -18,6 +18,8 @@ class InvestmentFactory extends Factory
      */
     public function definition(): array
     {
+        $created_at = fake()->dateTimeBetween(date('Y') - 1 . '-01-01', '-2 months');
+        $date = fake()->dateTimeBetween($created_at, (clone $created_at)->modify('+2 months'));
         $amount = fake()->randomFloat(2, 10, 1000);
         $interest_rate = fake()->boolean(90) ? 0 : fake()->numberBetween(0, 20);
         $status_id = $this->random_status_id();
@@ -34,14 +36,14 @@ class InvestmentFactory extends Factory
         return [
             'title' => fake()->text(50),
             'amount' => $amount,
-            'date' => fake()->date(),
+            'date' => $date,
             'interest_rate' => $interest_rate,
             'total_repayment' => $total_repayment,
             'remarks' => $this->generate_remarks(),
             'user_id' => $this->random_user_id(),
             'status_id' => $status_id,
             'created_by_user_id' => $this->random_admin_id(),
-            'created_at' => fake()->dateTime()
+            'created_at' => $created_at,
         ];
     }
 

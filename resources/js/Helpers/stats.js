@@ -88,11 +88,11 @@ export const getTopProjects = async ({ from, to }, limit = 3) => {
   return api.get('dashboard.top-projects', params)
 }
 
-export const getKpi = async ({ from, to }, limit = 3) => {
+export const getKpi = async ({ from, to }, user_id) => {
   const params = {
-    limit,
     from,
     to,
+    user_id,
   }
   
   return api.get('dashboard.kpi', params)

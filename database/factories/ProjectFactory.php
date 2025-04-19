@@ -21,14 +21,37 @@ class ProjectFactory extends Factory
      */
     public function definition(): array
     {
-        $createdAt = fake()->dateTimeBetween('-1 year', 'now'); 
-        $start = fake()->dateTimeBetween($createdAt, (clone $createdAt)->modify('+2 months'));
+        $createdAt = fake()->dateTimeBetween(date('Y') - 1 . '-01-01', '-2 months'); 
+        $start = fake()->dateTimeBetween($createdAt, (clone $createdAt)->modify('+6 months'));
         $deadline = fake()->dateTimeBetween($start, (clone $start)->modify('+1 months')); 
-        $status = $this->status();
+        $temp = fake()->dateTimeBetween((clone $deadline)->modify('-14 days'), (clone $deadline)->modify('+14 days'));
 
-        $end = ($status->id === 3 && $deadline < now())
-            ? fake()->dateTimeBetween((clone $start)->modify('+14 days'), (clone $deadline)->modify('+14 days'))
-            : null;
+        $now = new \DateTime();
+
+        if ($start > $now) {
+            $status_id = 1;
+            $end = null;
+        }
+        else if ($start < $now && $deadline > $now) {
+            $status_id = 2;
+            $end = null;
+        }
+        elseif ($deadline < (clone $now)->modify('-2 month')) {
+            $status_id = fake()->boolean(90) ? 3 : 2;
+            $end = $status_id === 3 ? fake()->dateTimeBetween((clone $deadline)->modify('-14 days'), (clone $deadline)->modify('+14 days')) : null;
+        }
+        elseif ($deadline < (clone $now)->modify('-1 month')) {
+            $status_id = fake()->boolean(70) ? 3 : 2;
+            $end = $status_id === 3 ? fake()->dateTimeBetween((clone $deadline)->modify('-14 days'), (clone $deadline)->modify('+14 days')) : null;
+        } 
+        elseif ($deadline < $now && (clone $now)->modify('-1 month') < $deadline) {
+            $status_id = fake()->boolean(10) ? 3 : 2;
+            $end = $status_id === 3 ? fake()->dateTimeBetween($deadline, $now) : null;
+        } 
+        else {
+            $status_id = 1;
+            $end = null;
+        }
 
         return [
             'title' => fake()->text(50),
@@ -43,7 +66,7 @@ class ProjectFactory extends Factory
             'visualization' => fake()->randomFloat(2, 0, 100),
             'created_by_user_id' => $this->user(),
             'client_id' => $this->client(),
-            'status_id' => $status->id,
+            'status_id' => $status_id,
             'type_id' => $this->type(),
             'created_at' => $createdAt,
         ];

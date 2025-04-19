@@ -17,16 +17,16 @@ class ExpensesFactory extends Factory
      */
     public function definition(): array
     {
-        $date = fake()->dateTimeBetween('-1 year', '-1 days');
+        $created_at = fake()->dateTimeBetween(date('Y') - 1 . '-01-01', '-1 days');
 
         return [
             'title' => fake()->text(50),
-            'date' => $date,
+            'date' => $created_at,
             'price' => fake()->randomFloat(2, 10, 1000),
             'shop_name' => fake()->company,
             'file' => fake()->word . '.pdf',
             'created_by_user_id' => $this->random_user_id(),
-            'created_at' => $date,
+            'created_at' => $created_at,
         ];
     }
 

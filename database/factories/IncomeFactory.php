@@ -20,17 +20,20 @@ class IncomeFactory extends Factory
     public function definition(): array
     {
         $status_id = $this->random_status_id();
+        $created_at = fake()->dateTimeBetween(date('Y') - 1 . '-01-01', '-1 days');
 
         return [
             'title' => fake()->text(50),
-            'date' => $status_id == 2 ? fake()->date() : null,
+            'date' => $status_id == 2 ? $created_at : null,
             'price' => fake()->randomFloat(2, 10, 1000),
             'status_id' => $status_id,
             'remarks' => $this->generate_remarks(),
             'project_id' => null,
             'created_by_user_id' => $this->random_admin_id(),
             'costs' => 50,
-            'distribution' => json_encode(['1' => 50, '2' => 50])
+            'distribution' => json_encode(['1' => 50, '2' => 50]),
+            'commission' => null,
+            'created_at' => $created_at,
         ];
     }
 

@@ -198,18 +198,18 @@ class DashboardController extends Controller
     public function getKpi(Request $request)
     {
         $validated = $this->validateInput($request, ['from', 'to', 'user_id'], [
-            'from'  => 'required|date_format:Y-m-d',
-            'to'    => 'required|date_format:Y-m-d|after_or_equal:from',
+            'from'  => 'required|date_format:Y-m',
+            'to'    => 'required|date_format:Y-m|after_or_equal:from',
         ]);
 
         $user_id = $validated['user_id'] ?? null;
-        $fromInput = $validated['from'] ?? null;
-        $toInput = $validated['to'] ?? null;
+        $from = $validated['from'] ?? null;
+        $to = $validated['to'] ?? null;
     
         $this->authorizeUserAccess($user_id);
     
-
+        $data = CacheService::remember(['projects', 'incomes'], ['user_id' => $user_id, 'from' => $from, 'to' => $to], fn () => StatsService::kpi($from, $to, $user_id));
     
-        return response()->json($kpi);
+        return response()->json($data);
     }
 }

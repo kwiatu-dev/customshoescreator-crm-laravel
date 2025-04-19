@@ -10,7 +10,7 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class ChartService {
+class StatsService {
     public static function projectYears($user_id = null) {
         $years = DB::table('projects')
             ->whereNull('deleted_at')
@@ -379,8 +379,8 @@ class ChartService {
 
     private static function buildKpi($from, $to, $user_id) {
         $previousPeriod = self::getPreviousPeriod($from, $to);
-        $currentStatus = self::calculateStatsInPeriod($from, $to);
-        $previousStats = self::calculateStatsInPeriod($previousPeriod['from'], $previousPeriod['to']);
+        $currentStatus = self::calculateStatsInPeriod($from, $to, $user_id);
+        $previousStats = self::calculateStatsInPeriod($previousPeriod['from'], $previousPeriod['to'], $user_id);
 
         $getPercentageChange = function ($current, $previous) {
             if ($previous == 0) {
@@ -409,8 +409,9 @@ class ChartService {
         return ['from' => $previousFrom, 'to' => $previousTo];
     }
 
-    private static function calculateStatsInPeriod($from, $to)
+    private static function calculateStatsInPeriod($from, $to, $user_id)
     {
+        $auth = Auth::user();
         $income = Income::whereBetween('date', [$from, $to])->where('status_id', 2)->sum(\DB::raw('price'));
         $expenses = Expenses::whereBetween('date', [$from, $to])->sum('price');
         $profit = $income - $expenses;
@@ -419,6 +420,7 @@ class ChartService {
             'income' => $income,
             'expenses' => $expenses,
             'profit' => $profit,
+            'earnings' => null,
             'new_projects' => Project::whereBetween('created_at', [$from, $to])->count(),
             'completed_projects' => Project::whereBetween('end', [$from, $to])->count(),
             'avg_days_projects' => round(Project::whereBetween('end', [$from, $to])->avg(\DB::raw('DATEDIFF(end, start)')), 2),

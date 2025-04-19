@@ -6,25 +6,30 @@
       </div>
       <div class="text-gray-800 font-medium text-xl dark:text-gray-400"><slot /></div>
     </div>
-    <div v-if="data" class="flex md:flex-col md:gap-2 gap-8 flex-wrap">
-      <div v-for="(item, name) in data" :key="name">
-        <div v-if="item.hasOwnProperty('arrow') && item.hasOwnProperty('percentage') && item.hasOwnProperty('value')">
-          <div class="text-gray-400 dark:text-gray-500">{{ labels[name] }}</div>
+    <div class="flex flex-col sm:flex-row justify-between gap-2 md:flex-col">
+      <div 
+        v-for="(label, key) in labels" 
+        :key="label"
+        class="flex-1"
+      >
+        <div 
+          v-if="data?.[key] && data[key].hasOwnProperty('arrow') && data[key].hasOwnProperty('percentage') && data[key].hasOwnProperty('value')"
+          class="flex flex-col"
+        >
+          <div class="text-gray-400 dark:text-gray-500">{{ label }}</div>
           <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
-            <span>{{ item['value'] }} {{ units?.[name] || '' }}</span>
-            <span class="text-xs" :class="{'text-green-500': item['arrow'] === 'up', 'text-rose-500': item['arrow'] === 'down'}">
-              <font-awesome-icon v-if="item['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
-              <font-awesome-icon v-if="item['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
-              {{ item['percentage'] }}%
+            <span>{{ data[key]['value'] }} {{ units?.[key] || '' }}</span>
+            <span class="text-xs" :class="{'text-green-500': data[key]['arrow'] === 'up', 'text-rose-500': data[key]['arrow'] === 'down'}">
+              <font-awesome-icon v-if="data[key]['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
+              <font-awesome-icon v-if="data[key]['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
+              {{ data[key]['percentage'] }}%
             </span>
           </div>
         </div>
-      </div>
-    </div>
-    <div v-else class="flex md:flex-col md:gap-2 gap-8 flex-wrap">
-      <div v-for="(item, name) in labels" :key="name">
-        <div class="text-gray-400 dark:text-gray-500">{{ labels[name] }}</div>
-        <div class="loading-placeholder" />
+        <div v-else>
+          <div class="text-gray-400 dark:text-gray-500">{{ label }}</div>
+          <div class="loading-placeholder" />
+        </div>
       </div>
     </div>
   </div>
@@ -53,6 +58,6 @@ defineProps({
 
 <style scoped>
 .loading-placeholder {
-  @apply bg-gray-200 dark:bg-gray-700 rounded-md shadow-sm w-full h-6 mt-2 animate-pulse;
+  @apply bg-gray-200 dark:bg-gray-700 rounded-md shadow-sm w-full h-6 animate-pulse;
 }
 </style>

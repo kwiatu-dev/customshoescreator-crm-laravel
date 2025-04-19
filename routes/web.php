@@ -167,7 +167,7 @@ Route::put('user-events/{user_event}/restore', [UserEventsController::class, 're
 
 Route::prefix('api')->group(function () {
     Route::prefix('dashboard')->group(function () {
-        Route::get('kpi', [DashboardController::class, 'kpi'])
+        Route::get('kpi', [DashboardController::class, 'getKpi'])
             ->name('dashboard.kpi');
 
         Route::get('top-users', [DashboardController::class, 'topUsersByIncome'])

@@ -32,43 +32,61 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\User::factory(5)->create();
-
         \App\Models\Client::factory(40)->create();
-
         \App\Models\Expenses::factory(20)->create();
+        \App\Models\Project::factory(200)->create();
+        \App\Models\Income::factory(10)->create();
+        \App\Models\Investment::factory(40)->create();
+        \App\Models\UserEvents::factory(30)->create();
 
-        \App\Models\Project::factory(100)->create();
+        foreach (\App\Models\Project::where('status_id', 3)->get() as $project) {
+            $status_id = fake()->boolean(90) ? 2 : 1;
+            $project_start = new \DateTime($project->start);
+            $project_deadline = new \DateTime($project->deadline);
+            $project_end = new \DateTime($project->end);
+            $date = null;
 
-        $projects = \App\Models\Project::where('status_id', 3)->get();
-
-        foreach ($projects as $project) {
-            $baseEnd = $project->end ?? $project->deadline;
-            $endDate = new \DateTime($baseEnd);
-
-            $incomeDate = fake()->dateTimeBetween(
-                (clone $endDate)->modify('-14 days'),
-                (clone $endDate)->modify('+14 days')
-            );
+            $now = new \DateTime();
+            $oneMonthAgo = (clone $now)->modify('-1 month');
+        
+            if ($project_end < $oneMonthAgo) {
+                $date = fake()->dateTimeBetween($project_start, $project_end->modify('+1 month'));
+            } else {
+                $date = fake()->dateTimeBetween($project_end, 'now');
+            }
 
             \App\Models\Income::factory()->create([
                 'project_id' => $project->id,
                 'costs' => $project->costs,
-                'price' => $project->price,
                 'distribution' => $project->distribution,
                 'commission' => $project->commission,
-                'date' => $incomeDate,
+                'price' => $project->price,
+                'date' => $status_id === 2 ? $date : null,
                 'created_at' => fake()->dateTimeBetween($project->start, $project->deadline),
                 'created_by_user_id' => null,
+                'status_id' => $status_id
             ]);
         }
 
-        \App\Models\Income::factory(10)->create();
+        foreach (\App\Models\Project::where('status_id', 2)->get() as $project) {
+            $status_id = fake()->boolean(10) ? 2 : 1;
+            $project_start = $project->start;
+            $project_deadline = $project->deadline;
 
-        \App\Models\Investment::factory(40)->create();
+            \App\Models\Income::factory()->create([
+                'project_id' => $project->id,
+                'costs' => $project->costs,
+                'distribution' => $project->distribution,
+                'commission' => $project->commission,
+                'price' => $project->price,
+                'date' => $status_id === 2 ? fake()->dateTimeBetween($project_start, $project_deadline) : null,
+                'created_at' => fake()->dateTimeBetween($project_start, $project_deadline),
+                'created_by_user_id' => null,
+                'status_id' => $status_id,
+            ]);
+        }
 
-        $investments = \App\Models\Investment::all();
-
-        foreach ($investments as $investment) {
+        foreach (\App\Models\Investment::all() as $investment) {
             if ($investment->total_repayment <= 0) {
                 continue;
             }
@@ -99,7 +117,5 @@ class DatabaseSeeder extends Seeder
                 $remaining_amount -= $repayment_amount;
             }
         }
-
-        \App\Models\UserEvents::factory(30)->create();
     }
 }
