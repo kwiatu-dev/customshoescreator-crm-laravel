@@ -147,12 +147,12 @@
 </template>
 
 <script setup>
-import ViewToggle from '@/Pages/Dashboard/Index/Components/ViewToggle.vue'
-import { ref, computed, onMounted, watch } from 'vue'
+import ViewToggle from '@/Components/UI/Others/ViewToggle.vue'
+import { ref, computed, watch } from 'vue'
 import dayjs from 'dayjs'
 import { debounce } from 'lodash'
-import { useTopProjects } from '@/Composables/useTopProjects.js'
-import { useIntersectionObserver } from '@vueuse/core'
+import { useElementInViewPortVisibility } from '@/Composables/useElementInViewPortVisibility'
+import { getTopProjects } from '@/Helpers/stats'
 
 const el = ref(null)
 const data = ref(null)
@@ -165,46 +165,43 @@ const range = computed(() => {
     return { from: startOfLastMonth.format('YYYY-MM-DD'), to: endOfLastMonth.format('YYYY-MM-DD') }
   }
   else if (view.value === 1) {
-    return null
+    return { from: null, to: null }
   }
 
-  return null
+  return { from: null, to: null }
 })
 
-useIntersectionObserver(
-  el,
-  async ([{ isIntersecting }]) => {
-    if (isIntersecting && data.value === null) {
-      data.value = await useTopProjects(range.value)
-    }
-  },
-)
+useElementInViewPortVisibility(el, async () => {
+  if (data.value === null)
+    data.value = await getTopProjects(range.value)
+})
 
 watch(range, debounce(async () => {
-  data.value = await useTopProjects(range.value)
+  console.log(range.value)
+  data.value = await getTopProjects(range.value)
 }, 1000))
 </script>
 
 <style scoped>
-table {
-  @apply w-full text-left border-collapse;
-}
+  table {
+    @apply w-full text-left border-collapse;
+  }
 
-th, td {
-  @apply py-2 px-4 border-b dark:border-gray-600 border-gray-200;
-}
+  th, td {
+    @apply py-2 px-4 border-b dark:border-gray-600 border-gray-200;
+  }
 
-th {
-  @apply bg-gray-200 text-gray-600 text-sm font-medium border border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-400; 
-}
+  th {
+    @apply bg-gray-200 text-gray-600 text-sm font-medium border border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-400; 
+  }
 
-td {
-  @apply text-gray-700 text-sm dark:text-gray-300;
-}
+  td {
+    @apply text-gray-700 text-sm dark:text-gray-300;
+  }
 
-.top-3-img {
-  aspect-ratio: 1;
-  object-fit: cover;
-  max-width: 120px;
-}
+  .top-3-img {
+    aspect-ratio: 1;
+    object-fit: cover;
+    max-width: 120px;
+  }
 </style>

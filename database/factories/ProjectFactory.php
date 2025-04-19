@@ -21,7 +21,7 @@ class ProjectFactory extends Factory
      */
     public function definition(): array
     {
-        $createdAt = fake()->dateTimeBetween('-1 year', '-1 days'); 
+        $createdAt = fake()->dateTimeBetween('-1 year', 'now'); 
         $start = fake()->dateTimeBetween($createdAt, (clone $createdAt)->modify('+2 months'));
         $deadline = fake()->dateTimeBetween($start, (clone $start)->modify('+1 months')); 
         $status = $this->status();

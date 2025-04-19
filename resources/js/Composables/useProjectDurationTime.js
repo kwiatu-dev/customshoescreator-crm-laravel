@@ -8,8 +8,6 @@ export const useProjectDurationTime = (start, end) => {
   const durationDays = computed(() => end_.diff(start_, 'day'))
   const durationHours = computed(() => end_.diff(start_, 'hour'))
   const durationMonths = computed(() => end_.diff(start_, 'month'))
-
-
-
+  
   return { durationDays, durationHours, durationMonths }
 }

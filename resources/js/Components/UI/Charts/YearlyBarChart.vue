@@ -13,8 +13,8 @@
 </template>
 
 <script setup>
-import BarChart from '@/Pages/Dashboard/Index/Components/BarChart.vue'
-import ChartNavButtons from '@/Pages/Dashboard/Index/Components/ChartNavButtons.vue'
+import BarChart from '@/Components/UI/Charts/BarChart.vue'
+import ChartNavButtons from '@/Components/UI/Charts/ChartNavButtons.vue'
 import { nextTick, onMounted, ref, watch } from 'vue'
 
 const chartData = ref(null)

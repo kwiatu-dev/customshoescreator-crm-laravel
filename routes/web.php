@@ -173,14 +173,17 @@ Route::prefix('api')->group(function () {
         Route::get('top-users', [DashboardController::class, 'topUsersByIncome'])
             ->name('dashboard.top-users');
 
-        Route::get('top-projects', [DashboardController::class, 'topProjectsByIncome'])
+        Route::get('top-projects', [DashboardController::class, 'getTopProjectsByIncome'])
             ->name('dashboard.top-projects');
 
         Route::get('projects-type-breakdown', [DashboardController::class, 'getProjectTypeBreakdown'])
             ->name('dashboard.projects-type-breakdown');
 
-        Route::get('project-years', [DashboardController::class, 'projectYears'])
+        Route::get('project-years', [DashboardController::class, 'getProjectYears'])
             ->name('dashboard.project-years');
+
+        Route::get('income-years', [DashboardController::class, 'getIncomeYears'])
+            ->name('dashboard.income-years');
 
         Route::get('monthly-financial-stats', [DashboardController::class, 'getMonthlyFinancialStats'])
             ->name('dashboard.monthly-financial-stats');

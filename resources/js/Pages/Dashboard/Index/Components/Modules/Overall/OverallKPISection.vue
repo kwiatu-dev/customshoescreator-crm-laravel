@@ -70,14 +70,14 @@
 
 <script setup>
 import dayjs from 'dayjs'
-import { nextTick, onMounted, ref, watch } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import { debounce } from 'lodash'
-import { useKPI } from '@/Composables/useKPI'
 import IconStatsCard from '@/Pages/Dashboard/Index/Components/IconStatsCard.vue'
 import StatsCard from '@/Pages/Dashboard/Index/Components/StatsCard.vue'
-import DateRangePicker from '@/Pages/Dashboard/Index/Components/DateRangePicker.vue'
+import DateRangePicker from '@/Components/UI/Others/DateRangePicker.vue'
 import SectionTitle from '@/Pages/Dashboard/Index/Components/SectionTitle.vue'
-import { useIntersectionObserver } from '@vueuse/core'
+import { getKpi } from '@/Helpers/stats'
+import { useElementInViewPortVisibility } from '@/Composables/useElementInViewPortVisibility'
 
 const range = ref({ from: dayjs().format('YYYY-MM'), to: dayjs().format('YYYY-MM') })
 const kpi = ref(null)
@@ -86,7 +86,7 @@ const el = ref(null)
 const fetch = debounce(async () => {
   if (range.value) {
     await nextTick()
-    kpi.value = await useKPI(range.value)
+    kpi.value = await getKpi(range.value)
   }
 }, 1000)
 
@@ -95,12 +95,9 @@ watch(() => range.value, () => {
   fetch()
 }, { deep: true })
 
-useIntersectionObserver(
-  el,
-  async ([{ isIntersecting }]) => {
-    if (isIntersecting && kpi.value === null) {
-      kpi.value = await useKPI(range.value)
-    }
-  },
-)
+useElementInViewPortVisibility(el, async () => {
+  if (kpi.value === null)
+    kpi.value = await getKpi(range.value)
+})
+
 </script>

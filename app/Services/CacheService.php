@@ -10,10 +10,23 @@ class CacheService {
         return now()->addHours(24);
     }
 
+    private static function buildCacheArgs(array $data): array
+    {
+        return collect($data)
+            ->filter(function ($value) {
+                return !is_null($value);
+            })
+            ->mapWithKeys(function ($value, $key) {
+                $key = $key === 'user_id' ? 'user' : $key;
+                return [$key => $value];
+            })
+            ->toArray();
+    }
+
     public static function remember(array $tags, array $args, \Closure $callback, $ttl = null)
     {
         $base = self::getCallingContext();
-        $key = self::buildCacheKey($base, $args);
+        $key = self::buildCacheKey($base, self::buildCacheArgs($args));
 
         return Cache::tags($tags)->remember($key, $ttl ?? self::cacheTTL(), $callback);
     }

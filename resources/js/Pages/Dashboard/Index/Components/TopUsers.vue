@@ -141,12 +141,12 @@
 </template>
 
 <script setup>
-import { useTopUsers } from '@/Composables/useTopUsers'
-import ViewToggle from '@/Pages/Dashboard/Index/Components/ViewToggle.vue'
+import ViewToggle from '@/Components/UI/Others/ViewToggle.vue'
 import dayjs from 'dayjs'
 import { computed, ref, watch } from 'vue'
 import { debounce } from 'lodash'
-import { useIntersectionObserver } from '@vueuse/core'
+import { getTopUsers } from '@/Helpers/stats'
+import { useElementInViewPortVisibility } from '@/Composables/useElementInViewPortVisibility'
 
 const el = ref(null)
 const data = ref(null)
@@ -159,41 +159,36 @@ const range = computed(() => {
     return { from: startOfLastMonth.format('YYYY-MM-DD'), to: endOfLastMonth.format('YYYY-MM-DD') }
   }
   else if (view.value === 1) {
-    return null
+    return { from: null, to: null }
   }
 
-  return null
+  return { from: null, to: null }
 })
 
-useIntersectionObserver(
-  el,
-  async ([{ isIntersecting }]) => {
-    if (isIntersecting && data.value === null) {
-      data.value = await useTopUsers(range.value)
-    }
-  },
-)
+useElementInViewPortVisibility(el, async () => {
+  if (data.value === null)
+    data.value = await getTopUsers(range.value)
+})
 
 watch(range, debounce(async () => {
-  console.log('test2')
-  data.value = await useTopUsers(range.value)
+  data.value = await getTopUsers(range.value)
 }, 1000))
 </script>
 
 <style scoped>
-table {
-  @apply w-full text-left border-collapse;
-}
+  table {
+    @apply w-full text-left border-collapse;
+  }
 
-th, td {
-  @apply py-2 px-4 border-b dark:border-gray-600 border-gray-200;
-}
+  th, td {
+    @apply py-2 px-4 border-b dark:border-gray-600 border-gray-200;
+  }
 
-th {
-  @apply bg-gray-200 text-gray-600 text-sm font-medium border border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-400; 
-}
+  th {
+    @apply bg-gray-200 text-gray-600 text-sm font-medium border border-gray-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-400; 
+  }
 
-td {
-  @apply text-gray-700 text-sm dark:text-gray-300;
-}
+  td {
+    @apply text-gray-700 text-sm dark:text-gray-300;
+  }
 </style>

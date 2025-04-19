@@ -10,6 +10,5 @@
 import SectionTitle from '@/Pages/Dashboard/Index/Components/SectionTitle.vue'
 import TopUsers from '@/Pages/Dashboard/Index/Components/TopUsers.vue'
 import TopProjects from '@/Pages/Dashboard/Index/Components/TopProjects.vue'
-
 </script>
 

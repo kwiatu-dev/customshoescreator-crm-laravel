@@ -6,7 +6,7 @@
         :key="index"
         :class="[
           'rounded-full px-2 py-1 text-xs font-medium',
-          selectedOption === index ? 'shadow-md bg-white dark:bg-gray-400 text-gray-800' : 'text-gray-600 dark:text-gray-200'
+          parseInt(selectedOption) === index ? 'shadow-md bg-white dark:bg-gray-400 text-gray-800' : 'text-gray-600 dark:text-gray-200'
         ]"
         @click="selectOption(index)"
       >
@@ -26,7 +26,7 @@ const props = defineProps({
     default: () => ['Option 1', 'Option 2'],
   },
   modelValue: {
-    type: Number,
+    type: [Number, String],
     default: 0,
   },
 })

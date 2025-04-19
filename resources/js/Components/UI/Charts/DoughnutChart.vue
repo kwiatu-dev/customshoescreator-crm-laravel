@@ -19,12 +19,12 @@
 </template>
 
 <script setup>
-import ChartNavButtons from '@/Pages/Dashboard/Index/Components/ChartNavButtons.vue'
+import ChartNavButtons from '@/Components/UI/Charts/ChartNavButtons.vue'
 import { Doughnut } from 'vue-chartjs'
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { useTheme } from '@/Composables/useTheme'
-import { colors as doughnutChartColors } from '@/Pages/Dashboard/Index/Components/ChartColors.js'
-import { options as doughnutChartOptions } from '@/Pages/Dashboard/Index/Components/DoughnutChartOptions.js'
+import { colors as doughnutChartColors } from '@/Components/UI/Charts/ChartColors.js'
+import { options as doughnutChartOptions } from '@/Components/UI/Charts/DoughnutChartOptions.js'
 import { useSlots } from 'vue'
 
 const slots = useSlots()

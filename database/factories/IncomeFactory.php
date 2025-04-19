@@ -28,7 +28,7 @@ class IncomeFactory extends Factory
             'status_id' => $status_id,
             'remarks' => $this->generate_remarks(),
             'project_id' => null,
-            'created_by_user_id' => $this->random_user_id(),
+            'created_by_user_id' => $this->random_admin_id(),
             'costs' => 50,
             'distribution' => json_encode(['1' => 50, '2' => 50])
         ];
@@ -42,6 +42,11 @@ class IncomeFactory extends Factory
     public function random_user_id()
     {
         return User::all()->random()->id;
+    }
+
+    public function random_admin_id()
+    {
+        return User::query()->where('is_admin', 1)->inRandomOrder()->first()->id;
     }
 
     private function generate_remarks()

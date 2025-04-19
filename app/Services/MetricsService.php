@@ -11,20 +11,20 @@ class Metrics
         return now()->addHours(24);
     }
 
-    public static function getUserMetrics(?User $user = null)
+    public static function getUserMetrics($user_id)
     {
         return [
-            'total_awaiting_projects_count' => self::getTotalAwaitingProjectsCount($user),
-            'total_in_progress_projects_count' => self::getTotalInProgressProjectsCount($user),
-            'total_after_deadline_projects_count' => self::getTotalAfterDeadlineProjectsCount($user),
-            'total_completed_projects_count' => self::getTotalCompletedProjectsCount($user),
-            'total_active_income_count' => self::getTotalRelatedActiveIncomeCount($user),
-            'total_completed_income_count' => self::getTotalRelatedCompletedIncomeCount($user),
-            'total_active_investments_count' => self::getTotalRelatedActiveInvestmentsCount($user),
-            'total_after_date_investments_count' => self::getTotalRelatedAfterDateInvestmentsCount($user),
-            'total_completed_investments_count' => self::getTotalRelatedCompletedInvestmentsCount($user),
-            'total_investor_awaiting_repayment_sum' => self::getTotalInvestorAwaitingRepaymentSum($user),
-            'total_user_awaiting_income_sum' => self::getTotalUserAwaitingIncomeSum($user),
+            'total_awaiting_projects_count' => self::getTotalAwaitingProjectsCount($user_id),
+            'total_in_progress_projects_count' => self::getTotalInProgressProjectsCount($user_id),
+            'total_after_deadline_projects_count' => self::getTotalAfterDeadlineProjectsCount($user_id),
+            'total_completed_projects_count' => self::getTotalCompletedProjectsCount($user_id),
+            'total_active_income_count' => self::getTotalRelatedActiveIncomeCount($user_id),
+            'total_completed_income_count' => self::getTotalRelatedCompletedIncomeCount($user_id),
+            'total_active_investments_count' => self::getTotalRelatedActiveInvestmentsCount($user_id),
+            'total_after_date_investments_count' => self::getTotalRelatedAfterDateInvestmentsCount($user_id),
+            'total_completed_investments_count' => self::getTotalRelatedCompletedInvestmentsCount($user_id),
+            'total_investor_awaiting_repayment_sum' => self::getTotalInvestorAwaitingRepaymentSum($user_id),
+            'total_user_awaiting_income_sum' => self::getTotalUserAwaitingIncomeSum($user_id),
         ];
     }
 
@@ -56,169 +56,169 @@ class Metrics
         ];
     }
 
-    private static function getTotalProjectsCount(?User $user = null)
+    private static function getTotalProjectsCount($user_id = null)
     {
         $cacheTag = config('cache_tags.projects');
         $cacheKeyBase = config('cache_keys.total_projects_count');
 
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
-                ? Project::where('created_by_user_id', $user->id)->count()
+            fn () => $user_id
+                ? Project::where('created_by_user_id', $user_id)->count()
                 : Project::count()
         );
     }
 
-    private static function getTotalClientsCount(?User $user = null)
+    private static function getTotalClientsCount($user_id = null)
     {  
         $cacheTag = config('cache_tags.clients');
         $cacheKeyBase = config('cache_keys.total_clients_count');
 
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
 
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
-                ? Client::where('created_by_user_id', $user->id)->count()
+            fn () => $user_id
+                ? Client::where('created_by_user_id', $user_id)->count()
                 : Client::count()
         );
     }
 
-    private static function getTotalUsersCount(?User $user = null)
+    private static function getTotalUsersCount($user_id = null)
     {
         $cacheKeyBase = config('cache_keys.total_users_count');
         $cacheTag = config('cache_tags.users');
 
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
-                ? User::where('created_by_user_id', $user->id)->count()
+            fn () => $user_id
+                ? User::where('created_by_user_id', $user_id)->count()
                 : User::count()
         );
     }
 
-    private static function getTotalIncomeCount(?User $user = null)
+    private static function getTotalIncomeCount($user_id = null)
     {
         $cacheTag = config('cache_tags.incomes');
         $cacheKeyBase = config('cache_keys.total_income_count');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
-                ? Income::where('created_by_user_id', $user->id)
+            fn () => $user_id
+                ? Income::where('created_by_user_id', $user_id)
                     ->count()
                 : Income::count()
         );
     }
 
-    private static function getTotalExpensesCount(?User $user = null)
+    private static function getTotalExpensesCount($user_id = null)
     {
         $cacheTag = config('cache_tags.expenses');
         $cacheKeyBase = config('cache_keys.total_expenses_count');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
-                ? Expenses::where('created_by_user_id', $user->id)->count()
+            fn () => $user_id
+                ? Expenses::where('created_by_user_id', $user_id)->count()
                 : Expenses::count()
         );
     }
 
-    private static function getTotalExpensesSum(?User $user = null)
+    private static function getTotalExpensesSum($user_id = null)
     {
         $cacheTag = config('cache_tags.expenses');
         $cacheKeyBase = config('cache_keys.total_expenses_sum');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
-                ? round(Expenses::where('created_by_user_id', $user->id)->sum('price'), 2)
+            fn () => $user_id
+                ? round(Expenses::where('created_by_user_id', $user_id)->sum('price'), 2)
                 : round(Expenses::sum('price'), 2)
         );
     }
 
-    private static function getTotalGrossIncomeSum(?User $user = null)
+    private static function getTotalGrossIncomeSum($user_id = null)
     {
         $cacheTag = config('cache_tags.incomes');
         $cacheKeyBase = config('cache_keys.total_gross_income_sum');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
-                ? round(Income::where('created_by_user_id', $user->id)
+            fn () => $user_id
+                ? round(Income::where('created_by_user_id', $user_id)
                     ->sum('price'), 2)
                 : round(Income::sum('price'), 2)
         );
     }
 
-    private static function getTotalNetIncomeSum(?User $user = null)
+    private static function getTotalNetIncomeSum($user_id = null)
     {
         $cacheTag = config('cache_tags.incomes');
         $cacheKeyBase = config('cache_keys.total_net_income_sum');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
-                ? round(Income::where('created_by_user_id', $user->id)
+            fn () => $user_id
+                ? round(Income::where('created_by_user_id', $user_id)
                     ->sum(\DB::raw('price * (costs / 100)'), 2))
                 : round(Income::sum(\DB::raw('price * (costs / 100)')), 2)
         );
     }
 
-    private static function getTotalUserAwaitingIncomeSum(User $user)
+    private static function getTotalUserAwaitingIncomeSum($user_id)
     {
         $cacheTag = config('cache_tags.incomes');
         $cacheKeyBase = config('cache_keys.total_user_awaiting_income_sum');
-        $cacheKey = $cacheKeyBase . '_user_' . $user->id;
+        $cacheKey = $cacheKeyBase . '_user_' . $user_id;
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            function () use ($user) {
+            function () use ($user_id) {
                 $incomes = Income::where('status_id', 1)
-                    ->where(function ($query) use ($user) {
-                        $query->whereHas('project', function ($query) use ($user) {
-                            $query->where('created_by_user_id', $user->id);
+                    ->where(function ($query) use ($user_id) {
+                        $query->whereHas('project', function ($query) use ($user_id) {
+                            $query->where('created_by_user_id', $user_id);
                         })
-                        ->orWhereRaw("JSON_EXTRACT(distribution, '$.\"{$user->id}\"') IS NOT NULL");
+                        ->orWhereRaw("JSON_EXTRACT(distribution, '$.\"{$user_id}\"') IS NOT NULL");
                     })
                     ->get();
 
@@ -237,8 +237,8 @@ class Metrics
                         $creator = round($base * ($commission / 100), 2);
                     }
 
-                    if (is_array($income->distribution) && array_key_exists($user->id, $income->distribution)) {
-                        $participant = round(($base - $creator) * (((int) $income->distribution[$user->id] ?? 0) / 100), 2);
+                    if (is_array($income->distribution) && array_key_exists($user_id, $income->distribution)) {
+                        $participant = round(($base - $creator) * (((int) $income->distribution[$user_id] ?? 0) / 100), 2);
 
                     }
                         
@@ -251,58 +251,58 @@ class Metrics
         );
     }
 
-    private static function getTotalInvestmentsSum(?User $user = null)
+    private static function getTotalInvestmentsSum($user_id = null)
     {
         $cacheTag = config('cache_tags.investments');
         $cacheKeyBase = config('cache_keys.total_investments_sum');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
-                ? round(Investment::where('created_by_user_id', $user->id)->sum('amount'), 2)
+            fn () => $user_id
+                ? round(Investment::where('created_by_user_id', $user_id)->sum('amount'), 2)
                 : round(Investment::sum('amount'), 2)
         );
     }
 
-    private static function getTotalInvestmentsCount(?User $user = null)
+    private static function getTotalInvestmentsCount($user_id = null)
     {
         $cacheTag = config('cache_tags.investments');
         $cacheKeyBase = config('cache_keys.total_investments_count');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
-                ? Investment::where('created_by_user_id', $user->id)->count()
+            fn () => $user_id
+                ? Investment::where('created_by_user_id', $user_id)->count()
                 : Investment::count()
         );
     }
 
-    private static function getTotalAfterDateInvestmentsCount(?User $user = null)
+    private static function getTotalAfterDateInvestmentsCount($user_id = null)
     {
         $cacheTag = config('cache_tags.investments');
         $cacheKeyBase = config('cache_keys.total_after_date_investments_count');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
+            fn () => $user_id
                 ? Investment::where('status_id', '1')
                     ->where('date', '<', now())
-                    ->where('created_by_user_id', $user->id)
+                    ->where('created_by_user_id', $user_id)
                     ->count()
                 : Investment::where('status_id', '1')
                     ->where('date', '<', now())
@@ -310,24 +310,24 @@ class Metrics
         );
     }
 
-    private static function getTotalRelatedAfterDateInvestmentsCount(User $user)
+    private static function getTotalRelatedAfterDateInvestmentsCount($user_id)
     {
         $cacheTag = config('cache_tags.investments');
         $cacheKeyBase = config('cache_keys.total_related_after_date_investments_count');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
+            fn () => $user_id
                 ? Investment::where('status_id', '1')
                     ->where('date', '<', now())
-                    ->where(function ($query) use ($user) {
-                        $query->where('user_id', $user->id)
-                        ->orWhere('created_by_user_id', $user->id);
+                    ->where(function ($query) use ($user_id) {
+                        $query->where('user_id', $user_id)
+                        ->orWhere('created_by_user_id', $user_id);
                     })
                     ->count()
                 : Investment::where('status_id', '1')
@@ -336,44 +336,44 @@ class Metrics
         );
     }
 
-    private static function getTotalActiveInvestmentsCount(?User $user = null)
+    private static function getTotalActiveInvestmentsCount($user_id = null)
     {
         $cacheTag = config('cache_tags.investments');
         $cacheKeyBase = config('cache_keys.total_active_investments_count');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
+            fn () => $user_id
                 ? Investment::where('status_id', '1')
-                    ->where('created_by_user_id', $user->id)
+                    ->where('created_by_user_id', $user_id)
                     ->count()
                 : Investment::where('status_id', '1')
                     ->count()
         );
     }
 
-    private static function getTotalRelatedActiveInvestmentsCount(User $user)
+    private static function getTotalRelatedActiveInvestmentsCount($user_id)
     {
         $cacheTag = config('cache_tags.investments');
         $cacheKeyBase = config('cache_keys.total_related_active_investments_count');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
+            fn () => $user_id
                 ? Investment::where('status_id', '1')
-                    ->where(function ($query) use ($user) {
-                        $query->where('user_id', $user->id)
-                        ->orWhere('created_by_user_id', $user->id);
+                    ->where(function ($query) use ($user_id) {
+                        $query->where('user_id', $user_id)
+                        ->orWhere('created_by_user_id', $user_id);
                     })
                     ->count()
                 : Investment::where('status_id', '1')
@@ -381,44 +381,44 @@ class Metrics
         );
     }
 
-    private static function getTotalCompletedInvestmentsCount(?User $user = null)
+    private static function getTotalCompletedInvestmentsCount($user_id = null)
     {
         $cacheTag = config('cache_tags.investments');
         $cacheKeyBase = config('cache_keys.total_completed_investments_count');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
+            fn () => $user_id
                 ? Investment::where('status_id', '2')
-                    ->where('created_by_user_id', $user->id)
+                    ->where('created_by_user_id', $user_id)
                     ->count()
                 : Investment::where('status_id', '2')
                     ->count()
         );
     }
 
-    private static function getTotalRelatedCompletedInvestmentsCount(User $user)
+    private static function getTotalRelatedCompletedInvestmentsCount($user_id)
     {
         $cacheTag = config('cache_tags.investments');
         $cacheKeyBase = config('cache_keys.total_related_completed_investments_count');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
+            fn () => $user_id
                 ? Investment::where('status_id', '2')
-                    ->where(function ($query) use ($user) {
-                        $query->where('user_id', $user->id)
-                        ->orWhere('created_by_user_id', $user->id);
+                    ->where(function ($query) use ($user_id) {
+                        $query->where('user_id', $user_id)
+                        ->orWhere('created_by_user_id', $user_id);
                     })
                     ->count()
                 : Investment::where('status_id', '2')
@@ -426,95 +426,95 @@ class Metrics
         );
     }
 
-    private static function getTotalAwaitingRepaymentSum(?User $user = null)
+    private static function getTotalAwaitingRepaymentSum($user_id = null)
     {
         $cacheTag = config('cache_tags.investments');
         $cacheKeyBase = config('cache_keys.total_awaiting_repayment_sum');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
-                ? round(Investment::where('created_by_user_id', $user->id)
+            fn () => $user_id
+                ? round(Investment::where('created_by_user_id', $user_id)
                     ->sum(\DB::raw('(amount + amount * (interest_rate / 100)) - total_repayment')), 2)
                 : round(Investment::sum(\DB::raw('(amount + amount * (interest_rate / 100)) - total_repayment')), 2)
         );
     }
 
-    private static function getTotalInvestorAwaitingRepaymentSum(User $investor) {
+    private static function getTotalInvestorAwaitingRepaymentSum($investor_id) {
         $cacheTag = config('cache_tags.investments');
         $cacheKeyBase = config('cache_keys.total_investor_awaiting_repayment_sum');
-        $cacheKey = $cacheKeyBase . '_user_' . $investor->id;
+        $cacheKey = $cacheKeyBase . '_user_' . $investor_id;
 
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => round(Investment::where('user_id', $investor->id)
+            fn () => round(Investment::where('user_id', $investor_id)
                         ->sum(\DB::raw('(amount + amount * (interest_rate / 100)) - total_repayment')), 2));
     }
 
-    private static function getTotalAwaitingProjectsCount(?User $user = null)
+    private static function getTotalAwaitingProjectsCount($user_id = null)
     {
         $cacheTag = config('cache_tags.projects');
         $cacheKeyBase = config('cache_keys.total_awaiting_projects_count');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
+            fn () => $user_id
                 ? Project::where('status_id', '1')
-                    ->where('created_by_user_id', $user->id)
+                    ->where('created_by_user_id', $user_id)
                     ->count()
                 : Project::where('status_id', '1')
                     ->count()
         );
     }
 
-    private static function getTotalInProgressProjectsCount(?User $user = null)
+    private static function getTotalInProgressProjectsCount($user_id = null)
     {
         $cacheTag = config('cache_tags.projects');
         $cacheKeyBase = config('cache_keys.total_in_progress_projects_count');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
+            fn () => $user_id
                 ? Project::where('status_id', '2')
-                    ->where('created_by_user_id', $user->id)
+                    ->where('created_by_user_id', $user_id)
                     ->count()
                 : Project::where('status_id', '2')
                     ->count()
         );
     }
 
-    private static function getTotalAfterDeadlineProjectsCount(?User $user = null)
+    private static function getTotalAfterDeadlineProjectsCount($user_id = null)
     {
         $cacheTag = config('cache_tags.projects');
         $cacheKeyBase = config('cache_keys.total_after_deadline_projects_count');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
+            fn () => $user_id
                 ? Project::whereNull('end')
                     ->where('deadline', '<', now())
-                    ->where('created_by_user_id', $user->id)
+                    ->where('created_by_user_id', $user_id)
                     ->count()
                 : Project::whereNull('end')
                     ->where('deadline', '<', now())
@@ -522,136 +522,136 @@ class Metrics
         );
     }
 
-    private static function getTotalCompletedProjectsCount(?User $user = null)
+    private static function getTotalCompletedProjectsCount($user_id = null)
     {
         $cacheTag = config('cache_tags.projects');
         $cacheKeyBase = config('cache_keys.total_completed_projects_count');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
+            fn () => $user_id
                 ? Project::where('status_id', '3')
-                    ->where('created_by_user_id', $user->id)
+                    ->where('created_by_user_id', $user_id)
                     ->count()
                 : Project::where('status_id', '3')
                     ->count()
         );
     }
 
-    private static function getTotalActiveIncomeCount(?User $user = null)
+    private static function getTotalActiveIncomeCount($user_id = null)
     {
         $cacheTag = config('cache_tags.incomes');
         $cacheKeyBase = config('cache_keys.total_active_income_count');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
+            fn () => $user_id
                 ? Income::where('status_id', '1')
-                    ->where('created_by_user_id', $user->id)
+                    ->where('created_by_user_id', $user_id)
                     ->count()
                 : Income::where('status_id', '1')->count()
         );
     }
 
-    private static function getTotalRelatedActiveIncomeCount(User $user)
+    private static function getTotalRelatedActiveIncomeCount($user_id)
     {
         $cacheTag = config('cache_tags.incomes');
         $cacheKeyBase = config('cache_keys.total_related_active_income_count');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
+            fn () => $user_id
                 ? Income::where('status_id', '1')
-                    ->where(function ($query) use ($user) {
-                        $query->whereHas('project', function ($query) use ($user) {
-                            $query->where('created_by_user_id', $user->id);
+                    ->where(function ($query) use ($user_id) {
+                        $query->whereHas('project', function ($query) use ($user_id) {
+                            $query->where('created_by_user_id', $user_id);
                         })
-                        ->orWhere('created_by_user_id', $user->id)
-                        ->orWhereRaw("JSON_EXTRACT(distribution, '$.{$user->id}') IS NOT NULL");
+                        ->orWhere('created_by_user_id', $user_id)
+                        ->orWhereRaw("JSON_EXTRACT(distribution, '$.{$user_id}') IS NOT NULL");
                     })
                     ->count()
                 : Income::where('status_id', '1')->count()
         );
     }
 
-    private static function getTotalCompletedIncomeCount(?User $user = null)
+    private static function getTotalCompletedIncomeCount($user_id = null)
     {
         $cacheTag = config('cache_tags.incomes');
         $cacheKeyBase = config('cache_keys.total_completed_income_count');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
+            fn () => $user_id
                 ? Income::where('status_id', '2')
-                    ->where('created_by_user_id', $user->id)
+                    ->where('created_by_user_id', $user_id)
                     ->count()
                 : Income::where('status_id', '2')->count()
         );
     }
 
-    private static function getTotalRelatedCompletedIncomeCount(User $user)
+    private static function getTotalRelatedCompletedIncomeCount($user_id)
     {
         $cacheTag = config('cache_tags.incomes');
         $cacheKeyBase = config('cache_keys.total_related_completed_income_count');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            fn () => $user
+            fn () => $user_id
                 ? Income::where('status_id', '2')
-                    ->where(function ($query) use ($user) {
-                        $query->whereHas('project', function ($query) use ($user) {
-                            $query->where('created_by_user_id', $user->id);
+                    ->where(function ($query) use ($user_id) {
+                        $query->whereHas('project', function ($query) use ($user_id) {
+                            $query->where('created_by_user_id', $user_id);
                         })
-                        ->orWhere('created_by_user_id', $user->id)
-                        ->orWhereRaw("JSON_EXTRACT(distribution, '$.{$user->id}') IS NOT NULL");
+                        ->orWhere('created_by_user_id', $user_id)
+                        ->orWhereRaw("JSON_EXTRACT(distribution, '$.{$user_id}') IS NOT NULL");
                     })
                     ->count()
                 : Income::where('status_id', '2')->count()
         );
     }
 
-    private static function getTotalAwaitingIncomeSum(?User $user = null)
+    private static function getTotalAwaitingIncomeSum($user_id = null)
     {
         $cacheTag = config('cache_tags.incomes');
         $cacheKeyBase = config('cache_keys.total_awaiting_income_sum');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
-            function () use ($user) {
+            function () use ($user_id) {
                 $query = Income::where('status_id', '1');
     
-                if ($user) {
-                    $query->where('created_by_user_id', $user->id);
+                if ($user_id) {
+                    $query->where('created_by_user_id', $user_id);
                 }
     
                 return round($query->sum(\DB::raw('price * (costs / 100)')), 2);
@@ -659,21 +659,21 @@ class Metrics
         );
     }
 
-    private static function getTotalRepaymentSum(?User $user = null)
+    private static function getTotalRepaymentSum($user_id = null)
     {
         $cacheTag = config('cache_tags.investments');
         $cacheKeyBase = config('cache_keys.total_repayment_sum');
     
-        $cacheKey = $user
-            ? $cacheKeyBase . '_user_' . $user->id
+        $cacheKey = $user_id
+            ? $cacheKeyBase . '_user_' . $user_id
             : $cacheKeyBase . '_all';
     
         return Cache::tags([$cacheTag])->remember(
             $cacheKey,
             self::cacheTTL(),
             fn () => round(
-                $user
-                    ? Investment::where('created_by_user_id', $user->id)->sum('total_repayment')
+                $user_id
+                    ? Investment::where('created_by_user_id', $user_id)->sum('total_repayment')
                     : Investment::sum('total_repayment'),
                 2
             )
