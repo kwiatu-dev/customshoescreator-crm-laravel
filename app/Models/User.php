@@ -111,20 +111,6 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         );
     }
 
-    public function listings(): HasMany{
-        return $this->hasMany(
-            \App\Models\Listing::class,
-            'by_user_id',
-        );
-    }
-
-    public function offers(): HasMany{
-        return $this->hasMany(
-            \App\Models\Offer::class,
-            'bidder_id',
-        );
-    }
-
     public function clients(): HasMany{
         return $this->hasMany(Client::class, 'created_by_user_id');
     }
@@ -137,8 +123,19 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         return $this->hasMany(Project::class, 'created_by_user_id');
     }
 
-    public function incomes(): HasMany{
+    public function incomes()
+    {
         return $this->hasMany(Income::class, 'created_by_user_id');
+    }
+
+    public function projectIncomes()
+    {
+        return $this->hasManyThrough(
+            Income::class,
+            Project::class,
+            'created_by_user_id',
+            'project_id'         
+        );
     }
 
     public function investments(): HasMany {

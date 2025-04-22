@@ -18,6 +18,10 @@ class Project extends Model
 {
     use HasFactory, HasFilters, HasSorting, HasFooter, HasPagination, SoftDeletes;
 
+    const STATUS_AWAITING = 1;
+    const STATUS_IN_PROGRESS = 2;
+    const STATUS_COMPLTED = 3;
+
     protected $fillable = [
         'title',
         'remarks',
@@ -115,6 +119,11 @@ class Project extends Model
         return $this->hasOne(Income::class, 'project_id', 'id');
     }
 
+    public function previewImage()
+    {
+        return $this->hasOne(ProjectImage::class)->inRandomOrder();
+    }
+
     public function getEndAttribute($value)
     {
         return $value === null ? '' : $value;
@@ -128,7 +137,7 @@ class Project extends Model
             return false;
         }
 
-        if ($income && $income->status_id == 2) {
+        if ($income && $income->status_id == Income::STATUS_SETTLED) {
             return false;
         }
 
@@ -143,7 +152,7 @@ class Project extends Model
             return false;
         }
 
-        if ($income && $income->status_id == 2) {
+        if ($income && $income->status_id == Income::STATUS_SETTLED) {
             return false;
         }
 
@@ -158,7 +167,7 @@ class Project extends Model
             return false;
         }
 
-        if ($income && $income->status_id == 2) {
+        if ($income && $income->status_id == Income::STATUS_SETTLED) {
             return false;
         }
 

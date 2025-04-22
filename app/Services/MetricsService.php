@@ -10,52 +10,15 @@ class MetricsService
 {
     public static function getUserMetrics($user_id)
     {
-        $relatedIncomeScope = fn ($query) => 
-            $query->where(function ($query) use ($user_id) {
-                $query->whereHas('project', function ($query) use ($user_id) {
-                    $query->where('created_by_user_id', $user_id);
-                })
-                ->orWhere('created_by_user_id', $user_id)
-                ->orWhereRaw("JSON_EXTRACT(distribution, '$.{$user_id}') IS NOT NULL");
-            });
+        $relatedIncomeScope = fn ($query) => $query->relatedIncome($user_id);
+        $relatedInvestmentScope = fn ($query) => $query->relatedInvestment($user_id);
+        $userHasIncomeScope = fn ($query) => $query->userHasIncome($user_id);
 
-        $relatedInvestmentScope = fn ($query) => 
-            $query->where(function ($query) use ($user_id) {
-                $query
-                    ->where('user_id', $user_id)
-                    ->orWhere('created_by_user_id', $user_id);
-            });
-
-        $userHasIncomeScope = fn ($query) => 
-            $query->where(function ($query) use ($user_id) {
-                $query->whereHas('project', function ($query) use ($user_id) {
-                    $query->where('created_by_user_id', $user_id);
-                })
-                ->orWhereRaw("JSON_EXTRACT(distribution, '$.\"{$user_id}\"') IS NOT NULL");
-            });
-
-        $computeUserEarnings = function ($incomes) use ($user_id) {
+        $calculateUserEarnings = function ($incomes) use ($user_id) {
             $total = 0;
 
             foreach ($incomes as $income) {
-                $price = (float) $income->price;
-                $costs = (float) $income->costs;
-                $commission = (float) $income->commission;
-                $creator = 0;
-                $participant = 0;
-        
-                $base = $price - ($price * ($costs / 100));
-                
-                if ($commission) {
-                    $creator = round($base * ($commission / 100), 2);
-                }
-
-                if (is_array($income->distribution) && array_key_exists($user_id, $income->distribution)) {
-                    $participant = round(($base - $creator) * (((int) $income->distribution[$user_id] ?? 0) / 100), 2);
-
-                }
-                    
-                $total += $creator + $participant;
+                $total += $income->calculateEarnings($user_id);
             }
             
             return round($total, 2);
@@ -83,7 +46,7 @@ class MetricsService
             'total_investor_awaiting_repayment_sum' => 
                 ModelAggregatorService::getModelData(Investment::class, 'sum', ['investments'], [['status_id', '1'], ['user_id', $user_id]], \DB::raw('(amount + amount * (interest_rate / 100)) - total_repayment'), fn ($value) => round($value, 2)),
             'total_user_awaiting_income_sum' => 
-                ModelAggregatorService::getModelData(Income::class, 'get', ['incomes'], [['status_id', '1'], $userHasIncomeScope], null, $computeUserEarnings),
+                ModelAggregatorService::getModelData(Income::class, 'get', ['incomes'], [['status_id', '1'], $userHasIncomeScope], null, $calculateUserEarnings),
         ];
     }
 

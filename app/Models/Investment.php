@@ -18,6 +18,9 @@ class Investment extends Model
 {
     use HasFactory, HasFilters, HasSorting, HasFooter, HasPagination, SoftDeletes;
 
+    const STATUS_ACTIVE = 1;
+    const STATUS_COMPLETED = 2;
+
     protected $table_name = 'investments';
 
     protected $fillable = [
@@ -76,6 +79,31 @@ class Investment extends Model
         'total_repayment' => 'sum'
     ];
 
+    public function user(): BelongsTo{
+        return $this->belongsTo(User::class, 'created_by_user_id');
+    }
+
+    public function investor(): BelongsTo{
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function status(): BelongsTo{
+        return $this->belongsTo(InvestmentStatus::class, 'status_id');
+    }
+
+    public function repayments(): HasMany {
+        return $this->hasMany(InvestmentRepayment::class, 'investment_id');
+    }
+
+    public function total() {
+        return round(($this->amount * $this->interest_rate / 100) + $this->amount, 2);
+    }
+
+    public function getTotalAttribute() 
+    {
+        return $this->total();
+    }
+
     private function setFooterDynamicFields() {
         $this->footer += [
             'amount' => function($investment) {
@@ -103,45 +131,30 @@ class Investment extends Model
         $query->when(
             $filters['after_date'] ?? false,
             function ($query, $value){
-                $query->where('status_id', '1')->where($this->table_name . '.date', '<', now());
+                $query->afterDateInvestment($this->table_nam);
             }
         );
 
         $query->when(
             $filters['related_with_user_id'] ?? false,
             function ($query, $value){
-                $query->where(function ($query) use ($value) {
-                    $query
-                    ->where($this->table_name . '.user_id', $value)
-                    ->orWhere($this->table_name . '.created_by_user_id', $value);
-                });
+                $query->relatedInvestment($value, $this->table_name);
             }
         );
     }
 
-    public function user(): BelongsTo{
-        return $this->belongsTo(User::class, 'created_by_user_id');
-    }
-
-    public function investor(): BelongsTo{
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function status(): BelongsTo{
-        return $this->belongsTo(InvestmentStatus::class, 'status_id');
-    }
-
-    public function repayments(): HasMany {
-        return $this->hasMany(InvestmentRepayment::class, 'investment_id');
-    }
-
-    public function total() {
-        return round(($this->amount * $this->interest_rate / 100) + $this->amount, 2);
-    }
-
-    public function getTotalAttribute() 
+    public function scopeRelatedInvestment($query, int $user_id, ?string $table_name = null)
     {
-        return $this->total();
+        return $query->where(function ($query) use ($user_id, $table_name) {
+            $query
+                ->where("{$table_name}.user_id", $user_id)
+                ->orWhere("{$table_name}.created_by_user_id", $user_id);
+        });
+    }
+
+    public function scopeAfterDateInvestment($query, ?string $table_name = null) 
+    {
+        return $query->where('status_id', Investment::STATUS_COMPLETED)->where("{$table_name}.date", '<', now());
     }
 
     public function addRepaymentValue($repayment_value) {
@@ -158,10 +171,10 @@ class Investment extends Model
             ]);
         }
 
-        $status_id = 1;
+        $status_id = Investment::STATUS_ACTIVE;
 
         if ($this->total == $this->total_repayment + $repayment_value) {
-            $status_id = 2;
+            $status_id = Investment::STATUS_COMPLETED;
         }
 
         $this->update([
