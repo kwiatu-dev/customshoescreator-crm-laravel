@@ -9,8 +9,13 @@ use App\Models\Investment;
 use App\Models\Project;
 use App\Models\User;
 use App\Services\CacheService;
+use App\Services\FinancialReportService;
+use App\Services\IncomeReportService;
 use App\Services\StatsService;
 use App\Services\MetricsService;
+use App\Services\ProjectReportService;
+use App\Services\Reports\Kpi\KpiReportService;
+use App\Services\UserReportService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +26,13 @@ use Illuminate\Support\Facades\Validator;
 
 class DashboardController extends Controller
 {
-    public function __construct()
+    public function __construct(
+        protected MetricsService $metricsService,
+        protected ProjectReportService $projectReportService,
+        protected IncomeReportService $incomeReportService,
+        protected UserReportService $userReportService,
+        protected FinancialReportService $financialReportService,
+        protected KpiReportService $kpiReportService)
     {
         $this->middleware(['auth', 'verified']);
     }
@@ -36,11 +47,11 @@ class DashboardController extends Controller
         if ($request->user() && $request->user()->is_admin) {
             $users = User::query()->withTrashed()->get();
             $user_id = $request->input('user_id') ?? $request->user()->id;  
-            $user_metrics = MetricsService::getUserMetrics($user_id);  
-            $overall_metrics = MetricsService::getOverallMetrics();
+            $user_metrics = $this->metricsService->getUserMetrics($user_id);  
+            $overall_metrics = $this->metricsService->getOverallMetrics();
         } 
         else {
-            $user_metrics = MetricsService::getUserMetrics($request->user()->id);
+            $user_metrics = $this->metricsService->getUserMetrics($request->user()->id);
         }
 
         return inertia(
@@ -98,105 +109,139 @@ class DashboardController extends Controller
 
     public function getMonthlyCompletedProjectsCount(Request $request): \Illuminate\Http\JsonResponse
     {
+        $auth = $request->user();
         $validated = $this->validateInput($request, ['year', 'user_id']);
         $year = (int) $validated['year'];
         $user_id = $validated['user_id'] ?? null;
     
         $this->authorizeUserAccess($user_id);
         
-        $data = CacheService::remember(['projects'], ['year' => $year, 'user_id' => $user_id], fn () => StatsService::monthlyCompletedProjectsCount($year, $user_id));
+        $data = CacheService::remember(
+            ['projects'], 
+            ['year' => $year, 'user_id' => $user_id, 'is_admin' => $auth?->is_admin], 
+            fn () => $this->projectReportService->getMonthlyCompletedProjectsCount($year, $user_id));
 
         return response()->json($data);
     }
 
     public function getMonthlyNewProjectsCount(Request $request): \Illuminate\Http\JsonResponse
     {
+        $auth = $request->user();
         $validated = $this->validateInput($request, ['year', 'user_id']);
         $year = (int) $validated['year'];
         $user_id = $validated['user_id'] ?? null;
     
         $this->authorizeUserAccess($user_id);
         
-        $data = CacheService::remember(['projects'], ['year' => $year, 'user_id' => $user_id], fn () => StatsService::monthlyNewProjectsCount($year, $user_id));
+        $data = CacheService::remember(
+            ['projects'], 
+            ['year' => $year, 'user_id' => $user_id, 'is_admin' => $auth?->is_admin], 
+            fn () => $this->projectReportService->getMonthlyNewProjectsCount($year, $user_id));
     
         return response()->json($data);
     }
 
     public function getMonthlyFinancialStats(Request $request)
     {
+        $auth = $request->user();
         $validated = $this->validateInput($request, ['year', 'user_id']);
         $year = (int) $validated['year'];
         $user_id = $validated['user_id'] ?? null;
     
         $this->authorizeUserAccess($user_id);
 
-        $data = CacheService::remember(['incomes', 'projects', 'expenses'], ['year' => $year, 'user_id' => $user_id], fn () => StatsService::monthlyFinancialStats($year, $user_id));
+        $data = CacheService::remember(
+            ['incomes', 'projects', 'expenses'], 
+            ['year' => $year, 'user_id' => $user_id, 'is_admin' => $auth?->is_admin], 
+            fn () => $this->financialReportService->getMonthlyFinancialStats($year, $user_id));
 
         return response()->json($data);
     }
 
     public function getProjectYears(Request $request)
     {
+        $auth = $request->user();
         $validated = $this->validateInput($request, ['user_id']);
         $user_id = $validated['user_id'] ?? null;
     
         $this->authorizeUserAccess($user_id);
 
-        $years = CacheService::remember(['projects'], ['user_id' => $user_id], fn () => StatsService::projectYears($user_id));
+        $years = CacheService::remember(
+            ['projects'], 
+            ['user_id' => $user_id, 'is_admin' => $auth?->is_admin], 
+            fn () => $this->projectReportService->getProjectYears($user_id));
 
         return response()->json($years);
     }
 
     public function getIncomeYears(Request $request) {
+        $auth = $request->user();
         $validated = $this->validateInput($request, ['user_id']);
         $user_id = $validated['user_id'] ?? null;
     
         $this->authorizeUserAccess($user_id);
 
-        $years = CacheService::remember(['projects', 'incomes'], ['user_id' => $user_id], fn () => StatsService::incomeYears($user_id));
+        $years = CacheService::remember(
+            ['projects', 'incomes'], 
+            ['user_id' => $user_id, 'is_admin' => $auth?->is_admin], 
+            fn () => $this->incomeReportService->getIncomeYears($user_id));
 
         return response()->json($years);
     }
 
     public function getProjectTypeBreakdown(Request $request)
     {
+        $auth = $request->user();
         $validated = $this->validateInput($request, ['year', 'user_id']);
         $year = (int) $validated['year'];
         $user_id = $validated['user_id'] ?? null;
     
         $this->authorizeUserAccess($user_id);
 
-        $result = CacheService::remember(['projects'], ['year' => $year, 'user_id' => $user_id], fn () => StatsService::projectTypeBreakdown($year, $user_id));
+        $result = CacheService::remember(
+            ['projects'], 
+            ['year' => $year, 'user_id' => $user_id, 'is_admin' => $auth?->is_admin], 
+            fn () => $this->projectReportService->getProjectTypeBreakdown($year, $user_id));
 
         return response()->json($result);
     }
 
     public function getTopProjectsByIncome(Request $request)
     {
+        $auth = $request->user();
         $validated = $this->validateInput($request, ['limit', 'from', 'to']);
         $limit = $validated['limit'] ? (int) $validated['limit'] : 3;
         $from = $validated['from'] ?? null; 
         $to = $validated['to'] ?? null;   
 
-        $data = CacheService::remember(['projects', 'incomes'], ['limit' => $limit, 'from' => $from, 'to' => $to], fn () => StatsService::topProjectsByIncome($limit, $from, $to));
+        $data = CacheService::remember(
+            ['projects', 'incomes'], 
+            ['limit' => $limit, 'from' => $from, 'to' => $to, 'is_admin' => $auth?->is_admin], 
+            fn () => $this->projectReportService->getTopProjectsByIncome($limit, $from, $to));
 
         return response()->json($data);
     }
 
-    public function topUsersByIncome(Request $request)
+    public function getTopUsersByIncome(Request $request)
     {
+        $auth = $request->user();
         $validated = $this->validateInput($request, ['limit', 'from', 'to']);
         $limit = $validated['limit'] ? (int) $validated['limit'] : 3;
         $from = $validated['from'] ?? null; 
         $to = $validated['to'] ?? null;   
     
-        $data = CacheService::remember(['projects', 'incomes'], ['limit' => $limit, 'from' => $from, 'to' => $to], fn () => StatsService::topUsersByIncome($limit, $from, $to));
+        $data = CacheService::remember(
+            ['projects', 'incomes'], 
+            ['limit' => $limit, 'from' => $from, 'to' => $to, 'is_admin' => $auth?->is_admin], 
+            fn () => $this->userReportService->getTopUsersByIncome($limit, $from, $to));
     
         return response()->json($data);
     }
 
     public function getKpi(Request $request)
     {
+        $auth = $request->user();
+
         $validated = $this->validateInput($request, ['from', 'to', 'user_id'], [
             'from'  => 'required|date_format:Y-m',
             'to'    => 'required|date_format:Y-m|after_or_equal:from',
@@ -208,7 +253,10 @@ class DashboardController extends Controller
     
         $this->authorizeUserAccess($user_id);
     
-        $data = CacheService::remember(['projects', 'incomes'], ['user_id' => $user_id, 'from' => $from, 'to' => $to], fn () => StatsService::kpi($from, $to, $user_id));
+        $data = CacheService::remember(
+            ['projects', 'incomes'], 
+            ['user_id' => $user_id, 'from' => $from, 'to' => $to, 'is_admin' => $auth?->is_admin], 
+            fn () => $this->kpiReportService->generate($from, $to, $user_id));
     
         return response()->json($data);
     }

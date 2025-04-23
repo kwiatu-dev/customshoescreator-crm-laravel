@@ -39,7 +39,7 @@ class UserReportService {
         return array_map(fn($v) => round($v, 2), $data);
     }
 
-    public static function topUsersByIncome($limit, $from, $to) {
+    public static function getTopUsersByIncome($limit, $from, $to) {
         $users = User::query()
             ->whereHas('incomes', function ($query) use ($from, $to) {
                 $query->whereNull('deleted_at')

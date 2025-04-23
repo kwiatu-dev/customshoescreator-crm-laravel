@@ -150,17 +150,17 @@ class Income extends Model
                 $query->where('created_by_user_id', $user_id);
             })
             ->orWhere("{$table_name}.created_by_user_id", $user_id)
-            ->orWhereRaw("JSON_EXTRACT({$table_name}.distribution, '$.{$user_id}') IS NOT NULL");
+            ->orWhereRaw("JSON_EXTRACT(" . ($table_name ? "{$table_name}.distribution" : "distribution") . ", '$.{$user_id}') IS NOT NULL");
         });
     }
 
-    public function scopeUserHasIncome($query, int $user_id)
+    public function scopeUserHasIncome($query, int $user_id, ?string $table_name = null)
     {
-        return $query->where(function ($query) use ($user_id) {
+        return $query->where(function ($query) use ($user_id, $table_name) {
             $query->whereHas('project', function ($query) use ($user_id) {
                 $query->where('created_by_user_id', $user_id);
             })
-            ->orWhereRaw("JSON_EXTRACT(distribution, '$.\"{$user_id}\"') IS NOT NULL");
+            ->orWhereRaw("JSON_EXTRACT(" . ($table_name ? "{$table_name}.distribution" : "distribution") . ", '$.{$user_id}') IS NOT NULL");
         });
     }
 }

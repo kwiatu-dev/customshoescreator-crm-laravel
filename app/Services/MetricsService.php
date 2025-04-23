@@ -8,7 +8,7 @@ use DB;
 
 class MetricsService
 {
-    public static function getUserMetrics($user_id)
+    public function getUserMetrics($user_id)
     {
         $relatedIncomeScope = fn ($query) => $query->relatedIncome($user_id);
         $relatedInvestmentScope = fn ($query) => $query->relatedInvestment($user_id);
@@ -52,7 +52,7 @@ class MetricsService
 
 
 
-    public static function getOverallMetrics()
+    public function getOverallMetrics()
     {
         return [
             'total_projects_count' => 
@@ -101,7 +101,7 @@ class MetricsService
         ];
     }
 
-    private static function getWallet()
+    private function getWallet()
     {
         $total_net_income_sum = ModelAggregatorService::getModelData(Income::class, 'sum', ['incomes'], [['status_id', '2']], \DB::raw('price * (costs / 100)'), fn ($value) => round($value, 2));
         $total_expenses_sum = ModelAggregatorService::getModelData(Expenses::class, 'sum', ['expenses'], [], 'price', fn ($value) => round($value, 2));

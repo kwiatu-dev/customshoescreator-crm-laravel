@@ -1,5 +1,5 @@
 <?php
-namespace App\Services\Kpi;
+namespace App\Services\Reports\Kpi;
 
 use App\Models\Expenses;
 use App\Models\Income;
@@ -12,75 +12,30 @@ class KpiDataFetcher
 {
     public function fetch(Carbon $from, Carbon $to, ?int $user_id = null): array
     {
-        $incomeSum = $this->getIncomeSum($from, $to, $user_id);
-        $expenseSum = $this->getExpenseSum($from, $to, $user_id);
-        $earningSum = $this->getEarningSum($from, $to, $user_id);
-        $profitSum = $this->calculateProfit($incomeSum, $expenseSum, $user_id);
+        $data = [];
 
-
-        $data = $this->getFinancialData($from, $to, $user_id, $incomeSum, $expenseSum, $earningSum, $profitSum);
-        $data = array_merge($data, $this->getProjectData($from, $to));
-        $data = array_merge($data, $this->getClientData($from, $to));
-        $data = array_merge($data, $this->getProjectTypeData($from, $to));
+        $data = array_merge($data, $this->getFinancialData($from, $to, $user_id));
+        $data = array_merge($data, $this->getProjectData($from, $to, $user_id));
+        $data = array_merge($data, $this->getClientData($from, $to, $user_id));
+        $data = array_merge($data, $this->getProjectTypeData($from, $to, $user_id));
 
         return $data;
-    }
-
-    private function getIncomeSum(Carbon $from, Carbon $to, ?int $user_id): float
-    {
-        return Income::query()
-            ->whereBetween('date', [$from, $to])
-            ->where('status_id', Income::STATUS_SETTLED)
-            ->when($user_id, function ($query) use ($user_id) {
-                $query->userHasIncome($user_id);
-            })
-            ->sum('price');
-    }
-
-    private function getExpenseSum(Carbon $from, Carbon $to, ?int $user_id): ?float
-    {
-        return $user_id ? null : Expenses::whereBetween('date', [$from, $to])->sum('price');
-    }
-
-    private function getEarningSum(Carbon $from, Carbon $to, ?int $user_id): ?float 
-    {
-        if (is_null($user_id)) {
-            return null;
-        }
-
-        $incomes = Income::query()
-            ->whereBetween('date', [$from, $to])
-            ->where('status_id', Income::STATUS_SETTLED)
-            ->userHasIncome($user_id)
-            ->get();
-
-        $total = 0;
-
-        foreach ($incomes as $income) {
-            $total += $income->calculateEarnings($user_id);
-        }
-
-        return $total;
-
-    }
-
-    private function calculateProfit(float $incomeSum, float $expenseSum, ?int $user_id): ?float
-    {
-        return $user_id ? null : $incomeSum - $expenseSum;
     }
 
     private function getFinancialData(
         Carbon $from, 
         Carbon $to, 
-        ?int $user_id, 
-        float $incomeSum, 
-        float $expenseSum, 
-        ?float $earningSum,
-        ?float $profitSum): array
+        ?int $user_id): array
     {
+        $auth = Auth::user();
         $data = [];
 
-        if (Auth::user()?->is_admin && $incomeSum) {
+        $incomeSum = $auth?->is_admin ? $this->getIncomeSum($from, $to, $user_id) : null;
+        $expenseSum = $user_id ? null : $this->getExpenseSum($from, $to);
+        $earningSum = $user_id ? $this->getEarningSum($from, $to, $user_id) : null;
+        $profitSum = $user_id ? null : $this->calculateProfit($incomeSum, $expenseSum, $user_id);
+
+        if ($incomeSum) {
             $data['income'] = $incomeSum;
         }
 
@@ -99,13 +54,19 @@ class KpiDataFetcher
         return $data;
     }
 
-    private function getProjectData(Carbon $from, Carbon $to): array
+    private function getProjectData(Carbon $from, Carbon $to, ?int $user_id): array
     {
         $data = [];
 
-        $data['new_projects'] = Project::whereBetween('created_at', [$from, $to])->count();
-        $data['completed_projects'] = Project::whereBetween('end', [$from, $to])->count();
-        $data['avg_days_projects'] = round(Project::whereBetween('end', [$from, $to])->avg(\DB::raw('DATEDIFF(end, start)')), 2);
+        $data['new_projects'] = Project::whereBetween('created_at', [$from, $to])
+            ->when($user_id, fn ($query) => $query->where('created_by_user_id', $user_id))
+            ->count();
+        $data['completed_projects'] = Project::whereBetween('end', [$from, $to])
+            ->when($user_id, fn ($query) => $query->where('created_by_user_id', $user_id))
+            ->count();
+        $data['avg_days_projects'] = Project::whereBetween('end', [$from, $to])
+            ->when($user_id, fn ($query) => $query->where('created_by_user_id', $user_id))
+            ->avg(\DB::raw('DATEDIFF(end, start)'));
 
         return $data;
     }
@@ -114,20 +75,24 @@ class KpiDataFetcher
     {
         $data = [];
 
-        $data['new_clients'] =  Client::whereBetween('created_at', [$from, $to])->count();
+        $data['new_clients'] =  Client::whereBetween('created_at', [$from, $to])
+            ->when($user_id, fn ($query) => $query->where('created_by_user_id', $user_id))
+            ->count();
 
         if (is_null($user_id)) {
             $data['returning_clients'] = Client::whereHas('projects', function ($query) use ($from, $to) {
                     $query->whereBetween('created_at', [$from, $to]);
-                })->whereHas('projects', function ($query) use ($from) {
+                })
+                ->whereHas('projects', function ($query) use ($from) {
                     $query->where('end', '<', $from);
-                })->count();
+                })
+                ->count();
         }
 
         return $data;
     }
 
-    private function getProjectTypeData(Carbon $from, Carbon $to): array
+    private function getProjectTypeData(Carbon $from, Carbon $to, ?int $user_id): array
     {
         $projectTypes = Project::select('type_id')
             ->whereBetween('created_at', [$from, $to])
@@ -142,11 +107,50 @@ class KpiDataFetcher
             if ($slug) {
                 $data["project_type:$slug"] = Project::where('type_id', $type->id)
                     ->whereBetween('created_at', [$from, $to])
+                    ->when($user_id, fn ($query) => $query->where('created_by_user_id', $user_id))
                     ->count();
             }
         }
 
         return $data;
+    }
+
+    private function getIncomeSum(Carbon $from, Carbon $to, ?int $user_id): float
+    {
+        return Income::query()
+            ->whereBetween('date', [$from, $to])
+            ->where('status_id', Income::STATUS_SETTLED)
+            ->when($user_id, function ($query) use ($user_id) {
+                $query->userHasIncome($user_id);
+            })
+            ->sum('price');
+    }
+
+    private function getExpenseSum(Carbon $from, Carbon $to): float
+    {
+        return Expenses::whereBetween('date', [$from, $to])->sum('price');
+    }
+
+    private function getEarningSum(Carbon $from, Carbon $to, int $user_id): float 
+    {
+        $incomes = Income::query()
+            ->whereBetween('date', [$from, $to])
+            ->where('status_id', Income::STATUS_SETTLED)
+            ->userHasIncome($user_id)
+            ->get();
+
+        $total = 0;
+
+        foreach ($incomes as $income) {
+            $total += $income->calculateEarnings($user_id);
+        }
+
+        return $total;
+    }
+
+    private function calculateProfit(float $incomeSum, float $expenseSum): float
+    {
+        return $incomeSum - $expenseSum;
     }
 
     private function slugify(string $name): string

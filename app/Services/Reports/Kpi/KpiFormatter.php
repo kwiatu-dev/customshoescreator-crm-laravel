@@ -1,38 +1,40 @@
 <?php
 namespace App\Services\Reports\Kpi;
 
-namespace App\Services\Kpi;
-
 class KpiFormatter
 {
-    public const PROJECT_TYPES = [
-        1 => 'renowacja-butow',
-        2 => 'personalizacja-butow',
-        3 => 'personalizacja-ubran',
-        4 => 'haft-reczny',
-        5 => 'haft-komputerowy',
-        6 => 'inne',
-    ];
+    const FINANCIAL_SECTIONS = ['income', 'expenses', 'profit', 'earnings'];
+    const PROJECT_SECTIONS = ['new_projects', 'completed_projects', 'avg_days_projects'];
+    const CLIENT_SECTIONS = ['new_clients', 'returning_clients'];
 
     public function format(array $current, array $previous): array
     {
-        return [
-            'financial' => $this->section(['income', 'expenses', 'profit'], $current, $previous),
-            'projects' => array_merge(
-                $this->section(['new_projects', 'completed_projects', 'avg_days_projects'], $current, $previous),
-                ['types' => $this->projectTypes($current, $previous)]
-            ),
-            'clients' => $this->section(['new_clients', 'returning_clients'], $current, $previous),
+        $data = [
+            'financial' => 
+                $this->section(KpiFormatter::FINANCIAL_SECTIONS, $current, $previous),
+            'projects' => 
+                $this->section(KpiFormatter::PROJECT_SECTIONS, $current, $previous),
+            'clients' => 
+                $this->section(KpiFormatter::CLIENT_SECTIONS, $current, $previous),
         ];
+
+        $data = array_merge($data, $this->projectTypes($current, $previous));
+
+        return $data;
     }
 
     private function section(array $keys, array $current, array $previous): array
     {
-        return collect($keys)->mapWithKeys(function ($key) use ($current, $previous) {
-            return [
-                str_replace(['new_', '_projects', '_clients'], ['new', '', ''], $key) => $this->formatItem($current[$key], $previous[$key]),
-            ];
-        })->toArray();
+        return collect($keys)
+            ->filter(function ($key) use ($current, $previous) {
+                return array_key_exists($key, $current) && array_key_exists($key, $previous);
+            })
+            ->mapWithKeys(function ($key) use ($current, $previous) {
+                return [
+                    $key => $this->formatItem($current[$key], $previous[$key]),
+                ];
+            })
+            ->toArray();
     }
 
     private function formatItem($current, $previous): array
@@ -47,10 +49,13 @@ class KpiFormatter
     private function projectTypes(array $current, array $previous): array
     {
         $result = [];
-        foreach (self::PROJECT_TYPES as $id => $slug) {
-            $key = "project_type:$slug";
-            $result[$slug] = $this->formatItem($current[$key], $previous[$key]);
+    
+        foreach ($current as $key => $value) {
+            if (strpos($key, 'project_type') !== false && isset($previous[$key])) {
+                $result[] = $this->formatItem($current[$key], $previous[$key]);
+            }
         }
+    
         return $result;
     }
 

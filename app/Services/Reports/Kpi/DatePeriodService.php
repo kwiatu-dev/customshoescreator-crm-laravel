@@ -1,5 +1,5 @@
 <?php
-namespace App\Services\Kpi;
+namespace App\Services\Reports\Kpi;
 
 use Carbon\CarbonPeriod;
 use Carbon\Carbon;

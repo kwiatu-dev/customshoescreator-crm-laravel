@@ -1,5 +1,5 @@
 <?php 
-namespace App\Services\Kpi;
+namespace App\Services\Reports\Kpi;
 
 use Carbon\CarbonPeriod;
 
@@ -9,11 +9,11 @@ class KpiCalculator
         protected KpiDataFetcher $fetcher
     ) {}
 
-    public function calculate(CarbonPeriod $period, int $userId): array
+    public function calculate(CarbonPeriod $period, ?int $user_id = null): array
     {
         $from = $period->getStartDate();
         $to = $period->getEndDate();
 
-        return $this->fetcher->fetch($from, $to, $userId);
+        return $this->fetcher->fetch($from, $to, $user_id = null);
     }
 }
