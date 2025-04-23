@@ -52,7 +52,7 @@ class KpiFormatter
     
         foreach ($current as $key => $value) {
             if (strpos($key, 'project_type') !== false && isset($previous[$key])) {
-                $result[] = $this->formatItem($current[$key], $previous[$key]);
+                $result[$key] = $this->formatItem($current[$key], $previous[$key]);
             }
         }
     

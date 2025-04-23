@@ -5,6 +5,7 @@ use App\Models\Expenses;
 use App\Models\Income;
 use App\Models\Project;
 use App\Models\Client;
+use App\Models\ProjectType;
 use Auth;
 use Carbon\Carbon;
 
@@ -35,19 +36,19 @@ class KpiDataFetcher
         $earningSum = $user_id ? $this->getEarningSum($from, $to, $user_id) : null;
         $profitSum = $user_id ? null : $this->calculateProfit($incomeSum, $expenseSum, $user_id);
 
-        if ($incomeSum) {
+        if (!is_null($incomeSum)) {
             $data['income'] = $incomeSum;
         }
 
-        if ($expenseSum) {
+        if (!is_null($expenseSum)) {
             $data['expenses'] = $expenseSum;
         }
 
-        if ($profitSum) {
+        if (!is_null($profitSum)) {
             $data['profit'] = $profitSum;
         }
 
-        if ($earningSum) {
+        if (!is_null($earningSum)) {
             $data['earnings'] = $earningSum;
         }
 
@@ -94,10 +95,7 @@ class KpiDataFetcher
 
     private function getProjectTypeData(Carbon $from, Carbon $to, ?int $user_id): array
     {
-        $projectTypes = Project::select('type_id')
-            ->whereBetween('created_at', [$from, $to])
-            ->distinct()
-            ->get();
+        $projectTypes = ProjectType::query()->get();
 
         $data = [];
 
@@ -156,8 +154,8 @@ class KpiDataFetcher
     private function slugify(string $name): string
     {
         $unaccented = iconv('UTF-8', 'ASCII//TRANSLIT', $name);
-        $uppercased = strtolower($unaccented); 
-        $underscored = preg_replace('/\s+/', '_', $uppercased); 
-        return preg_replace('/[^A-Z0-9_]/', '', $underscored);
+        $lowercased = strtolower($unaccented); 
+        $underscored = preg_replace('/\s+/', '_', $lowercased); 
+        return preg_replace('/[^a-z0-9_]/', '', $underscored); 
     }
 }
