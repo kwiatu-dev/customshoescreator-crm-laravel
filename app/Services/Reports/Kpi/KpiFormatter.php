@@ -13,12 +13,14 @@ class KpiFormatter
             'financial' => 
                 $this->section(KpiFormatter::FINANCIAL_SECTIONS, $current, $previous),
             'projects' => 
-                $this->section(KpiFormatter::PROJECT_SECTIONS, $current, $previous),
+                array_merge(
+                    $this->section(KpiFormatter::PROJECT_SECTIONS, $current, $previous),
+                    ['types' => $this->projectTypes($current, $previous)],
+                ),
             'clients' => 
                 $this->section(KpiFormatter::CLIENT_SECTIONS, $current, $previous),
+            
         ];
-
-        $data = array_merge($data, $this->projectTypes($current, $previous));
 
         return $data;
     }
@@ -30,8 +32,16 @@ class KpiFormatter
                 return array_key_exists($key, $current) && array_key_exists($key, $previous);
             })
             ->mapWithKeys(function ($key) use ($current, $previous) {
+                $parts = explode('_', $key);
+
+                if (count($parts) > 1) {
+                    array_pop($parts);
+                }
+
+                $shortKey = implode('_', $parts);
+
                 return [
-                    $key => $this->formatItem($current[$key], $previous[$key]),
+                    $shortKey => $this->formatItem($current[$key], $previous[$key]),
                 ];
             })
             ->toArray();
@@ -52,7 +62,7 @@ class KpiFormatter
     
         foreach ($current as $key => $value) {
             if (strpos($key, 'project_type') !== false && isset($previous[$key])) {
-                $result[$key] = $this->formatItem($current[$key], $previous[$key]);
+                $result[str_replace('project_type:', '', $key)] = $this->formatItem($current[$key], $previous[$key]);
             }
         }
     

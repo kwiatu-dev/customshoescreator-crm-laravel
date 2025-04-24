@@ -3,6 +3,9 @@ namespace App\Services;
 
 use App\Models\Income;
 use App\Models\User;
+use Carbon\Carbon;
+use Date;
+use DateTime;
 
 class UserReportService {
     public function getMonthlyGeneratedIncomeByUserId($year, $user_id): array {
@@ -39,65 +42,63 @@ class UserReportService {
         return array_map(fn($v) => round($v, 2), $data);
     }
 
-    public static function getTopUsersByIncome($limit, $from, $to) {
+    public function getTopUsersByIncome($limit, $from, $to)
+    {
         $users = User::query()
-            ->whereHas('incomes', function ($query) use ($from, $to) {
-                $query->whereNull('deleted_at')
-                    ->where('status_id', Income::STATUS_SETTLED)
-                    ->whereNotNull('project_id'); 
-
-                if (!is_null($from)) {
-                    $query->where('date', '>=', $from);
+            ->whereHas('projectIncomes', fn($query) => $this->applyIncomeDateFilters($query, $from, $to))
+            ->with([
+                'projectIncomes' => function ($query) use ($from, $to) {
+                    $this->applyIncomeDateFilters($query, $from, $to);
+                    $query->with(['project' => fn($q) => $q
+                        ->whereNotNull('end')
+                        ->select('id', 'start', 'end')
+                    ]);
                 }
-
-                if (!is_null($to)) {
-                    $query->where('date', '<=', $to);
-                }
-            })
-            ->with(['incomes' => function ($query) use ($from, $to) {
-                $query->whereNull('deleted_at')
-                    ->where('status_id', Income::STATUS_SETTLED)
-                    ->whereNotNull('project_id')
-                    ->with(['project' => function ($query) {
-                        $query->whereNull('deleted_at')
-                            ->whereNotNull('end')
-                            ->select('id', 'start', 'end');
-                    }]);
-
-                if (!is_null($from)) {
-                    $query->where('date', '>=', $from);
-                }
-
-                if (!is_null($to)) {
-                    $query->where('date', '<=', $to);
-                }
-            }])
+            ])
             ->get()
-            ->map(function ($user) {
-                $totalIncome = $user->incomes->sum('price');
-
-                $projects = $user->incomes
-                    ->filter(fn($income) => $income->project && $income->project->start && $income->project->end)
-                    ->mapToGroups(fn($income) => [$income->project->id => $income->project]);
-
-                $projectCount = $projects->count();
-
-                $avgCompletionDays = $projects
-                    ->map(fn($group) => $group->first()->end->diffInDays($group->first()->start))
-                    ->avg();
-
-                return (object)[
-                    'id' => $user->id,
-                    'full_name' => $user->first_name . ' ' . $user->last_name,
-                    'total_income' => round($totalIncome, 2),
-                    'project_count' => $projectCount,
-                    'avg_completion_days' => round($avgCompletionDays ?? 0, 2),
-                ];
-            })
+            ->map(fn($user) => $this->transformUserIncomeData($user))
             ->sortByDesc('total_income')
             ->take($limit)
             ->values();
-
+    
         return $users;
+    }
+    
+    private function applyIncomeDateFilters($query, $from, $to)
+    {
+        $query->where('incomes.status_id', Income::STATUS_SETTLED)
+              ->whereNotNull('incomes.project_id');
+    
+        if (!is_null($from)) {
+            $query->where('date', '>=', $from);
+        }
+    
+        if (!is_null($to)) {
+            $query->where('date', '<=', $to);
+        }
+    }
+    
+    private function transformUserIncomeData($user)
+    {
+        $totalIncome = $user->projectIncomes->sum('price');
+    
+        $projects = $user->projectIncomes
+            ->filter(fn($income) => $income->project && $income->project->start && $income->project->end)
+            ->mapToGroups(fn($income) => [$income->project->id => $income->project]);
+    
+        $projectCount = $projects->count();
+    
+        $avgCompletionDays = $projects
+            ->map(fn($group) => Carbon::parse($group->first()->end)
+                ->diffInDays(Carbon::parse($group->first()->start)))
+            ->avg();
+    
+        return (object)[
+            'id' => $user->id,
+            'full_name' => $user->first_name . ' ' . $user->last_name,
+            'total_income' => round($totalIncome, 2),
+            'project_count' => $projectCount,
+            'avg_completion_days' => round($avgCompletionDays ?? 0, 2),
+        ];
     }
 }

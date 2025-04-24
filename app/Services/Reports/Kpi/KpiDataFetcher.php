@@ -155,7 +155,7 @@ class KpiDataFetcher
     {
         $unaccented = iconv('UTF-8', 'ASCII//TRANSLIT', $name);
         $lowercased = strtolower($unaccented); 
-        $underscored = preg_replace('/\s+/', '_', $lowercased); 
-        return preg_replace('/[^a-z0-9_]/', '', $underscored); 
+        $underscored = preg_replace('/\s+/', '-', $lowercased); 
+        return preg_replace('/[^a-z0-9_-]/', '', $underscored); 
     }
 }

@@ -170,7 +170,7 @@ Route::prefix('api')->group(function () {
         Route::get('kpi', [DashboardController::class, 'getKpi'])
             ->name('dashboard.kpi');
 
-        Route::get('top-users', [DashboardController::class, 'topUsersByIncome'])
+        Route::get('top-users', [DashboardController::class, 'getTopUsersByIncome'])
             ->name('dashboard.top-users');
 
         Route::get('top-projects', [DashboardController::class, 'getTopProjectsByIncome'])

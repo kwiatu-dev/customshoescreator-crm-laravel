@@ -98,6 +98,7 @@ watch(() => range.value, () => {
 useElementInViewPortVisibility(el, async () => {
   if (kpi.value === null)
     kpi.value = await getKpi(range.value)
+  console.log(kpi.value)
 })
 
 </script>

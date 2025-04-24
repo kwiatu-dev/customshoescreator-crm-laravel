@@ -14,6 +14,6 @@ class KpiCalculator
         $from = $period->getStartDate();
         $to = $period->getEndDate();
 
-        return $this->fetcher->fetch($from, $to, $user_id = null);
+        return $this->fetcher->fetch($from, $to, $user_id);
     }
 }

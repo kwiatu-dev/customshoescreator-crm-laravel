@@ -13,38 +13,38 @@ class FinancialReportService {
     public function getMonthlyFinancialStats(int $year, ?int $user_id = null) {
         $auth = Auth::user();
 
-        $incomeData = $user_id
-            ? $this->userReportService->getMonthlyGeneratedIncomeByUserId($year, $user_id)
-            : $this->incomeReportService->getMonthlyIncome($year);
+        $monthlyIncomeData = $user_id
+            ? $this->userReportService->getMonthlyGeneratedIncomeByUserId($year, $user_id)['data']
+            : $this->incomeReportService->getMonthlyIncome($year)['data'];
 
-        $expensesData = $user_id
+        $monthlyExpensesData = $user_id
             ? null
-            : $this->expensesReportService->getMonthlyCosts($year);
+            : $this->expensesReportService->getMonthlyCosts($year)['data'];
 
-        $profitData = $user_id
+        $monthlyProfitData = $user_id
             ? null
-            : $this->calculateMonthlyProfit($incomeData, $expensesData);
+            : $this->calculateMonthlyProfit($monthlyIncomeData, $monthlyExpensesData);
 
-        $earningData = $user_id
-            ? $this->userReportService->getMonthlyEarningsForUser($year, $user_id)
+        $monthlyEarningsData = $user_id
+            ? $this->userReportService->getMonthlyEarningsForUser($year, $user_id)['data']
             : null;
 
         $datasets = [];
 
-        if ($incomeData && $auth?->is_admin) {
-            $datasets[] = $this->makeDataset('Przychód', $incomeData);
+        if ($monthlyIncomeData && $auth?->is_admin) {
+            $datasets[] = $this->makeDataset('Przychód', $monthlyIncomeData);
         }
 
-        if ($expensesData) {
-            $datasets[] = $this->makeDataset('Wydatki', $expensesData);
+        if ($monthlyExpensesData) {
+            $datasets[] = $this->makeDataset('Wydatki', $monthlyExpensesData);
         }
 
-        if ($profitData) {
-            $datasets[] = $this->makeDataset('Dochód', $profitData);
+        if ($monthlyProfitData) {
+            $datasets[] = $this->makeDataset('Dochód', $monthlyProfitData);
         }
 
-        if ($earningData) {
-            $datasets[] = $this->makeDataset('Zarobki', $earningData);
+        if ($monthlyEarningsData) {
+            $datasets[] = $this->makeDataset('Zarobki', $monthlyEarningsData);
         }
 
         return [
@@ -53,9 +53,15 @@ class FinancialReportService {
         ];
     }
 
-    private function calculateMonthlyProfit(array $incomes, array $costs): array
+    private function calculateMonthlyProfit(array $monthlyIncomeData, array $monthlyExpensesData): array
     {
-        return array_map(fn($income, $cost) => round($income - $cost, 2), $incomes, $costs);
+        return collect(ChartHelper::getMonthLabels())
+            ->mapWithKeys(function ($month, $index) use ($monthlyIncomeData, $monthlyExpensesData) {
+                $income = $monthlyIncomeData[$index] ?? 0;
+                $expense = $monthlyExpensesData[$index] ?? 0;
+                return [$month => round($income - $expense, 2)];
+            })
+            ->toArray();
     }
 
     private function makeDataset(string $label, array $data): array

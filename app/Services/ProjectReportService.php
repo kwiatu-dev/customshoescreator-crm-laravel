@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Models\Income;
 use App\Models\Project;
+use Carbon\Carbon;
 use DB;
 
 class ProjectReportService {
@@ -78,47 +79,45 @@ class ProjectReportService {
         ];
     }
 
-    public static function getTopProjectsByIncome($limit, $from, $to) {
+    public function getTopProjectsByIncome($limit, $from, $to)
+    {
         $projects = Project::query()
             ->with('previewImage')
-            ->whereNull('deleted_at')
             ->whereNotNull('end')
-            ->whereHas('incomes', function ($query) use ($from, $to) {
-                $query->where('status_id', Income::STATUS_SETTLED)
-                    ->whereNull('deleted_at');
-
-                if (!is_null($from)) {
-                    $query->where('date', '>=', $from);
-                }
-
-                if (!is_null($to)) {
-                    $query->where('date', '<=', $to);
-                }
-            })
-            ->withSum(['incomes as total_income' => function ($query) use ($from, $to) {
-                $query->where('status_id', Income::STATUS_SETTLED)
-                    ->whereNull('deleted_at');
-
-                if (!is_null($from)) {
-                    $query->where('date', '>=', $from);
-                }
-
-                if (!is_null($to)) {
-                    $query->where('date', '<=', $to);
-                }
-            }], 'price')
+            ->whereHas('income', fn($query) => $this->applyIncomeDateFilters($query, $from, $to))
+            ->withSum(['income as total_income' => fn($query) => $this->applyIncomeDateFilters($query, $from, $to)], 'price')
             ->orderByDesc('total_income')
             ->limit($limit)
             ->get();
+    
+        return $projects->map(fn($project) => $this->transformProjectIncomeData($project));
+    }
+    
+    private function applyIncomeDateFilters($query, $from, $to)
+    {
+        $query->where('status_id', Income::STATUS_SETTLED);
+    
+        if (!is_null($from)) {
+            $query->where('date', '>=', $from);
+        }
+    
+        if (!is_null($to)) {
+            $query->where('date', '<=', $to);
+        }
+    }
 
-        return $projects->map(fn($project) => [
+    private function transformProjectIncomeData($project)
+    {
+        return [
             'id' => $project->id,
             'title' => $project->title,
-            'total_income' => $project->total_income,
-            'duration_days' => $project->start && $project->end ? $project->end->diffInDays($project->start) : null,
+            'total_income' => round($project->total_income, 2),
+            'duration_days' => $project->start && $project->end
+                ? Carbon::parse($project->end)->diffInDays(Carbon::parse($project->start))
+                : null,
             'preview_image_url' => $project->previewImage
                 ? route('private.files', ['catalog' => 'projects', 'file' => $project->previewImage->file])
                 : null,
-        ]);
+        ];
     }
 }

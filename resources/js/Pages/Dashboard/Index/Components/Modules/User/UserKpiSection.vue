@@ -7,8 +7,8 @@
     class="col-span-12 md:col-span-4"
     :icon="['fas', 'sack-dollar']"
     :data="kpi?.['financial'] || null"
-    :labels="{ income: 'Przychód', ernings: 'Zarobek' }"
-    :units="{ income: ' zł', ernings: ' zł' }"
+    :labels="{ income: 'Przychód', earnings: 'Zarobek' }"
+    :units="{ income: ' zł', earnings: ' zł' }"
   >
     Finanse
   </IconStatsCard>
