@@ -4,7 +4,7 @@
       <div class="flex flex-col gap-4">
         <div>
           <div>Inspiracje</div>
-          <PhotoGrid :photos="project.images.filter(image => image.type_id === 0)" />
+          <PhotoGrid :photos="project.images.filter(image => image.type_id === 4)" />
         </div>
         <div>
           <div>Wizualizacje komputerowe</div>

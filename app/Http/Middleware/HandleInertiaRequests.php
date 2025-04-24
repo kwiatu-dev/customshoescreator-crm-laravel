@@ -54,6 +54,8 @@ class HandleInertiaRequests extends Middleware
                 'last_name' => $request->user()->last_name,
                 'email' => $request->user()->email,
                 'is_admin' => $request->user()->is_admin,
+                'unread_notifications_count' => $request->user()->unreadNotifications()->count(),
+                'unread_notifications' => $request->user()->unreadNotifications()->get(),
             ] : null,
             'inertia' => $request->session()->get('inertia', []),
             'csrfToken' => csrf_token()

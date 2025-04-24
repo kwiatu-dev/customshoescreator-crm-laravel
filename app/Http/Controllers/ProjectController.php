@@ -11,7 +11,9 @@ use App\Models\ProjectImage;
 use Illuminate\Http\Request;
 use App\Helpers\RequestProcessor;
 use App\Models\ConversionSource;
+use App\Models\ProjectImageType;
 use App\Models\ProjectStatus;
+use App\Notifications\ProjectCreate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Validator;
@@ -129,12 +131,14 @@ class ProjectController extends Controller
             'commission' => $user->commission,
             'costs' => $user->costs,
             'distribution' => $user->distribution,
-            'status_id' => 1,
+            'status_id' => Project::STATUS_AWAITING,
             'remarks' => $fields['remarks'] ?? '',
         ]);
 
         $tmp_files = $request->input('inspiration_images');
-        $project->addImages($tmp_files, 1);
+        $project->addImages($tmp_files, ProjectImageType::TYPE_INSPIRATION);
+
+        $user->notify(new ProjectCreate($user, $project));
 
         return redirect()->route('projects.index')
             ->with('success', 'Projekt został dodany!');

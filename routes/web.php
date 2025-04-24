@@ -14,6 +14,7 @@ use App\Http\Controllers\DictionaryController;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\InvestmentController;
 use App\Http\Controllers\InvestmentRepaymentController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrganizerController;
 use App\Http\Controllers\PrivateFilesController;
 use App\Http\Controllers\RestoreStateController;
@@ -164,6 +165,9 @@ Route::get('user-events/{user_event}', [UserEventsController::class, 'show'])
 Route::put('user-events/{user_event}/restore', [UserEventsController::class, 'restore'])
     ->name('user-events.restore')
     ->withTrashed();
+
+Route::resource('notifications', NotificationController::class)
+    ->only(['index']);
 
 Route::prefix('api')->group(function () {
     Route::prefix('dashboard')->group(function () {

@@ -10,6 +10,11 @@ class ProjectImageType extends Model
 {
     use HasFactory;
 
+    const TYPE_VISUALIZATION = 1;
+    const TYPE_PROCESS = 2;
+    const TYPE_FINAL = 3;
+    const TYPE_INSPIRATION = 4;
+
     public function projectImages(): HasMany{
         return $this->hasMany(Project::class, 'type_id');
     }
