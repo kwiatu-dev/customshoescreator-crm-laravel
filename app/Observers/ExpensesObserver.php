@@ -12,7 +12,7 @@ class ExpensesObserver
      */
     public function created(Expenses $expenses): void
     {
-        $this->clearExpensesCache();
+        $this->clearCache();
     }
 
     /**
@@ -20,7 +20,7 @@ class ExpensesObserver
      */
     public function updated(Expenses $expenses): void
     {
-        $this->clearExpensesCache();
+        $this->clearCache();
     }
 
     /**
@@ -28,7 +28,7 @@ class ExpensesObserver
      */
     public function deleted(Expenses $expenses): void
     {
-        $this->clearExpensesCache();
+        $this->clearCache();
     }
 
     /**
@@ -36,7 +36,7 @@ class ExpensesObserver
      */
     public function restored(Expenses $expenses): void
     {
-        $this->clearExpensesCache();
+        $this->clearCache();
     }
 
     /**
@@ -44,15 +44,14 @@ class ExpensesObserver
      */
     public function forceDeleted(Expenses $expenses): void
     {
-        $this->clearExpensesCache();
+        $this->clearCache();
     }
 
     /**
      * Clear cache for expenses-related metrics.
      */
-    private function clearExpensesCache(): void
+    private function clearCache(): void
     {
-        Cache::forget(config('cache_keys.total_expenses_count'));
-        Cache::forget(config('cache_keys.total_expenses_sum'));
+        Cache::tags(['expenses'])->flush();
     }
 }

@@ -12,7 +12,7 @@ class ClientObserver
      */
     public function created(Client $client): void
     {
-        Cache::forget(config('cache_keys.total_clients_count'));
+        $this->clearCache();
     }
 
     /**
@@ -20,7 +20,7 @@ class ClientObserver
      */
     public function updated(Client $client): void
     {
-        Cache::forget(config('cache_keys.total_clients_count'));
+        $this->clearCache();
     }
 
     /**
@@ -28,7 +28,7 @@ class ClientObserver
      */
     public function deleted(Client $client): void
     {
-        Cache::forget(config('cache_keys.total_clients_count'));
+        $this->clearCache();
     }
 
     /**
@@ -36,7 +36,7 @@ class ClientObserver
      */
     public function restored(Client $client): void
     {
-        Cache::forget(config('cache_keys.total_clients_count'));
+        $this->clearCache();
     }
 
     /**
@@ -44,6 +44,11 @@ class ClientObserver
      */
     public function forceDeleted(Client $client): void
     {
-        Cache::forget(config('cache_keys.total_clients_count'));
+        $this->clearCache();
+    }
+
+    private function clearCache(): void
+    {
+        Cache::tags(['clients'])->flush();
     }
 }

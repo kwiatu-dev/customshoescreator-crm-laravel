@@ -12,7 +12,7 @@ class ProjectObserver
      */
     public function created(Project $project): void
     {
-        $this->clearProjectAndIncomeCache();
+        $this->clearCache();
     }
 
     /**
@@ -20,7 +20,7 @@ class ProjectObserver
      */
     public function updated(Project $project): void
     {
-        $this->clearProjectAndIncomeCache();
+        $this->clearCache();
     }
 
     /**
@@ -28,7 +28,7 @@ class ProjectObserver
      */
     public function deleted(Project $project): void
     {
-        $this->clearProjectAndIncomeCache();
+        $this->clearCache();
     }
 
     /**
@@ -36,7 +36,7 @@ class ProjectObserver
      */
     public function restored(Project $project): void
     {
-        $this->clearProjectAndIncomeCache();
+        $this->clearCache();
     }
 
     /**
@@ -44,13 +44,13 @@ class ProjectObserver
      */
     public function forceDeleted(Project $project): void
     {
-        $this->clearProjectAndIncomeCache();
+        $this->clearCache();
     }
 
     /**
      * Clear cache for projects and related income.
      */
-    private function clearProjectAndIncomeCache(): void
+    private function clearCache(): void
     {
         Cache::tags(['projects'])->flush();
     }

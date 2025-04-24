@@ -177,7 +177,6 @@ useElementInViewPortVisibility(el, async () => {
 })
 
 watch(range, debounce(async () => {
-  console.log(range.value)
   data.value = await getTopProjects(range.value)
 }, 1000))
 </script>

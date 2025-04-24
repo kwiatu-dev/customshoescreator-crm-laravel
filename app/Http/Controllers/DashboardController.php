@@ -39,7 +39,6 @@ class DashboardController extends Controller
     
     public function index(Request $request)
     {
-        Cache::flush();
         $overall_metrics = null;
         $user_metrics = null;
         $users = null;
@@ -231,7 +230,7 @@ class DashboardController extends Controller
         $to = $validated['to'] ?? null;   
     
         $data = CacheService::remember(
-            ['projects', 'incomes'], 
+            ['projects', 'incomes', 'users'], 
             ['limit' => $limit, 'from' => $from, 'to' => $to, 'is_admin' => $auth?->is_admin], 
             fn () => $this->userReportService->getTopUsersByIncome($limit, $from, $to));
     
@@ -254,7 +253,7 @@ class DashboardController extends Controller
         $this->authorizeUserAccess($user_id);
     
         $data = CacheService::remember(
-            ['projects', 'incomes'], 
+            ['projects', 'incomes', 'clients'], 
             ['user_id' => $user_id, 'from' => $from, 'to' => $to, 'is_admin' => $auth?->is_admin], 
             fn () => $this->kpiReportService->generate($from, $to, $user_id));
     

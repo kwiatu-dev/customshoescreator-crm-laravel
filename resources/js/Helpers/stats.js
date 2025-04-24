@@ -10,8 +10,6 @@ export const getMonthlyFinancialStatsChartData = async (user_id) => {
   for (const year of await years) {
     data[year] = await api.get('dashboard.monthly-financial-stats', { year, user_id })
   }
-
-  console.log(data)
   
   return data
 }

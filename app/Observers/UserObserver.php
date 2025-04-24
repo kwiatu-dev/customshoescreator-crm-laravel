@@ -12,7 +12,7 @@ class UserObserver
      */
     public function created(User $user): void
     {
-        Cache::forget('total_users_count');
+        $this->clearCache();
     }
 
     /**
@@ -20,7 +20,7 @@ class UserObserver
      */
     public function updated(User $user): void
     {
-        Cache::forget('total_users_count');
+        $this->clearCache();
     }
 
     /**
@@ -28,7 +28,7 @@ class UserObserver
      */
     public function deleted(User $user): void
     {
-        Cache::forget('total_users_count');
+        $this->clearCache();
     }
 
     /**
@@ -36,7 +36,7 @@ class UserObserver
      */
     public function restored(User $user): void
     {
-        Cache::forget('total_users_count');
+        $this->clearCache();
     }
 
     /**
@@ -44,6 +44,11 @@ class UserObserver
      */
     public function forceDeleted(User $user): void
     {
-        Cache::forget('total_users_count');
+        $this->clearCache();
+    }
+
+    private function clearCache(): void
+    {
+        Cache::tags(['users'])->flush();
     }
 }

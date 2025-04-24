@@ -12,7 +12,7 @@ class IncomeObserver
      */
     public function created(Income $income): void
     {
-        $this->clearIncomeCache();
+        $this->clearCache();
     }
 
     /**
@@ -20,7 +20,7 @@ class IncomeObserver
      */
     public function updated(Income $income): void
     {
-        $this->clearIncomeCache();
+        $this->clearCache();
     }
 
     /**
@@ -28,7 +28,7 @@ class IncomeObserver
      */
     public function deleted(Income $income): void
     {
-        $this->clearIncomeCache();
+        $this->clearCache();
     }
 
     /**
@@ -36,7 +36,7 @@ class IncomeObserver
      */
     public function restored(Income $income): void
     {
-        $this->clearIncomeCache();
+        $this->clearCache();
     }
 
     /**
@@ -44,19 +44,14 @@ class IncomeObserver
      */
     public function forceDeleted(Income $income): void
     {
-        $this->clearIncomeCache();
+        $this->clearCache();
     }
 
     /**
      * Clear cache for income-related metrics.
      */
-    private function clearIncomeCache(): void
+    private function clearCache(): void
     {
-        Cache::forget(config('cache_keys.total_income_count'));
-        Cache::forget(config('cache_keys.total_gross_income_sum'));
-        Cache::forget(config('cache_keys.total_net_income_sum'));
-        Cache::forget(config('cache_keys.total_awaiting_income_sum'));
-        Cache::forget(config('cache_keys.total_completed_income_count'));
-        Cache::forget(config('cache_keys.total_active_income_count'));
+        Cache::tags(['incomes'])->flush();
     }
 }

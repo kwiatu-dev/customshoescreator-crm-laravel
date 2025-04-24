@@ -3,6 +3,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Cache;
 use App\Models\{User, Project, Client, Income, Expenses, Investment};
+use Carbon\Carbon;
 use Closure;
 use DB;
 
@@ -30,7 +31,7 @@ class MetricsService
             'total_in_progress_projects_count' => 
                 ModelAggregatorService::getModelData(Project::class, 'count', ['projects'], [['status_id', '2'], ['created_by_user_id', $user_id]]),
             'total_after_deadline_projects_count' => 
-                ModelAggregatorService::getModelData(Project::class, 'count', ['projects'], [['deadline', '<', now()], ['created_by_user_id', $user_id], fn ($query) => $query->whereNull('end')]),
+                ModelAggregatorService::getModelData(Project::class, 'count', ['projects'], [['deadline', '<', Carbon::today()->toDateString()], ['created_by_user_id', $user_id], fn ($query) => $query->whereNull('end')]),
             'total_completed_projects_count' =>  
                 ModelAggregatorService::getModelData(Project::class, 'count', ['projects'], [['status_id', '3'], ['created_by_user_id', $user_id]]),
             'total_active_income_count' => 
@@ -40,7 +41,7 @@ class MetricsService
             'total_active_investments_count' => 
                 ModelAggregatorService::getModelData(Investment::class, 'count', ['investments'], [['status_id', '1'], $relatedInvestmentScope]),
             'total_after_date_investments_count' => 
-                ModelAggregatorService::getModelData(Investment::class, 'count', ['investments'], [['status_id', '1'], ['date', '<', now()], $relatedInvestmentScope]),
+                ModelAggregatorService::getModelData(Investment::class, 'count', ['investments'], [['status_id', '1'], ['date', '<', Carbon::today()->toDateString()], $relatedInvestmentScope]),
             'total_completed_investments_count' => 
                 ModelAggregatorService::getModelData(Investment::class, 'count', ['investments'], [['status_id', '2'], $relatedInvestmentScope]),
             'total_investor_awaiting_repayment_sum' => 
@@ -49,8 +50,6 @@ class MetricsService
                 ModelAggregatorService::getModelData(Income::class, 'get', ['incomes'], [['status_id', '1'], $userHasIncomeScope], null, $calculateUserEarnings),
         ];
     }
-
-
 
     public function getOverallMetrics()
     {
@@ -78,7 +77,7 @@ class MetricsService
             'total_active_investments_count' => 
                 ModelAggregatorService::getModelData(Investment::class, 'count', ['investments'], [['status_id', '1']]),
             'total_after_date_investments_count' => 
-                ModelAggregatorService::getModelData(Investment::class, 'count', ['investments'], [['status_id', '1'], ['date', '<', now()]]),
+                ModelAggregatorService::getModelData(Investment::class, 'count', ['investments'], [['status_id', '1'], ['date', '<', Carbon::today()->toDateString()]]),
             'total_completed_investments_count' => 
                 ModelAggregatorService::getModelData(Investment::class, 'count', ['investments'], [['status_id', '2']]),
             'total_awaiting_repayment_sum' => 
@@ -88,7 +87,7 @@ class MetricsService
             'total_in_progress_projects_count' => 
                 ModelAggregatorService::getModelData(Project::class, 'count', ['projects'], [['status_id', '2']]),
             'total_after_deadline_projects_count' => 
-                ModelAggregatorService::getModelData(Project::class, 'count', ['projects'], [['deadline', '<', now()], fn ($query) => $query->whereNull('end')]),
+                ModelAggregatorService::getModelData(Project::class, 'count', ['projects'], [['deadline', '<', Carbon::today()->toDateString()], fn ($query) => $query->whereNull('end')]),
             'total_completed_projects_count' => 
                 ModelAggregatorService::getModelData(Project::class, 'count', ['projects'], [['status_id', '3']]),
             'total_active_income_count' => 

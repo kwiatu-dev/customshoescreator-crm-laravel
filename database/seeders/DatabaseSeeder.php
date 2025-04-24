@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use DateTime;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -73,14 +75,22 @@ class DatabaseSeeder extends Seeder
             $project_start = $project->start;
             $project_deadline = $project->deadline;
 
+            if (new DateTime($project_deadline) < now()) {
+                $created_at = fake()->dateTimeBetween($project_start, $project_deadline);
+            }
+            else {
+                $created_at = fake()->dateTimeBetween($project_start, 'now');
+            }
+            
+
             \App\Models\Income::factory()->create([
                 'project_id' => $project->id,
                 'costs' => $project->costs,
                 'distribution' => $project->distribution,
                 'commission' => $project->commission,
                 'price' => $project->price,
-                'date' => $status_id === 2 ? fake()->dateTimeBetween($project_start, $project_deadline) : null,
-                'created_at' => fake()->dateTimeBetween($project_start, $project_deadline),
+                'date' => $status_id === 2 ? fake()->dateTimeBetween($created_at, 'now') : null,
+                'created_at' => $created_at,
                 'created_by_user_id' => null,
                 'status_id' => $status_id,
             ]);
