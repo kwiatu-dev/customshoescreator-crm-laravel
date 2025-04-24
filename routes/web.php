@@ -167,7 +167,7 @@ Route::put('user-events/{user_event}/restore', [UserEventsController::class, 're
     ->withTrashed();
 
 Route::resource('notifications', NotificationController::class)
-    ->only(['index']);
+    ->only(['index', 'destroy']);
 
 Route::prefix('api')->group(function () {
     Route::prefix('dashboard')->group(function () {

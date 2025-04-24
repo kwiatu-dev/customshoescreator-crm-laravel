@@ -46,22 +46,22 @@
               Powiadomienia
             </div>
             <div>
-              <div href="#" class="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
+              <div v-for="notification in unreadNotificationsList" :key="notification.id" class="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
                 <div class="pl-3 w-full">
                   <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
                     New message from 
                     <span class="font-semibold text-gray-900 dark:text-white">
                       Bonnie Green
                     </span>
-                    : "Hey, what's up? All set for the presentation?"
+                    {{ notification }}
                   </div>
                   <div class="text-xs font-medium text-primary-700 dark:text-primary-400">
-                    a few moments ago
+                    {{ dayjs(notification.created_at).format('YYYY-MM-DD') }}
                   </div>
                 </div>
-                <button class="hover:text-gray-500 p-2 hover:dark:text-gray-50">
+                <Link class="hover:text-gray-500 p-2 hover:dark:text-gray-50" :href="route('notifications.destroy', { notification: notification.id })" as="button" method="delete" preserve-scroll>
                   <font-awesome-icon :icon="['fas', 'trash-can']" />
-                </button>
+                </Link>
               </div>
             </div>
             <Link :href="route('notifications.index')" class="block py-2 text-base font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100 hover:dark:bg-gray-600 dark:bg-gray-700 dark:text-white dark:hover:underline">
@@ -176,6 +176,7 @@
 <script setup>
 import { useAuthUser } from '@/Composables/useAuthUser'
 import { Link, usePage } from '@inertiajs/vue3'
+import dayjs from 'dayjs'
 import { computed, onBeforeUnmount, onMounted, ref} from 'vue'
 
 const page = usePage()
