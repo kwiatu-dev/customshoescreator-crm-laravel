@@ -41,32 +41,40 @@
             ref="notificationsDropdown" 
             class="overflow-hidden z-50 my-4 max-w-sm text-base list-none bg-white rounded divide-y divide-gray-100 shadow-lg dark:divide-gray-600 dark:bg-gray-700"
             :class="{ 'hidden': notifications }"
+            style="min-width: 300px;"
           >
             <div class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               Powiadomienia
             </div>
             <div>
-              <div v-for="notification in unreadNotificationsList" :key="notification.id" class="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
+              <div 
+                v-for="(notification, index) in unreadNotificationsList" 
+                :key="notification.id" 
+                class="overflow-hidden cursor-pointer flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600 relative"
+                @click="toggleNotificationActionVisibility(index)"
+              >
                 <div class="pl-3 w-full">
                   <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
-                    New message from 
-                    <span class="font-semibold text-gray-900 dark:text-white">
-                      Bonnie Green
-                    </span>
-                    {{ notification }}
+                    <NotificationText :notification="notification" />
                   </div>
                   <div class="text-xs font-medium text-primary-700 dark:text-primary-400">
                     {{ dayjs(notification.created_at).format('YYYY-MM-DD') }}
                   </div>
                 </div>
-                <Link class="hover:text-gray-500 p-2 hover:dark:text-gray-50" :href="route('notifications.destroy', { notification: notification.id })" as="button" method="delete" preserve-scroll>
-                  <font-awesome-icon :icon="['fas', 'trash-can']" />
+                <Link 
+                  :class="visibleNotificationActionIndexes.includes(index) ? 'translate-x-0' : 'translate-x-full'"
+                  class="text-xl w-24 h-full bg-green-600 hover:bg-green-700 absolute -mt-3 right-0 transition-transform duration-300" 
+                  :href="route('notifications.destroy', { notification: notification.id })" 
+                  as="button" 
+                  method="delete" 
+                  preserve-scroll
+                >
+                  <font-awesome-icon :icon="['fas', 'envelope-open']" />
                 </Link>
               </div>
             </div>
             <Link :href="route('notifications.index')" class="block py-2 text-base font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100 hover:dark:bg-gray-600 dark:bg-gray-700 dark:text-white dark:hover:underline">
               <div class="inline-flex items-center ">
-                <svg aria-hidden="true" class="mr-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z" /><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" /></svg>
                 Zobacz wszystkie
               </div>
             </Link>
@@ -178,6 +186,7 @@ import { useAuthUser } from '@/Composables/useAuthUser'
 import { Link, usePage } from '@inertiajs/vue3'
 import dayjs from 'dayjs'
 import { computed, onBeforeUnmount, onMounted, ref} from 'vue'
+import NotificationText from '@/Pages/Notification/Index/Components/NotificationText.vue'
 
 const page = usePage()
 const user = useAuthUser()
@@ -189,6 +198,7 @@ const notificationsButton = ref(null)
 const notificationsDropdown = ref(null)
 const unreadNotificationsCount = computed(() => user.value?.unread_notifications_count ?? 0)
 const unreadNotificationsList = computed(() => user.value?.unread_notifications ?? [])
+const visibleNotificationActionIndexes = ref([])
 
 const toggleMenu = () => {
   menu.value = !menu.value
@@ -196,6 +206,14 @@ const toggleMenu = () => {
 
 const toggleNotifications = () => {
   notifications.value = !notifications.value
+}
+
+const toggleNotificationActionVisibility = (index) => {
+  if (visibleNotificationActionIndexes.value.includes(index)) {
+    visibleNotificationActionIndexes.value = visibleNotificationActionIndexes.value.filter(i => i !== index)
+  } else {
+    visibleNotificationActionIndexes.value.push(index)
+  }
 }
 
 const isActive = (name) => {
@@ -265,5 +283,9 @@ onBeforeUnmount(() => {
   font-weight: bold;
 
   @apply bg-red-500 dark:bg-red-600;
+}
+
+.transition-transform {
+  transition: transform 0.3s ease-in-out;
 }
 </style>

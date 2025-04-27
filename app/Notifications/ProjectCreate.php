@@ -52,7 +52,7 @@ class ProjectCreate extends Notification
         return [
             'user_id' => $this->user->id,
             'project_id' => $this->project->id,
-            'title' => $this->project->title,
+            'project_title' => $this->project->title,
             'user_url' => route('user.show', ['user' => $this->user->id]),
             'project_url' => route('projects.show', ['project' => $this->project->id])
         ];
