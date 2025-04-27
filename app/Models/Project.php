@@ -40,6 +40,10 @@ class Project extends Model
         'type_id'
     ];
 
+    protected $attributes = [
+        'status_id' => Project::STATUS_AWAITING,
+    ];
+
     //protected $appends = ['editable'];
 
     protected $filterable = [

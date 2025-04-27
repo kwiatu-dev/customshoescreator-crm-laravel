@@ -64,13 +64,16 @@
                 <Link 
                   :class="visibleNotificationActionIndexes.includes(index) ? 'translate-x-0' : 'translate-x-full'"
                   class="text-xl w-24 h-full bg-green-600 hover:bg-green-700 absolute -mt-3 right-0 transition-transform duration-300" 
-                  :href="route('notifications.destroy', { notification: notification.id })" 
+                  :href="route('notifications.seen', { notification: notification.id })" 
                   as="button" 
-                  method="delete" 
+                  method="PUT" 
                   preserve-scroll
                 >
                   <font-awesome-icon :icon="['fas', 'envelope-open']" />
                 </Link>
+              </div>
+              <div v-if="unreadNotificationsList.length === 0" class="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
+                Brak powiadomień
               </div>
             </div>
             <Link :href="route('notifications.index')" class="block py-2 text-base font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100 hover:dark:bg-gray-600 dark:bg-gray-700 dark:text-white dark:hover:underline">

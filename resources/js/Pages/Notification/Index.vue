@@ -23,14 +23,17 @@
         >
           <Link
             v-if="notification.read_at === null" 
-            :href="route('notifications.destroy', { notification: notification.id })"
+            :href="route('notifications.seen', { notification: notification.id })"
             as="button" 
-            method="delete" 
+            method="PUT" 
             class="text-2xl text-gray-50 rounded-r-sm bg-green-600 w-28 h-full flex flex-row justify-center items-center shadow-md hover:bg-green-700"
           >
             <font-awesome-icon :icon="['fas', 'envelope-open']" />
           </Link>
         </div>
+      </div>
+      <div v-if="notifications.data.length === 0" class="">
+        Brak powiadomień
       </div>
     </div>
     <div 

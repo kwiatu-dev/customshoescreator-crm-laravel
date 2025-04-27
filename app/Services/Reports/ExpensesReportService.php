@@ -1,5 +1,5 @@
 <?php
-namespace App\Services;
+namespace App\Services\Reports;
 
 class ExpensesReportService {
     public function getMonthlyCosts(int $year): array

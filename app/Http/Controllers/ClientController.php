@@ -5,6 +5,12 @@ namespace App\Http\Controllers;
 use App\Helpers\RequestProcessor;
 use App\Models\Client;
 use App\Models\ConversionSource;
+use App\Models\User;
+use App\Notifications\Client\ClientCreateNotification;
+use App\Notifications\Client\ClientDeleteNotification;
+use App\Notifications\Client\ClientRestoreNotification;
+use App\Notifications\Client\ClientUpdateNotification;
+use App\Services\NotificationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -12,7 +18,9 @@ class ClientController extends Controller
 {
     private $fields;
 
-    public function __construct()
+    public function __construct(
+        private NotificationService $notificationService,
+    )
     {
         $this->middleware(['auth', 'verified']);
 
@@ -112,6 +120,10 @@ class ClientController extends Controller
             RequestProcessor::validation($request, $this->fields, new Client())
         );
 
+        $this->notificationService->sendNotification(
+            new ClientCreateNotification($client, $request->user(), $client->user),
+        );
+
         if(request()->route()->getName() == 'client.create'){
             return redirect()->route('client.index')->with('success', 'Klient został dodany!');
         }
@@ -144,8 +156,8 @@ class ClientController extends Controller
     {
         $this->authorize('update', $client);
 
-        $client->update(
-            RequestProcessor::validation($request, $this->fields, $client)
+        $this->notificationService->sendNotification(
+            new ClientUpdateNotification($client, $request->user(), $client->user),
         );
 
         return redirect()->route('restore.state', ['url' => route('client.index')])->with('success', 'Klient został edytowany!');
@@ -154,19 +166,28 @@ class ClientController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Client $client)
+    public function destroy(Client $client, Request $request)
     {
         $this->authorize('delete', $client);
 
         $client->deleteOrFail();
 
+        $this->notificationService->sendNotification(
+            new ClientDeleteNotification($client, $request->user(), $client->user),
+        );
+
         return redirect()->back()->with('success', 'Klient został usunięty!');
     }
 
-    public function restore(Client $client){
+    public function restore(Client $client, Request $request)
+    {
         $this->authorize('restore', $client);
 
         $client->restore();
+
+        $this->notificationService->sendNotification(
+            new ClientRestoreNotification($client, $request->user(), $client->user),
+        );
 
         return redirect()->back()->with('success', 'Klient został odzyskany!');
     }

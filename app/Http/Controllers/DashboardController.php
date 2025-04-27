@@ -9,13 +9,13 @@ use App\Models\Investment;
 use App\Models\Project;
 use App\Models\User;
 use App\Services\CacheService;
-use App\Services\FinancialReportService;
-use App\Services\IncomeReportService;
+use App\Services\Reports\FinancialReportService;
+use App\Services\Reports\IncomeReportService;
 use App\Services\StatsService;
-use App\Services\MetricsService;
-use App\Services\ProjectReportService;
+use App\Services\Reports\MetricsReportService;
+use App\Services\Reports\ProjectReportService;
 use App\Services\Reports\Kpi\KpiReportService;
-use App\Services\UserReportService;
+use App\Services\Reports\UserReportService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Validator;
 class DashboardController extends Controller
 {
     public function __construct(
-        protected MetricsService $metricsService,
+        protected MetricsReportService $metricsService,
         protected ProjectReportService $projectReportService,
         protected IncomeReportService $incomeReportService,
         protected UserReportService $userReportService,

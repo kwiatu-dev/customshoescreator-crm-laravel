@@ -1,5 +1,5 @@
 <?php
-namespace App\Services;
+namespace App\Services\Reports;
 
 use App\Models\Income;
 use App\Models\User;

@@ -15,6 +15,7 @@ use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\InvestmentController;
 use App\Http\Controllers\InvestmentRepaymentController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\NotificationSeenController;
 use App\Http\Controllers\OrganizerController;
 use App\Http\Controllers\PrivateFilesController;
 use App\Http\Controllers\RestoreStateController;
@@ -199,5 +200,8 @@ Route::prefix('api')->group(function () {
             ->name('dashboard.monthly-new-projects-count');
     });
 });
+
+Route::put('notifications/{notification}/seen', NotificationSeenController::class)
+    ->name('notifications.seen');
 
 

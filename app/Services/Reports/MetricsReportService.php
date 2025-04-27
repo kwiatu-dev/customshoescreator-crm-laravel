@@ -1,13 +1,14 @@
 <?php
-namespace App\Services;
+namespace App\Services\Reports;
 
 use Illuminate\Support\Facades\Cache;
 use App\Models\{User, Project, Client, Income, Expenses, Investment};
+use App\Services\ModelAggregatorService;
 use Carbon\Carbon;
 use Closure;
 use DB;
 
-class MetricsService
+class MetricsReportService
 {
     public function getUserMetrics($user_id)
     {

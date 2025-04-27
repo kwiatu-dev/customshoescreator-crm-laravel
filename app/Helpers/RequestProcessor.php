@@ -39,7 +39,6 @@ class RequestProcessor{
         'conversion_source_id' => 'required|exists:conversion_sources,id',
         'social_link' => 'nullable|url:http,https|max:255',
         'interest_rate' => 'required|integer|min:0',
-
     ];
 
     public static function getSortFields(Request $request, array $sortable): array{
@@ -96,7 +95,7 @@ class RequestProcessor{
         return $filters;
     }
 
-    public static function validation(Request $request, array $fields, Model $model = null, array $custom_validation = null): array{
+    public static function validation(Request $request, array $fields, ?Model $model = null, ?array $custom_validation = null): array{
         $validate = [];
 
         foreach($fields as $field){

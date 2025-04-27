@@ -11,9 +11,12 @@ use App\Models\Project;
 use App\Models\User;
 use App\Models\UserEvents;
 use App\Policies\ClientPolicy;
+use App\Policies\NotificationPolicy;
 use App\Policies\UserEventsPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Notifications\DatabaseNotification;
+use Notification;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -27,6 +30,7 @@ class AuthServiceProvider extends ServiceProvider
         User::class => UserPolicy::class,
         Client::class => ClientPolicy::class,
         UserEvents::class => UserEventsPolicy::class,
+        DatabaseNotification::class => NotificationPolicy::class,
     ];
 
     /**

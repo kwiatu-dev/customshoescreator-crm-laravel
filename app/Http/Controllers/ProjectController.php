@@ -1,28 +1,31 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use DB;
-use Exception;
 use App\Models\User;
 use App\Models\Client;
 use App\Models\Project;
-use App\Models\ProjectImage;
 use Illuminate\Http\Request;
 use App\Helpers\RequestProcessor;
-use App\Models\ConversionSource;
 use App\Models\ProjectImageType;
 use App\Models\ProjectStatus;
-use App\Notifications\ProjectCreate;
+use App\Notifications\Project\ProjectCreateNotification;
+use App\Notifications\Project\ProjectDeleteNotification;
+use App\Notifications\Project\ProjectRestoreNotification;
+use App\Notifications\Project\ProjectStatusNotification;
+use App\Notifications\Project\ProjectUpdateNotification;
+use App\Services\NotificationService;
+use App\Services\ProjectService;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Validator;
 
 class ProjectController extends Controller
 {
     private $fields;
 
-    public function __construct()
+    public function __construct(
+        private ProjectService $projectService,
+        private NotificationService $notificationService)
     {
         $this->middleware(['auth', 'verified']);
 
@@ -123,7 +126,7 @@ class ProjectController extends Controller
             'distribution' => ['nullable']
         ]);
 
-        $user = User::find($fields['created_by_user_id'] ?? Auth::id());
+        $user = User::findOrFail($fields['created_by_user_id'] ?? Auth::id());
         $fields['created_by_user_id'] = $user->id;
 
         $project = Project::create([
@@ -138,7 +141,9 @@ class ProjectController extends Controller
         $tmp_files = $request->input('inspiration_images');
         $project->addImages($tmp_files, ProjectImageType::TYPE_INSPIRATION);
 
-        $user->notify(new ProjectCreate($user, $project));
+        $this->notificationService->sendNotification(
+            new ProjectCreateNotification($project, $request->user(), $user),
+        );
 
         return redirect()->route('projects.index')
             ->with('success', 'Projekt został dodany!');
@@ -289,6 +294,10 @@ class ProjectController extends Controller
             }
         }
 
+        $this->notificationService->sendNotification(
+            new ProjectUpdateNotification($project, $request->user(), $user),
+        );
+
         return redirect()->route('restore.state', ['url' => route('projects.index')])->with('success', 'Projekt został edytowany!');
     }
 
@@ -344,6 +353,11 @@ class ProjectController extends Controller
             }
         }
 
+        
+        $this->notificationService->sendNotification(
+            new ProjectStatusNotification($project, $request->user(), $project->user),
+        );
+
         return redirect()->back()
             ->with('success', 'Status projektu został zaktualizowany!');
     }
@@ -369,7 +383,7 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Project $project)
+    public function destroy(Project $project, Request $request)
     {
         $this->authorize('destroy', $project);
 
@@ -381,10 +395,14 @@ class ProjectController extends Controller
             $project->deleteRelatedIncome();
         }
 
+        $this->notificationService->sendNotification(
+            new ProjectDeleteNotification($project, $request->user(), $project->user),
+        );
+
         return redirect()->back()->with('success', 'Projekt został usunięty!');
     }
 
-    public function restore(Project $project){
+    public function restore(Project $project, Request $request){
         $this->authorize('restore', $project);
 
         $project->restore();
@@ -394,6 +412,10 @@ class ProjectController extends Controller
         if ($income) {
             $project->restoreRelatedIncome();
         }
+
+        $this->notificationService->sendNotification(
+            new ProjectRestoreNotification($project, $request->user(), $project->user),
+        );
 
         return redirect()->back()->with('success', 'Projekt został przywrócony!');
     }

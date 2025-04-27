@@ -151,6 +151,10 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         }
     }
 
+    public function isAdmin(): bool{
+        return $this->is_admin;
+    }
+
     public function getEditableAttribute()
     {
         return $this->deleted_at == null && $this->is_admin == false;
