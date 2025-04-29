@@ -8,11 +8,11 @@ use App\Notifications\BaseNotification;
 
 class BaseProjectNotification extends BaseNotification
 {
-    private string $project_id;
-    private string $project_url;
-    private string $project_title;
-    private string $project_status_id;
-    private string $project_status_name;
+    protected string $project_id;
+    protected string $project_url;
+    protected string $project_title;
+    protected string $project_status_id;
+    protected string $project_status_name;
 
     public function __construct(    
         private Project $project,

@@ -1,6 +1,5 @@
 <?php
-
-namespace App\Notifications\Client;
+namespace App\Notifications\User;
 
 use App\Models\Client;
 use App\Models\User;
@@ -8,14 +7,14 @@ use App\Notifications\BaseNotification;
 
 class BaseUserNotification extends BaseNotification
 {
-    private string $user_id;
-    private string $user_url;
-    private string $user_fullname;
+    protected string $user_id;
+    protected string $user_url;
+    protected string $user_fullname;
 
     public function __construct(    
         private User $user,
-        User $auth,
-        User $recipient) 
+        ?User $auth,
+        ?User $recipient) 
     {
         parent::__construct($auth, $recipient);
 

@@ -12,28 +12,44 @@ abstract class BaseNotification extends Notification
 {
     use Queueable;
 
-    protected string $recipient_id;
-    protected string $recipient_url;
-    protected string $recipient_fullname;
-    protected string $auth_id;
-    protected string $auth_url;
-    protected string $auth_fullname;
-    protected string $action;
+    protected ?string $recipient_id;
+    protected ?string $recipient_url;
+    protected ?string $recipient_fullname;
+    protected ?string $auth_id;
+    protected ?string $auth_url;
+    protected ?string $auth_fullname;
+    protected ?string $action;
 
     /**
      * Create a new notification instance.
      */
     public function __construct(    
-        protected User $auth,
-        protected User $recipient) 
+        protected ?User $auth,
+        protected ?User $recipient) 
     {
-        $this->recipient_id = $this->recipient->id;
-        $this->recipient_url = route('user.show', ['user' => $this->recipient->id]);
-        $this->recipient_fullname = $this->recipient->first_name . ' ' . $this->recipient->last_name;
-        $this->auth_id = $this->auth->id;
-        $this->auth_url = route('user.show', ['user' => $this->auth->id]);
-        $this->auth_fullname = $this->auth->first_name . ' ' . $this->auth->last_name;
-        $this->action = $this->getActionFromClass();
+        if ($recipient) {
+            $this->recipient_id = $this->recipient->id;
+            $this->recipient_url = route('user.show', ['user' => $this->recipient->id]);
+            $this->recipient_fullname = $this->recipient->first_name . ' ' . $this->recipient->last_name;
+        }
+        else {
+            $this->recipient_id = null;
+            $this->recipient_url = null;
+            $this->recipient_fullname = null;
+        }
+
+        if ($auth) {
+            $this->auth_id = $this->auth->id;
+            $this->auth_url = route('user.show', ['user' => $this->auth->id]);
+            $this->auth_fullname = $this->auth->first_name . ' ' . $this->auth->last_name;
+            $this->action = $this->getActionFromClass();
+        }
+        else {
+            $this->auth_id = null;
+            $this->auth_url = null;
+            $this->auth_fullname = null;
+            $this->action = null;
+        }
     }
 
     /**
@@ -93,12 +109,12 @@ abstract class BaseNotification extends Notification
         return strtolower($action);
     }
 
-    public function getAuth(): User
+    public function getAuth(): ?User
     {
         return $this->auth;
     }
 
-    public function getRecipient(): User
+    public function getRecipient(): ?User
     {
         return $this->recipient;
     }

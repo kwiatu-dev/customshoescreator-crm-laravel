@@ -8,9 +8,9 @@ use App\Notifications\BaseNotification;
 
 class BaseClientNotification extends BaseNotification
 {
-    private string $client_id;
-    private string $client_url;
-    private string $client_fullname;
+    protected string $client_id;
+    protected string $client_url;
+    protected string $client_fullname;
 
     public function __construct(    
         private Client $client,

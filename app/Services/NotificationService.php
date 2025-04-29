@@ -19,15 +19,15 @@ class NotificationService
         }
     }
 
-    protected function buildRecipients(User $auth, User $recipient)
+    protected function buildRecipients(?User $auth, ?User $recipient)
     {
         $admins = User::where('is_admin', true)->get();
         $recipients = collect();
 
-        $admin_recipients = $admins->filter(fn ($admin) => ($admin->id !== $recipient->id && $admin->id !== $auth->id));
+        $admin_recipients = $admins->filter(fn ($admin) => ((!$recipient || $admin->id !== $recipient->id) && (!$auth || $admin->id !== $auth->id)));
         $recipients = $recipients->merge($admin_recipients);
 
-        if ($auth->id !== $recipient->id) {
+        if ($recipient && $auth && $auth->id !== $recipient->id) {
             $recipients->push($recipient);
         }
 
