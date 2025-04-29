@@ -99,8 +99,8 @@ abstract class BaseNotification extends Notification
     protected function getActionFromClass(): string
     {
         $className = (new \ReflectionClass($this))->getShortName();
-
-        if (preg_match('/^[A-Za-z]+([A-Z][a-zA-Z]+)Notification$/', $className, $matches)) {
+    
+        if (preg_match('/([A-Z][a-z]+)Notification$/', $className, $matches)) {
             $action = $matches[1];
         } else {
             $action = $className;

@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Notifications\Investment\InvestmentStatusNotification;
+use App\Services\NotificationService;
 use App\Traits\HasFooter;
 use App\Traits\HasFilters;
 use App\Traits\HasSorting;
 use App\Traits\HasPagination;
+use Auth;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

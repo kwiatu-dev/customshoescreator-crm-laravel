@@ -5,15 +5,24 @@ namespace App\Http\Controllers;
 use App\Helpers\RequestProcessor;
 use App\Models\Investment;
 use App\Models\User;
+use App\Notifications\Investment\InvestmentCreateNotification;
+use App\Notifications\Investment\InvestmentDeleteNotification;
+use App\Notifications\Investment\InvestmentRestoreNotification;
+use App\Notifications\Investment\InvestmentStatusNotification;
+use App\Notifications\Investment\InvestmentUpdateNotification;
+use App\Services\NotificationService;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Validation\ValidationException;
 
 class InvestmentController extends Controller
 {
     private $fields;
 
-    public function __construct()
+    public function __construct(
+        private NotificationService $notificationService
+    )
     {
         $this->middleware(['auth', 'verified', 'admin']);
 
@@ -105,6 +114,10 @@ class InvestmentController extends Controller
             'remarks' => $fields['remarks'] ?? '',
         ]);
 
+        $this->notificationService->sendNotification(
+            new InvestmentCreateNotification($investment, $request->user(), null)
+        );
+
         return redirect()->route('investments.index')
             ->with('success', 'Inwestycja została dodana!');
     }
@@ -169,11 +182,24 @@ class InvestmentController extends Controller
             ]);
         }
 
+        $status_change = false;
+
         if ($investment->total_repayment == $total) {
             $fields['status_id'] = 2;
+            $status_change = true;
         }
 
         $investment->update($fields);
+
+        $this->notificationService->sendNotification(
+            new InvestmentUpdateNotification($investment, $request->user(), null)
+        );
+
+        if ($status_change) {
+            $this->notificationService->sendNotification(
+                new InvestmentStatusNotification($investment, $request->user(), null)
+            );
+        }
 
         return redirect()->route('restore.state', ['url' => route('investments.index')])->with('success', 'Inwestycja został edytowana!');
     }
@@ -181,7 +207,7 @@ class InvestmentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Investment $investment)
+    public function destroy(Investment $investment, Request $request)
     {
         if (!$investment->deletable) {
             return redirect()->back()->with('failed', 'Nie można usunać tej inwestycji!');
@@ -189,15 +215,23 @@ class InvestmentController extends Controller
 
         $investment->deleteOrFail();
 
+        $this->notificationService->sendNotification(
+            new InvestmentDeleteNotification($investment, $request->user(), null)
+        );
+
         return redirect()->back()->with('success', 'Inwestycja została usunięta!');
     }
 
-    public function restore(Investment $investment){
+    public function restore(Investment $investment, Request $request){
         if (!$investment->restorable) {
             return redirect()->back()->with('failed', 'Nie można przywrócić tej inwestycji!');
         }
 
         $investment->restore();
+
+        $this->notificationService->sendNotification(
+            new InvestmentRestoreNotification($investment, $request->user(), null)
+        );
 
         return redirect()->back()->with('success', 'Inwestycja została przywrócona!');
     }

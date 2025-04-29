@@ -6,6 +6,12 @@ use App\Helpers\RequestProcessor;
 use App\Models\Investment;
 use App\Models\InvestmentRepayment;
 use App\Models\User;
+use App\Notifications\Investment\InvestmentStatusNotification;
+use App\Notifications\InvestmentRepayment\InvestmentRepaymentCreateNotification;
+use App\Notifications\InvestmentRepayment\InvestmentRepaymentDeleteNotification;
+use App\Notifications\InvestmentRepayment\InvestmentRepaymentRestoreNotification;
+use App\Notifications\InvestmentRepayment\InvestmentRepaymentUpdateNotification;
+use App\Services\NotificationService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +21,8 @@ class InvestmentRepaymentController extends Controller
 {
     private $fields;
 
-    public function __construct()
+    public function __construct(
+        private NotificationService $notificationService)
     {
         $this->middleware(['auth', 'verified', 'admin']);
 
@@ -102,6 +109,10 @@ class InvestmentRepaymentController extends Controller
             'created_by_user_id' => $user->id,
         ]);
 
+        $this->notificationService->sendNotification(
+            new InvestmentRepaymentCreateNotification($repayment, $request->user(), null)
+        );
+
         return redirect()->route('repayments.index', ['investment' => $investment->id])
             ->with('success', 'Zwrot z inwestycji został dodany!');
     }
@@ -139,6 +150,10 @@ class InvestmentRepaymentController extends Controller
         $investment->addRepaymentValue(-$repayment_value);
         $repayment->update($fields);
 
+        $this->notificationService->sendNotification(
+            new InvestmentRepaymentUpdateNotification($repayment, $request->user(), null),
+        );
+
         return redirect()
             ->route('restore.state', ['url' => route('repayments.index', ['investment' => $investment->id])])
             ->with('success', 'Zwrot z inwestycji został edytowany!');
@@ -147,26 +162,52 @@ class InvestmentRepaymentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Investment $investment, InvestmentRepayment $repayment)
+    public function destroy(Investment $investment, InvestmentRepayment $repayment, Request $request)
     {
         if (!$repayment->deletable) {
             return redirect()->back()->with('failed', 'Nie można usunać tego zwrotu inwestycji!');
         }
 
+        $investment_status_before = $investment->status_id;
         $investment->addRepaymentValue(-$repayment->repayment);
+        $investment_status_after = $investment->status_id;
+
+        if ($investment_status_before != $investment_status_after) {
+            $this->notificationService->sendNotification(
+                new InvestmentStatusNotification($investment, $request->user(), null),
+            );
+        }
+
         $repayment->deleteOrFail();
+
+        $this->notificationService->sendNotification(
+            new InvestmentRepaymentDeleteNotification($repayment, $request->user(), null),
+        );
 
 
         return redirect()->back()->with('success', 'Zwrot inwestycji został usunięty!');
     }
 
-    public function restore(Investment $investment, InvestmentRepayment $repayment) {
+    public function restore(Investment $investment, InvestmentRepayment $repayment, Request $request) {
         if (!$repayment->restorable) {
             return redirect()->back()->with('failed', 'Nie można przywrócić tego zwrotu inwestycji!');
         }
 
+        $investment_status_before = $investment->status_id;
         $investment->addRepaymentValue($repayment->repayment);
+        $investment_status_after = $investment->status_id;
+
+        if ($investment_status_before != $investment_status_after) {
+            $this->notificationService->sendNotification(
+                new InvestmentStatusNotification($investment, $request->user(), null),
+            );
+        }
+
         $repayment->restore();
+
+        $this->notificationService->sendNotification(
+            new InvestmentRepaymentRestoreNotification($repayment, $request->user(), null),
+        );
 
         return redirect()->back()->with('success', 'Zwrot inwestycji został przywrócony!');
     }

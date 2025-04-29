@@ -6,6 +6,11 @@ use App\Helpers\RequestProcessor;
 use App\Models\User;
 use App\Models\UserEvents;
 use App\Models\UserEventType;
+use App\Notifications\UserEvent\UserEventCreateNotification;
+use App\Notifications\UserEvent\UserEventDeleteNotification;
+use App\Notifications\UserEvent\UserEventRestoreNotification;
+use App\Notifications\UserEvent\UserEventUpdateNotification;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +18,9 @@ class UserEventsController extends Controller
 {
     private $fields;
 
-    public function __construct()
+    public function __construct(
+        private NotificationService $notificationService,
+    )
     {
         $this->middleware(['auth', 'verified']);
 
@@ -47,6 +54,10 @@ class UserEventsController extends Controller
             ...$fields,
             'created_by_user_id' => $user->id,
         ]);
+
+        $this->notificationService->sendNotification(
+            new UserEventCreateNotification($userEvent, $request->user(), $userEvent->user),
+        );
 
         if(request()->route()->getName() == 'user-events.create'){
             return redirect()->route('user-events.index')->with('success', 'Wydarzenie zostało dodane!');
@@ -107,6 +118,7 @@ class UserEventsController extends Controller
         $this->authorize('update', $userEvent);
 
         $fields = RequestProcessor::validation($request, $this->fields, new UserEvents(), [
+            'start' => 'required|date|date_format:Y-m-d',
             'user_id' => 'required|exists:users,id',
             'type_id' => 'required|exists:user_event_types,id',
         ]);
@@ -119,13 +131,17 @@ class UserEventsController extends Controller
 
         $userEvent->update($fields);
 
+        $this->notificationService->sendNotification(
+            new UserEventUpdateNotification($userEvent, $request->user(), $userEvent->user),
+        );
+
         return redirect()->route('restore.state', ['url' => route('organizer.index')])->with('success', 'Wydarzenie zostało zaktualizowane!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UserEvents $userEvent)
+    public function destroy(UserEvents $userEvent, Request $request)
     {
         $this->authorize('delete', $userEvent);
 
@@ -135,10 +151,14 @@ class UserEventsController extends Controller
 
         $userEvent->deleteOrFail();
 
+        $this->notificationService->sendNotification(
+            new UserEventDeleteNotification($userEvent, $request->user(), $userEvent->user),
+        );
+
         return redirect()->back()->with('success', 'Wydarzenie zostało usunięte!');
     }
 
-    public function restore(UserEvents $userEvent){
+    public function restore(UserEvents $userEvent, Request $request){
         $this->authorize('restore', $userEvent);
 
         if (!$userEvent->restorable) {
@@ -146,6 +166,10 @@ class UserEventsController extends Controller
         }
 
         $userEvent->restore();
+
+        $this->notificationService->sendNotification(
+            new UserEventRestoreNotification($userEvent, $request->user(), $userEvent->user),
+        );
 
         return redirect()->back()->with('success', 'Wydarzenie zostało przywrócone!');
     }
