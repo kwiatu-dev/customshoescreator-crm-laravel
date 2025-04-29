@@ -41,7 +41,7 @@
             ref="notificationsDropdown" 
             class="overflow-hidden z-50 my-4 max-w-sm text-base list-none bg-white rounded divide-y divide-gray-100 shadow-lg dark:divide-gray-600 dark:bg-gray-700"
             :class="{ 'hidden': notifications }"
-            style="min-width: 300px;"
+            style="min-width: 300px; max-height: 600px; overflow-y: auto; right: 10px;"
           >
             <div class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               Powiadomienia
@@ -58,12 +58,12 @@
                     <NotificationText :notification="notification" />
                   </div>
                   <div class="text-xs font-medium text-primary-700 dark:text-primary-400">
-                    {{ dayjs(notification.created_at).format('YYYY-MM-DD') }}
+                    {{ useNotificationTimeAgo(notification.created_at).timeAgo }}
                   </div>
                 </div>
                 <Link 
                   :class="visibleNotificationActionIndexes.includes(index) ? 'translate-x-0' : 'translate-x-full'"
-                  class="text-xl w-24 h-full bg-green-600 hover:bg-green-700 absolute -mt-3 right-0 transition-transform duration-300" 
+                  class="text-xl w-24 h-full bg-green-400 hover:bg-green-300 dark:bg-green-700 hover:dark:bg-green-800 text-gray-50 absolute -mt-3 right-0 transition-transform duration-300" 
                   :href="route('notifications.seen', { notification: notification.id })" 
                   as="button" 
                   method="PUT" 
@@ -101,6 +101,7 @@
             ref="menuDropdown" 
             class="overflow-hidden z-50 my-4 max-w-sm text-base list-none bg-white rounded divide-y divide-gray-100 shadow-lg dark:bg-gray-700 dark:divide-gray-600"
             :class="{ 'hidden': menu }"
+            style="right: 10px;"
           >
             <div class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               Menu
@@ -190,6 +191,7 @@ import { Link, usePage } from '@inertiajs/vue3'
 import dayjs from 'dayjs'
 import { computed, onBeforeUnmount, onMounted, ref} from 'vue'
 import NotificationText from '@/Pages/Notification/Index/Components/NotificationText.vue'
+import { useNotificationTimeAgo } from '@/Composables/useNotificationTimeAgo'
 
 const page = usePage()
 const user = useAuthUser()

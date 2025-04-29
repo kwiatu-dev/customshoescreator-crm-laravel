@@ -5,17 +5,17 @@
       <div 
         v-for="(notification, index) in notifications.data" 
         :key="notification.id" 
-        class="overflow-hidden dark:bg-gray-800 hover:shadow-md rounded-sm shadow-sm p-4 flex flex-row flex-nowrap justify-between items-center relative cursor-pointer"
+        class="overflow-hidden bg-gray-200 dark:bg-gray-800 hover:shadow-md rounded-sm shadow-sm p-4 flex flex-row flex-nowrap justify-between items-center relative cursor-pointer"
         :class="{
-          'opacity-80': notification.read_at !== null,
+          'opacity-30': notification.read_at !== null,
         }"
         @click="toggleActionVisibility(index)"
       >
         <div class="w-full">
-          <div class="text-md text-gray-300">
+          <div class="text-md text-gray-800 dark:text-gray-300">
             <NotificationText :notification="notification" />
           </div>
-          <div class="text-xs text-gray-600 mt-2">Utworzono dnia: {{ dayjs(notification.created_at).format('YYYY-MM-DD') }}</div>
+          <div class="text-xs font-bold text-gray-500 dark:text-gray-600 mt-2">{{ useNotificationTimeAgo(notification.created_at).timeAgo }}</div>
         </div>
         <div 
           class="absolute top-0 right-0 h-full flex items-center transition-transform duration-300"
@@ -26,7 +26,7 @@
             :href="route('notifications.seen', { notification: notification.id })"
             as="button" 
             method="PUT" 
-            class="text-2xl text-gray-50 rounded-r-sm bg-green-600 w-28 h-full flex flex-row justify-center items-center shadow-md hover:bg-green-700"
+            class="text-2xl text-gray-50 rounded-r-sm bg-green-400 dark:bg-green-600 w-28 h-full flex flex-row justify-center items-center shadow-md hover:bg-green-300 hover:dark:bg-green-700"
           >
             <font-awesome-icon :icon="['fas', 'envelope-open']" />
           </Link>
@@ -53,6 +53,7 @@ import dayjs from 'dayjs'
 import Pagination from '@/Components/UI/List/Pagination.vue'
 import { Link } from '@inertiajs/vue3'
 import NotificationText from '@/Pages/Notification/Index/Components/NotificationText.vue'
+import { useNotificationTimeAgo } from '@/Composables/useNotificationTimeAgo'
 
 defineProps({
   notifications: {
