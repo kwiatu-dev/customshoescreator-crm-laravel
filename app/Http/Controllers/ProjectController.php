@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 use App\Helpers\RequestProcessor;
 use App\Models\ProjectImageType;
 use App\Models\ProjectStatus;
+use App\Notifications\Income\IncomeCreateNotification;
+use App\Notifications\Income\IncomeDeleteNotification;
+use App\Notifications\Income\IncomeRestoreNotification;
+use App\Notifications\Income\IncomeUpdateNotification;
 use App\Notifications\Project\ProjectCreateNotification;
 use App\Notifications\Project\ProjectDeleteNotification;
 use App\Notifications\Project\ProjectRestoreNotification;
@@ -274,28 +278,35 @@ class ProjectController extends Controller
             'remarks' => $fields['remarks'] ?? '',
         ]);
 
-        $after_update_status_id = $project->status_id;
-        $images = $request->input('inspiration_images');
-        $project->replaceImages($images, 0);
-
-        $income = $project->getRelatedIncome();
-
-        if ($income) {
-            if ($after_update_status_id == 1) {
-                $income->forceDelete();
-            }
-            else {
-                $project->editRelatedIncome();
-            }
-        }
-        else {
-            if ($after_update_status_id != 1) {
-                $project->createRelatedIncome();
-            }
-        }
-
         $this->notificationService->sendNotification(
             new ProjectUpdateNotification($project, $request->user(), $user),
+        );
+
+        $after_update_status_id = $project->status_id;
+        $images = $request->input('inspiration_images');
+        $project->replaceImages($images, ProjectImageType::TYPE_INSPIRATION);
+
+        $income = $project->income;
+
+        if ($income && $income->deleted_at == null && $after_update_status_id == Project::STATUS_AWAITING) {
+            $project->deleteRelatedIncome();
+
+            $this->notificationService->sendNotification(
+                new IncomeDeleteNotification($income, $request->user(), null),
+            );
+        }
+        else if ($income && $income->deleted_at != null && $after_update_status_id != Project::STATUS_AWAITING) {
+            $project->restoreRelatedIncome();
+
+            $this->notificationService->sendNotification(
+                new IncomeRestoreNotification($income, $request->user(), null),
+            );
+        }
+
+        $project->editRelatedIncome(true);
+
+        $this->notificationService->sendNotification(
+            new IncomeUpdateNotification($income, $request->user(), null),
         );
 
         return redirect()->route('restore.state', ['url' => route('projects.index')])->with('success', 'Projekt został edytowany!');
@@ -345,18 +356,26 @@ class ProjectController extends Controller
         $project->status_id = $status_id;
         $project->save();
 
-        $income = $project->getRelatedIncome();
-
-        if (!$income) {
-            if ($status_id == 2) {
-                $project->createRelatedIncome();
-            }
-        }
-
-        
         $this->notificationService->sendNotification(
             new ProjectStatusNotification($project, $request->user(), $project->user),
         );
+
+        $income = $project->income;
+
+        if (!$income) {
+            $income = $project->createRelatedIncome();
+
+            $this->notificationService->sendNotification(
+                new IncomeCreateNotification($income, $request->user(), null),
+            );
+        }
+        else if ($income && $income->deleted_at != null) {
+            $project->restoreRelatedIncome(true);
+
+            $this->notificationService->sendNotification(
+                new IncomeRestoreNotification($income, $request->user(), null),
+            );
+        }
 
         return redirect()->back()
             ->with('success', 'Status projektu został zaktualizowany!');
@@ -389,15 +408,19 @@ class ProjectController extends Controller
 
         $project->deleteOrFail();
 
-        $income = $project->getRelatedIncome();
-
-        if ($income) {
-            $project->deleteRelatedIncome();
-        }
-
         $this->notificationService->sendNotification(
             new ProjectDeleteNotification($project, $request->user(), $project->user),
         );
+
+        $income = $project->income;
+
+        if ($income) {
+            $project->deleteRelatedIncome();
+
+            $this->notificationService->sendNotification(
+                new IncomeDeleteNotification($income, $request->user(), null),
+            );
+        }
 
         return redirect()->back()->with('success', 'Projekt został usunięty!');
     }
@@ -407,15 +430,20 @@ class ProjectController extends Controller
 
         $project->restore();
 
-        $income = $project->getRelatedIncome(true);
+        $income = $project->income;
 
-        if ($income) {
-            $project->restoreRelatedIncome();
-        }
-
+        
         $this->notificationService->sendNotification(
             new ProjectRestoreNotification($project, $request->user(), $project->user),
         );
+
+        if ($income) {
+            $project->restoreRelatedIncome();
+
+            $this->notificationService->sendNotification(
+                new IncomeRestoreNotification($income, $request->user(), null),
+            );
+        }
 
         return redirect()->back()->with('success', 'Projekt został przywrócony!');
     }

@@ -121,7 +121,7 @@ class Project extends Model
 
     public function income()
     {
-        return $this->hasOne(Income::class, 'project_id', 'id');
+        return $this->hasOne(Income::class, 'project_id', 'id')->withTrashed();
     }
 
     public function previewImage()
@@ -232,17 +232,8 @@ class Project extends Model
         $this->removeImages($images_to_delete);
     }
 
-    public function getRelatedIncome($withThrashed = false)
-    {
-        if ($withThrashed) {
-            return Income::withTrashed()->where('project_id', $this->id)->first();
-        }
-        
-        return $this->income;
-    }
-
     public function createRelatedIncome() {
-        $income = $this->getRelatedIncome(true);
+        $income = $this->income;
 
         if ($income != null) {
             throw new \Exception('Cannot create income: a related income already exists.');
@@ -265,8 +256,8 @@ class Project extends Model
         throw new \Exception('Cannot create income: the project status is not valid.');
     }
 
-    public function editRelatedIncome() {
-        $income = $this->getRelatedIncome();
+    public function editRelatedIncome($withThrashed = false) {
+        $income = $this->income;
 
         if ($income) {
             $income->price = $this->price;
@@ -283,7 +274,7 @@ class Project extends Model
     }
 
     public function deleteRelatedIncome() {
-        $income = $this->getRelatedIncome();
+        $income = $this->income;
 
         if ($income) {
             $income->delete();
@@ -295,7 +286,7 @@ class Project extends Model
     }
 
     public function restoreRelatedIncome() {
-        $income = $this->getRelatedIncome(true);
+        $income = $this->income;
 
         if ($income && $income->trashed()) {
             $income->restore();

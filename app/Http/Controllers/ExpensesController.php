@@ -5,14 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Expenses;
 use Illuminate\Http\Request;
 use App\Helpers\RequestProcessor;
+use App\Notifications\Expense\ExpenseCreateNotification;
+use App\Notifications\Expense\ExpenseDeleteNotification;
+use App\Notifications\Expense\ExpenseRestoreNotification;
+use App\Notifications\Expense\ExpenseUpdateNotification;
+use App\Services\NotificationService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Notification;
 
 class ExpensesController extends Controller
 {
     private $fields;
 
-    public function __construct()
+    public function __construct(
+        private NotificationService $notificationService,
+    )
     {
         $this->middleware(['auth', 'verified', 'admin']);
 
@@ -77,7 +85,11 @@ class ExpensesController extends Controller
             unset($fields['file']);
         }
 
-        Auth::user()->expenses()->save(new Expenses($fields));
+        $expense = Auth::user()->expenses()->save(new Expenses($fields));
+
+        $this->notificationService->sendNotification(
+            new ExpenseCreateNotification($expense, $request->user(), null)
+        );
 
         return redirect()->route('expenses.index')
             ->with('success', 'Wydatek został dodany!');
@@ -114,26 +126,38 @@ class ExpensesController extends Controller
 
         $expense->update($fields);
 
+        $this->notificationService->sendNotification(
+            new ExpenseUpdateNotification($expense, $request->user(), null)
+        );
+
         return redirect()->route('restore.state', ['url' => route('expenses.index')])->with('success', 'Wydatek został edytowany!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Expenses $expense)
+    public function destroy(Expenses $expense, Request $request)
     {
         $expense->deleteOrFail();
+
+        $this->notificationService->sendNotification(
+            new ExpenseDeleteNotification($expense, $request->user(), null)
+        );
 
         return redirect()->back()->with('success', 'Wydatek został usunięty!');
     }
 
-    public function restore(Expenses $expense){
+    public function restore(Expenses $expense, Request $request){
         $expense->restore();
+
+        $this->notificationService->sendNotification(
+            new ExpenseRestoreNotification($expense, $request->user(), null)
+        );
 
         return redirect()->back()->with('success', 'Wydatek został przywrócony!');
     }
 
-    public function remove(Expenses $expense){
+    public function remove(Expenses $expense, Request $request){
         $catalog = $expense->file['catalog'];
         $file = $expense->file['file'];
         $disk = Storage::disk('private');

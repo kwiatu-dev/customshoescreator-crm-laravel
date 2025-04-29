@@ -5,6 +5,12 @@ namespace App\Http\Controllers;
 use App\Helpers\RequestProcessor;
 use App\Models\Income;
 use App\Models\User;
+use App\Notifications\Income\IncomeCreateNotification;
+use App\Notifications\Income\IncomeDeleteNotification;
+use App\Notifications\Income\IncomeRestoreNotification;
+use App\Notifications\Income\IncomeStatusNotification;
+use App\Notifications\Income\IncomeUpdateNotification;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +19,8 @@ class IncomeController extends Controller
 {
     private $fields;
 
-    public function __construct()
+    public function __construct(
+        private NotificationService $notificationService)
     {
         $this->middleware(['auth', 'verified', 'admin']);
 
@@ -107,7 +114,11 @@ class IncomeController extends Controller
             $fields['status_id'] = 1;
         }
 
-        Auth::user()->incomes()->save(new Income($fields));
+        $income = Auth::user()->incomes()->save(new Income($fields));
+
+        $this->notificationService->sendNotification(
+            new IncomeCreateNotification($income, $request->user(), null),
+        );
 
         return redirect()->route('incomes.index')
             ->with('success', 'Przychód został dodany!');
@@ -178,7 +189,21 @@ class IncomeController extends Controller
             $fields['status_id'] = 1;
         }
 
+        $income_status_before = $income->status_id;
         $income->update($fields);
+        $income_status_after = $income->status_id;
+
+        $this->notificationService->sendNotification(
+            new IncomeUpdateNotification($income, $request->user(), null),
+        );
+
+        if ($income_status_before != $income_status_after) {
+            $this->notificationService->sendNotification(
+                new IncomeStatusNotification($income, $request->user(), null),
+            );
+        }
+
+
 
         return redirect()->route('restore.state', ['url' => route('incomes.index')])->with('success', 'Przychód został edytowany!');
     }
@@ -186,10 +211,14 @@ class IncomeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Income $income)
+    public function destroy(Income $income, Request $request)
     {
         if ($income->deletable) {
             $income->deleteOrFail();
+
+            $this->notificationService->sendNotification(
+                new IncomeDeleteNotification($income, $request->user(), null),
+            );
     
             return redirect()->back()->with('success', 'Przychód został usunięty!');
         }
@@ -197,10 +226,14 @@ class IncomeController extends Controller
         return redirect()->back()->with('failed', 'Przychód nie może zostać usunięty');
     }
 
-    public function restore(Income $income)
+    public function restore(Income $income, Request $request)
     {
         if ($income->restorable) {
             $income->restore();
+
+            $this->notificationService->sendNotification(
+                new IncomeRestoreNotification($income, $request->user(), null),
+            );
 
             return redirect()->back()->with('success', 'Przychód został przywrócony!');
         }
@@ -219,6 +252,10 @@ class IncomeController extends Controller
             $income->date = Carbon::now();
             $income->status_id = 2;
             $income->save();
+
+            $this->notificationService->sendNotification(
+                new IncomeStatusNotification($income, $request->user(), null),
+            );
 
             return redirect()->to($redirectUrl)->with('success', 'Przychód został rozliczony');
         }
