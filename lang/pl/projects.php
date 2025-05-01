@@ -18,6 +18,12 @@ return [
         ],
         'status' => [
             'message' => 'link[:auth_url](:auth_fullname) zmienił/a status projektu link[:project_url](:project_title), który jest przypisany do link[:recipient_url](:recipient_fullname) na :status_name',
-        ]
+        ],
+        'overdue' => [
+            'message' => 'Projekt link[:project_url](:project_title) jest opóźniony. Ostateczny termin realizacji to :project_deadline',
+        ],
+        'unstarted' => [
+            'message' => 'Projekt link[:project_url](:project_title) nie wystartował w wyznaczonym terminie. Planowany start to :project_start',
+        ],
     ],
 ];

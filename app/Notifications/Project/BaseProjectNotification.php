@@ -16,8 +16,8 @@ class BaseProjectNotification extends BaseNotification
 
     public function __construct(    
         private Project $project,
-        User $auth,
-        User $recipient) 
+        ?User $auth,
+        ?User $recipient) 
     {
         parent::__construct($auth, $recipient);
 

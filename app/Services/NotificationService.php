@@ -27,7 +27,7 @@ class NotificationService
         $admin_recipients = $admins->filter(fn ($admin) => ((!$recipient || $admin->id !== $recipient->id) && (!$auth || $admin->id !== $auth->id)));
         $recipients = $recipients->merge($admin_recipients);
 
-        if ($recipient && $auth && $auth->id !== $recipient->id) {
+        if ($recipient && (!$auth || $auth->id !== $recipient->id)) {
             $recipients->push($recipient);
         }
 

@@ -1,7 +1,7 @@
 <template>
   <div v-if="notification.data.message">
     <span v-for="(part, index) in parsedMessage" :key="index">
-      <Link v-if="part.type === 'link'" :href="part.url" class="underline text-indigo-500 dark:text-indigo-400">{{ part.text }}</Link>
+      <Link v-if="part.type === 'link'" :href="part.url" class="underline text-indigo-500 dark:text-indigo-400" @click.stop>{{ part.text }}</Link>
       <span v-else>{{ part.text }}</span>
     </span>
   </div>

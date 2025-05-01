@@ -14,7 +14,7 @@ class FinancialReportService {
         $auth = Auth::user();
 
         $monthlyIncomeData = $user_id
-            ? $this->userReportService->getMonthlyGeneratedIncomeByUserId($year, $user_id)['data']
+            ? $this->userReportService->getMonthlyGeneratedIncomeByUserId($year, $user_id)
             : $this->incomeReportService->getMonthlyIncome($year)['data'];
 
         $monthlyExpensesData = $user_id
@@ -26,7 +26,7 @@ class FinancialReportService {
             : $this->calculateMonthlyProfit($monthlyIncomeData, $monthlyExpensesData);
 
         $monthlyEarningsData = $user_id
-            ? $this->userReportService->getMonthlyEarningsForUser($year, $user_id)['data']
+            ? $this->userReportService->getMonthlyEarningsForUser($year, $user_id)
             : null;
 
         $datasets = [];

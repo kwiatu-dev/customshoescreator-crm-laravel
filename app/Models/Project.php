@@ -21,7 +21,7 @@ class Project extends Model
 
     const STATUS_AWAITING = 1;
     const STATUS_IN_PROGRESS = 2;
-    const STATUS_COMPLTED = 3;
+    const STATUS_COMPLETED = 3;
 
     protected $fillable = [
         'title',

@@ -8,6 +8,7 @@ class ModelAggregatorService {
     private static function generateCacheKey(
         string $model,
         string $method,
+        array $keys,
         array $conditions,
         Closure|string|null $compute,
         string|\Illuminate\Database\Query\Expression|null $raw = null,
@@ -22,6 +23,10 @@ class ModelAggregatorService {
             } else {
                 $normalized[] = "$key:$value";
             }
+        }
+
+        foreach ($keys as $key => $value) {
+            $normalized[] = "$key:$value";
         }
     
         $computeKey = match (true) {
@@ -48,13 +53,14 @@ class ModelAggregatorService {
         string $model,
         string $method,
         array $tags,
+        array $keys = [],
         array $conditions = [],
         string|\Illuminate\Database\Query\Expression|null $raw = null,
         Closure|string|null $compute = null,
     ) {
         return CacheService::remember(
             $tags,
-            self::generateCacheKey($model, $method, $conditions, $compute, $raw),
+            self::generateCacheKey($model, $method, $keys, $conditions, $compute, $raw),
             function () use ($model, $method, $conditions, $raw, $compute) {
                 $query = $model::query();
     

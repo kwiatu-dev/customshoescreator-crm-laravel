@@ -8,19 +8,23 @@ use Date;
 use DateTime;
 
 class UserReportService {
-    public function getMonthlyGeneratedIncomeByUserId($year, $user_id): array {
-        return ChartHelper::getMonthlyAggregatedData(
-            table: 'incomes',
-            dateColumn: 'date',
-            year: $year,
-            filter: function ($query) use ($user_id) {
-                $query
-                    ->where('status_id', Income::STATUS_SETTLED)
-                    ->userHasIncome($user_id);
-            },
-            aggregate: 'SUM(price * (costs / 100))',
-            alias: 'income'
-        );
+    public function getMonthlyGeneratedIncomeByUserId(int $year, $user_id): array
+    {
+        $data = array_fill(0, 12, 0);
+    
+        $incomes = Income::select('date', 'price', 'costs')
+            ->where('status_id', Income::STATUS_SETTLED)
+            ->whereYear('date', $year)
+            ->userHasIncome($user_id)
+            ->get();
+    
+        foreach ($incomes as $income) {
+            $generatedIncome = $income->price * ($income->costs / 100);
+            $month = (int) date('n', strtotime($income->date)) - 1;
+            $data[$month] += $generatedIncome;
+        }
+    
+        return array_map(fn($v) => round($v, 2), $data);
     }
 
     public function getMonthlyEarningsForUser(int $year, $user_id): array
@@ -45,7 +49,10 @@ class UserReportService {
     public function getTopUsersByIncome($limit, $from, $to)
     {
         $users = User::query()
-            ->whereHas('projectIncomes', fn($query) => $this->applyIncomeDateFilters($query, $from, $to))
+            ->whereHas('projectIncomes', function ($query) use ($from, $to) {
+                $this->applyIncomeDateFilters($query, $from, $to);
+                $query->whereHas('project', fn($q) => $q->whereNotNull('end'));
+            })
             ->with([
                 'projectIncomes' => function ($query) use ($from, $to) {
                     $this->applyIncomeDateFilters($query, $from, $to);

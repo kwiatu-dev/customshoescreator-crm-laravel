@@ -9,6 +9,7 @@
     :data="kpi?.['financial'] || null"
     :labels="{ income: 'Przychód', earnings: 'Zarobek' }"
     :units="{ income: ' zł', earnings: ' zł' }"
+    :only-for-admin="{ income: true }"
   >
     Finanse
   </IconStatsCard>

@@ -9,26 +9,28 @@
     <div class="flex flex-col sm:flex-row justify-between gap-2 md:flex-col">
       <div 
         v-for="(label, key) in labels" 
-        :key="label"
+        :key="key"
         class="flex-1"
       >
-        <div 
-          v-if="data?.[key] && data[key].hasOwnProperty('arrow') && data[key].hasOwnProperty('percentage') && data[key].hasOwnProperty('value')"
-          class="flex flex-col"
-        >
-          <div class="text-gray-400 dark:text-gray-500">{{ label }}</div>
-          <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
-            <span>{{ data[key]['value'] }} {{ units?.[key] || '' }}</span>
-            <span class="text-xs" :class="{'text-green-500': data[key]['arrow'] === 'up', 'text-rose-500': data[key]['arrow'] === 'down'}">
-              <font-awesome-icon v-if="data[key]['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
-              <font-awesome-icon v-if="data[key]['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
-              {{ data[key]['percentage'] }}%
-            </span>
+        <div v-if="visibleForUser(key)">
+          <div 
+            v-if="data?.[key] && data[key].hasOwnProperty('arrow') && data[key].hasOwnProperty('percentage') && data[key].hasOwnProperty('value')"
+            class="flex flex-col"
+          >
+            <div class="text-gray-400 dark:text-gray-500">{{ label }}</div>
+            <div class="font-medium text-gray-600 dark:text-gray-400 text-xl flex flex-row flex-nowrap justify-start md:justify-between items-center gap-4">
+              <span>{{ data[key]['value'] }} {{ units?.[key] || '' }}</span>
+              <span class="text-xs" :class="{'text-green-500': data[key]['arrow'] === 'up', 'text-rose-500': data[key]['arrow'] === 'down'}">
+                <font-awesome-icon v-if="data[key]['arrow'] === 'up'" :icon="['fas', 'caret-up']" />
+                <font-awesome-icon v-if="data[key]['arrow'] === 'down'" :icon="['fas', 'caret-down']" />
+                {{ data[key]['percentage'] }}%
+              </span>
+            </div>
           </div>
-        </div>
-        <div v-else>
-          <div class="text-gray-400 dark:text-gray-500">{{ label }}</div>
-          <div class="loading-placeholder" />
+          <div v-else>
+            <div class="text-gray-400 dark:text-gray-500">{{ label }}</div>
+            <div class="loading-placeholder" />
+          </div>
         </div>
       </div>
     </div>
@@ -36,7 +38,9 @@
 </template>
 
 <script setup>
-defineProps({
+import { useAuthUser } from '@/Composables/useAuthUser'
+
+const props = defineProps({
   data: {
     type: [Object, null],
     required: true,
@@ -53,7 +57,22 @@ defineProps({
     type: Object,
     required: true,
   },
+  onlyForAdmin: {
+    type: Object,
+    required: false,
+    default: () => ({}),
+  },
 })
+
+const auth = useAuthUser()
+
+const visibleForUser = (label) => {
+  if (props.onlyForAdmin?.[label]) {
+    return !!auth.value?.is_admin
+  }
+
+  return true
+}
 </script>
 
 <style scoped>
