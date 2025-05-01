@@ -42,7 +42,7 @@ const columns = {
   investor: { label: 'Użytkownik (inwestor)', columns: ['first_name', 'last_name'], link: {column: 'investor', field: 'id', prefix: route('user.show', { user: '' }) + '/'}, order: 1},
   title: { label: 'Tytuł', order: 2 },
   amount: { label: 'Kwota', component: Amount, suffix: 'zł', order: 4 },
-  date: { label: 'Data', order: 6 },
+  date: { label: 'Do kiedy', order: 6 },
   status: { label: 'Status', columns: ['name'], order: 7 },
   remarks: { label: 'Uwagi', order: 8 },
 }
