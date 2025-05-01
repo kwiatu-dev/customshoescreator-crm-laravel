@@ -191,7 +191,7 @@ import { Link, usePage } from '@inertiajs/vue3'
 import { computed, onBeforeUnmount, onMounted, ref} from 'vue'
 import NotificationText from '@/Pages/Notification/Index/Components/NotificationText.vue'
 import { useNotificationTimeAgo } from '@/Composables/useNotificationTimeAgo'
-import logo from '@/../../public/storage/logo.webp'
+import logo from '@/../../public/images/logo.webp'
 
 const page = usePage()
 const user = useAuthUser()
