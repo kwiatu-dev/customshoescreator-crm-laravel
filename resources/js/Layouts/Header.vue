@@ -11,7 +11,7 @@
             <span class="sr-only">Toggle sidebar</span>
           </button> -->
           <Link :href="route('dashboard.index')" class="flex items-center mr-4">
-            <img src="/storage/logo.webp" class="mr-3 h-10 rounded-full" />
+            <img :src="logo" class="mr-3 h-10 rounded-full" />
             <div>
               <p class="hidden sm:block self-center text-2xl font-semibold whitespace-nowrap dark:text-white mb-0 -mt-2">panelCSC</p>
               <p class="hidden sm:block text-sm -mt-1 text-gray-500">System do zarządzania zleceniami.</p>
@@ -188,10 +188,10 @@
 <script setup>
 import { useAuthUser } from '@/Composables/useAuthUser'
 import { Link, usePage } from '@inertiajs/vue3'
-import dayjs from 'dayjs'
 import { computed, onBeforeUnmount, onMounted, ref} from 'vue'
 import NotificationText from '@/Pages/Notification/Index/Components/NotificationText.vue'
 import { useNotificationTimeAgo } from '@/Composables/useNotificationTimeAgo'
+import logo from '@/../../public/storage/logo.webp'
 
 const page = usePage()
 const user = useAuthUser()
