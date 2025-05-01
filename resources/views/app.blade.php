@@ -3,6 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="/images/logo.webp" sizes="32x32" />
+        <link rel="icon" href="/images/logo.webp" sizes="192x192" />
         
         <title>panelCSC</title>
         @routes
