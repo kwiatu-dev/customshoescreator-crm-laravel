@@ -1,5 +1,5 @@
 <template>
-  <RememberStateButton v-if="object.project_id" label="Projekt" :url="route('projects.show', { project: object.project_id })" />
+  <RememberStateButton v-if="object.project_id && !disableShowButton" label="Projekt" :url="route('projects.show', { project: object.project_id })" />
   <SettleIncomeAction v-if="object.settleable" :income="object" />
   <RememberStateButton v-if="!disableShowButton" label="Zobacz" :url="route('incomes.show', { income: object.id })" />
   <RememberStateButton :disabled="!object.editable" label="Edytuj" :url="route('incomes.edit', { income: object.id })" />

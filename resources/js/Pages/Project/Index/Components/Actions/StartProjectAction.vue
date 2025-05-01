@@ -14,7 +14,7 @@
       ref="form"
       v-model:saved="isSaved"
       :project="project"
-      :type-id="1"
+      :type-id="4"
       title="Dodaj wizualizacje (opcjonalnie)"
       description="Wizualizacje możesz dodać teraz lub przed zakończeniem zlecenia."
       label="Wizualizacje (zdjęcia)"

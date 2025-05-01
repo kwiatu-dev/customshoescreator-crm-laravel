@@ -69,6 +69,7 @@ class ProjectController extends Controller
                 'user' => function ($query) {
                     $query->withTrashed();
                 },
+                'income',
                 'images',
             ]);
 

@@ -13,7 +13,7 @@
           'w-full mt-4': data.remarks,
           'w-full text-lg font-bold mb-4': data.title,
           'w-full': data.fullWidth,
-          'text-right': (data.order || index + 1) % 2 !== 0
+          'text-right': (data.order || index + 1) % 2 !== 0 && !(data.remarks || data.fullWidth),
         }"
         :style="{ order: data.order || 'unset' }"
       /> 

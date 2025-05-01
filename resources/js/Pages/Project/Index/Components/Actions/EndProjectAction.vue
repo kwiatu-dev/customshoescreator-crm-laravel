@@ -130,7 +130,7 @@
             <div class="flex flex-col gap-4">
               <div>
                 <div>Inspiracje</div>
-                <PhotoGrid :photos="project.images.filter(image => image.type_id === 0)" />
+                <PhotoGrid :photos="project.images.filter(image => image.type_id === 4)" />
               </div>
               <div>
                 <div>Wizualizacje komputerowe</div>
@@ -179,8 +179,8 @@ const props = defineProps({
 const stepper = ref(null)
 const show = ref(false)
 const steps = ref(4)
-const step_active = ref(Math.max(0,...props.project.images.map(image => image.type_id)))
-const step_focus = ref(step_active.value + 1)
+const step_active = ref(0)
+const step_focus = ref(1)
 
 const open = () => {
   show.value = true

@@ -1,4 +1,5 @@
 <template>
+  <Link v-if="auth?.is_admin && object?.income && object.income.deleted_at === null" :href="route('incomes.show', { income: object.income.id })" method="get" as="button" class="btn-action">Przychód</Link>
   <RememberStateButton v-if="!disableShowButton" label="Zobacz" :url="route('projects.show', { project: object.id })" />
   <StartProjectAction v-if="object.deletable && object.status_id === 1" :project="object" />
   <EndProjectAction v-if="object.deletable && object.status_id === 2" :project="object" />
@@ -13,10 +14,12 @@ import { Link } from '@inertiajs/vue3'
 import StartProjectAction from '@/Pages/Project/Index/Components/Actions/StartProjectAction.vue'
 import EndProjectAction from '@/Pages/Project/Index/Components/Actions/EndProjectAction.vue'
 import RememberStateButton from '@/Components/UI/Buttons/RememberStateButton.vue'
+import { useAuthUser } from '@/Composables/useAuthUser'
 
 defineProps({
   object: Object,
 })
 
+const auth = useAuthUser()
 const disableShowButton = inject('disable_show_button', false)
 </script>

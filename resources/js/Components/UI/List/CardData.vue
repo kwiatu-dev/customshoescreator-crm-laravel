@@ -23,7 +23,7 @@
     <div 
       v-else 
       class="inline" 
-      :style="props.element.title ? '' : 'display: inline-block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'"
+      :style="[props.element.title || props.element.remarks ? '' : 'display: inline-block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;']"
     >
       <component :is="props.element.component" v-if="hasComponent" :object="object" />
       <span v-else>{{ data }}</span>
