@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Log;
 
 class TestJob implements ShouldQueue
 {
@@ -27,7 +28,5 @@ class TestJob implements ShouldQueue
     public function handle(): void
     {
         sleep(2);
-        
-        Log::info('Zadanie TestJob zostało zakończone.');
     }
 }
