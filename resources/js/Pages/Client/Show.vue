@@ -26,23 +26,16 @@
       :actions="Actions"
     />
   </div>
-  <!-- <div v-if="projects.length" class="mb-4">
-    <div class="text-gray-500 font-medium mb-1">Projekty</div>
-    <div class="grid md:grid-cols-2 grid-cols-1 gap-2">
-      <Cards 
-        :cards="projectCards"
-        :objects="projects" 
-      />
-    </div>
-  </div> -->
 </template>
 
-<script setup lang="ts">
+<script setup>
+import { defineAsyncComponent, provide } from 'vue'
+
+const Box = defineAsyncComponent(() => import('@/Components/UI/List/Box.vue'))
+const Cards = defineAsyncComponent(() => import('@/Components/UI/List/Cards.vue'))
+const Actions = defineAsyncComponent(() => import('@/Pages/Client/Index/Components/Actions.vue'))
+
 import dayjs from 'dayjs'
-import Box from '@/Components/UI/List/Box.vue'
-import Cards from '@/Components/UI/List/Cards.vue'
-import Actions from '@/Pages/Client/Index/Components/Actions.vue'
-import { provide } from 'vue'
 
 defineProps({
   client: {
@@ -61,17 +54,6 @@ const clientCard = {
   street: { concat: ['street_nr', 'apartment_nr'] },
   phone: { link: { field: 'phone', prefix: 'tel:' }},
   postcode: { concat: ['city'], separator: ', ' },
-}
-
-const projectCards = {
-  title: { title: true },
-  client: { columns: ['first_name', 'last_name'], link: {column: 'client', field: 'email', prefix: 'mailto:'} },
-  user: { columns: ['first_name', 'last_name'], link: {column: 'user', field: 'email', prefix: 'mailto:'} },
-  price: { suffix: ' zł', concat: ['visualization'], separator: ' + ' },
-  status: { columns: ['name'] },
-  start: { },
-  deadline: { },
-  end: {},
 }
 
 provide('disable_show_button', true)

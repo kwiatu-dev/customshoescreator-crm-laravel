@@ -16,8 +16,10 @@
 </template>
     
 <script setup>
-import FormError from '@/Components/UI/Form/FormError.vue'
-import {useForm} from '@inertiajs/vue3'
+import { defineAsyncComponent } from 'vue'
+import { useForm } from '@inertiajs/vue3'
+
+const FormError = defineAsyncComponent(() => import('@/Components/UI/Form/FormError.vue'))
   
 const form = useForm({
   email: null,

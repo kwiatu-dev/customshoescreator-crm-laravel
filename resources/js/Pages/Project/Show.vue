@@ -29,12 +29,13 @@
 </template>
 
 <script setup>
-import Box from '@/Components/UI/List/Box.vue'
-import Cards from '@/Components/UI/List/Cards.vue'
-import Actions from '@/Pages/Project/Index/Components/Actions/AllActions.vue'
-import PhotoGrid from '@/Pages/Project/Show/Components/PhotoGrid.vue'
-import AdminDistribution from '@/Components/UI/List/AdminDistribution.vue'
-import { provide } from 'vue'
+import { defineAsyncComponent, provide } from 'vue'
+
+const Box = defineAsyncComponent(() => import('@/Components/UI/List/Box.vue'))
+const Cards = defineAsyncComponent(() => import('@/Components/UI/List/Cards.vue'))
+const PhotoGrid = defineAsyncComponent(() => import('@/Pages/Project/Show/Components/PhotoGrid.vue'))
+const AdminDistribution = defineAsyncComponent(() => import('@/Components/UI/List/AdminDistribution.vue'))
+const Actions = defineAsyncComponent(() => import('@/Pages/Project/Index/Components/Actions/AllActions.vue'))
 
 const props = defineProps({
   project: Object,

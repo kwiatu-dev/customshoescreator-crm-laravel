@@ -121,17 +121,18 @@
 </template>
   
 <script setup>
-import UploadImages from '@/Components/UI/Form/UploadImages.vue'
-import FormError from '@/Components/UI/Form/FormError.vue'
-import Autocomplete from '@/Components/UI/Form/Autocomplete.vue'
-import FormClientCreate from '@/Pages/Client/Create.vue'
-import DropdownList from '@/Components/UI/Form/DropdownList.vue'
-import { onMounted, ref, computed } from 'vue'
+import { defineAsyncComponent, onMounted, ref, computed } from 'vue'
 import { useForm, usePage } from '@inertiajs/vue3'
-import datepicker from '@/Helpers/datepicker.js'
-import FormPopup from '@/Components/UI/Popup/FormPopup.vue'
-import AdminDistribution from '@/Components/UI/Form/AdminDistribution.vue'
-import HiddenSection from '@/Components/UI/Form/HiddenSection.vue'
+
+const FormClientCreate = defineAsyncComponent(() => import('@/Pages/Client/Create.vue'))
+const UploadImages = defineAsyncComponent(() => import('@/Components/UI/Form/UploadImages.vue'))
+const FormPopup = defineAsyncComponent(() => import('@/Components/UI/Popup/FormPopup.vue'))
+const HiddenSection = defineAsyncComponent(() => import('@/Components/UI/Form/HiddenSection.vue'))
+const AdminDistribution = defineAsyncComponent(() => import('@/Components/UI/Form/AdminDistribution.vue'))
+const FormError = defineAsyncComponent(() => import('@/Components/UI/Form/FormError.vue'))
+const Autocomplete = defineAsyncComponent(() => import('@/Components/UI/Form/Autocomplete.vue'))
+const DropdownList = defineAsyncComponent(() => import('@/Components/UI/Form/DropdownList.vue'))
+
 
 const props = defineProps({
   users: {
@@ -167,7 +168,7 @@ const form = useForm({
   deadline: props.project.deadline,
   remarks: props.project.remarks,
   inspiration_images: props.project.images
-    .filter(i => i.type_id === 0)
+    .filter(i => i.type_id === 4)
     .map(i => i.file),
   status_id: props.project.status.id.toString(),
   costs: props.project.costs,
@@ -192,7 +193,8 @@ const isAdmin = computed(() => currentUser.value?.is_admin)
 const hasHiddenSectionErrors = computed(() => 
   form.errors.distribution !== undefined || form.errors.commission !== undefined || form.errors.costs !== undefined || form.errors.status_id !== undefined)
   
-onMounted(() => {
+onMounted(async () => {
+  const { default: datepicker } = await import('@/Helpers/datepicker.js')
   datepicker.create(start, null, (event) => form.start = event.target.value)
   datepicker.create(deadline, null, (event) => form.deadline = event.target.value)
 })

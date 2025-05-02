@@ -26,9 +26,11 @@
 </template>
 
 <script setup>
+import { defineAsyncComponent } from 'vue'
 import { Link } from '@inertiajs/vue3'
-import ListLayout from '@/Components/UI/List/Layout.vue'
-import actions from '@/Pages/Expenses/Index/Components/Actions.vue'
+
+const ListLayout = defineAsyncComponent(() => import('@/Components/UI/List/Layout.vue'))
+const actions = defineAsyncComponent(() => import('@/Pages/Expenses/Index/Components/Actions.vue'))
 
 defineProps({
   expenses: Object,

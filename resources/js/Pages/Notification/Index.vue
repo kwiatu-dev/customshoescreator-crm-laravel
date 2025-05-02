@@ -48,13 +48,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import dayjs from 'dayjs'
-import Pagination from '@/Components/UI/List/Pagination.vue'
 import { Link } from '@inertiajs/vue3'
-import NotificationText from '@/Pages/Notification/Index/Components/NotificationText.vue'
+import { defineAsyncComponent, ref } from 'vue'
 import { useNotificationTimeAgo } from '@/Composables/useNotificationTimeAgo'
 
+const Pagination = defineAsyncComponent(() => import('@/Components/UI/List/Pagination.vue'))
+const NotificationText = defineAsyncComponent(() => import('@/Pages/Notification/Index/Components/NotificationText.vue'))
 defineProps({
   notifications: {
     type: Object,

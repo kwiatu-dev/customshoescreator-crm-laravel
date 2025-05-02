@@ -83,17 +83,17 @@ library.add(
   faWallet,
 )
 
+const pages = import.meta.glob('./Pages/**/*.vue')
+
 createInertiaApp({
   progress: { 
     color: '#818cf8',
     delay: 0,
     showSpinner: true,
   },
-  resolve: name => {
-    const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
-    const page = pages[`./Pages/${name}.vue`]
+  resolve: async name => {
+    const page = await pages[`./Pages/${name}.vue`]()
     page.default.layout = page.default.layout || MainLayout
-
     return page
   },
   setup({ el, App, props, plugin }) {

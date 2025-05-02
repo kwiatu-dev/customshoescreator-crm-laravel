@@ -27,9 +27,12 @@
 </template>
   
 <script setup>
+import { defineAsyncComponent } from 'vue'
 import { Link } from '@inertiajs/vue3'
-import ListLayout from '@/Components/UI/List/Layout.vue'
-import Actions from '@/Pages/Project/Index/Components/Actions/AllActions.vue'
+
+const ListLayout = defineAsyncComponent(() => import('@/Components/UI/List/Layout.vue'))
+const Actions = defineAsyncComponent(() => import('@/Pages/Project/Index/Components/Actions/AllActions.vue'))
+
 import dayjs from 'dayjs'
 
 defineProps({

@@ -8,7 +8,7 @@
     :cards="cards"
     :filterable="filterable"
     :get="'user.index'"
-    :actions="actions"
+    :actions="Actions"
   >
     <template #title>
       Lista użytkowników
@@ -26,10 +26,11 @@
 
 <script setup>
 import { Link } from '@inertiajs/vue3'
-import ListLayout from '@/Components/UI/List/Layout.vue'
-import actions from '@/Pages/User/Index/Components/Actions.vue'
-import AdminDistribution from '@/Components/UI/List/AdminDistribution.vue'
-import { provide } from 'vue'
+import { defineAsyncComponent, provide } from 'vue'
+
+const ListLayout = defineAsyncComponent(() => import('@/Components/UI/List/Layout.vue'))
+const AdminDistribution = defineAsyncComponent(() => import('@/Components/UI/List/AdminDistribution.vue'))
+const Actions = defineAsyncComponent(() => import('@/Pages/User/Index/Components/Actions.vue'))
 
 const props = defineProps({
   users: Object,

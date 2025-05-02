@@ -9,9 +9,11 @@
 </template>
 
 <script setup>
-import Actions from '@/Pages/Investment/Index/Components/Actions.vue'
-import Cards from '@/Components/UI/List/Cards.vue'
-import Amount from '@/Pages/Investment/Index/Components/Amount.vue'
+import { defineAsyncComponent } from 'vue'
+
+const Actions = defineAsyncComponent(() => import('@/Pages/Investment/Index/Components/Actions.vue'))
+const Cards = defineAsyncComponent(() => import('@/Components/UI/List/Cards.vue'))
+const Amount = defineAsyncComponent(() => import('@/Pages/Investment/Index/Components/Amount.vue'))
 
 defineProps({
   investment: {

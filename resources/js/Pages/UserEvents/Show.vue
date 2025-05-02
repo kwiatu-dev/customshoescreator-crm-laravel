@@ -9,8 +9,10 @@
 </template>
 
 <script setup>
-import Cards from '@/Components/UI/List/Cards.vue'
-import Actions from '@/Pages/UserEvents/Components/Actions.vue'
+import { defineAsyncComponent } from 'vue'
+
+const Cards = defineAsyncComponent(() => import('@/Components/UI/List/Cards.vue'))
+const Actions = defineAsyncComponent(() => import('@/Pages/UserEvents/Components/Actions.vue'))
 
 defineProps({
   userEvent: {

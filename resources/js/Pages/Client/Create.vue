@@ -91,11 +91,11 @@
 </template>
 
 <script setup>
-import FormError from '@/Components/UI/Form/FormError.vue'
-import DropdownList from '@/Components/UI/Form/DropdownList.vue'
+import { defineAsyncComponent, ref, onMounted } from 'vue'
 import { useForm } from '@inertiajs/vue3'
-import { onMounted, ref } from 'vue'
-import axios from 'axios'
+
+const FormError = defineAsyncComponent(() => import('@/Components/UI/Form/FormError.vue'))
+const DropdownList = defineAsyncComponent(() => import('@/Components/UI/Form/DropdownList.vue'))
 
 const conversionSources = ref([])
 
@@ -116,13 +116,15 @@ const form = useForm({
 })
 
 onMounted(() => {
-  axios.get(route('dictionary.index', {table: 'ConversionSource'}))
-    .then(response => {
-      conversionSources.value = response.data
-    })
-    .catch(error => {
-      console.error(error)
-    })
+  import('axios').then(({ default: axios }) => {
+    axios.get(route('dictionary.index', {table: 'ConversionSource'}))
+      .then(response => {
+        conversionSources.value = response.data
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  })
 })
 
 const clear = () => {

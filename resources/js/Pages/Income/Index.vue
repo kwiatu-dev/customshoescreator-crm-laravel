@@ -26,10 +26,11 @@
 </template>
     
 <script setup>
+import { defineAsyncComponent, provide } from 'vue'
 import { Link } from '@inertiajs/vue3'
-import ListLayout from '@/Components/UI/List/Layout.vue'
-import Actions from '@/Pages/Income/Index/Components/Actions.vue'
-import { provide } from 'vue'
+
+const ListLayout = defineAsyncComponent(() => import('@/Components/UI/List/Layout.vue'))
+const Actions = defineAsyncComponent(() => import('@/Pages/Income/Index/Components/Actions.vue'))
   
 const props = defineProps({
   incomes: Object,
@@ -76,6 +77,4 @@ const sortable = {
 }
 
 provide('users', props.users)
-  
-//todo 1. wyczyścić niepotrzebne tabelki i kod z projektu, 2. utworzyć widoki show, create, edit, 3. uwzględnić, że edycja oraz usuwanie będzie dostępne tylko dla przychodów dodanych przed użytkownika, resztę uznajemy, że są powiązane z projektami
 </script>

@@ -21,7 +21,7 @@
       />
     </div>
 
-    <FullCalendar ref="fullCalendar" :options="calendarOptions" />
+    <FullCalendar v-if="fullCalendarOptions" ref="fullCalendar" :options="fullCalendarOptions" />
 
     <div class="flex flex-nowrap flex-row gap-4 items-center mt-4">
       <div>
@@ -41,18 +41,18 @@
 </template>
 
 <script setup> 
-import Filters from '@/Components/UI/List/Filters.vue'
-import FullCalendar from '@fullcalendar/vue3'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import plLocale from '@fullcalendar/core/locales/pl'
-import { ref, computed, watch, nextTick, onBeforeMount } from 'vue'
+import { defineAsyncComponent, ref, computed, watch, nextTick, onBeforeMount, provide } from 'vue'
 import { useProjectEvent } from '@/Composables/useProjectEvent'
 import { useUserEvent } from '@/Composables/useUserEvent'
-import FormPopup from '@/Components/UI/Popup/FormPopup.vue'
-import FormUserEventCreate from '@/Pages/UserEvents/Create.vue'
-import { provide } from 'vue'
-import { router } from '@inertiajs/vue3'
 import { useQueryParams } from '@/Composables/useQueryParams'
+import { router } from '@inertiajs/vue3'
+
+const Filters = defineAsyncComponent(() => import('@/Components/UI/List/Filters.vue'))
+const FullCalendar = defineAsyncComponent(() => import('@fullcalendar/vue3'))
+const FormPopup = defineAsyncComponent(() => import('@/Components/UI/Popup/FormPopup.vue'))
+const FormUserEventCreate = defineAsyncComponent(() => import('@/Pages/UserEvents/Create.vue'))
+
+
 import dayjs from 'dayjs'
  
 const props = defineProps({
@@ -76,54 +76,35 @@ const props = defineProps({
 })
 
 const fullCalendar = ref(null)
+const fullCalendarOptions = ref(null)
 const projectEvents = computed(() => props.projects.map(useProjectEvent))
 const userEvents = computed(() => props.userEvents.map(useUserEvent))
-const events = computed(() => [...projectEvents.value, ...userEvents.value])
+const allEvents = computed(() => [...projectEvents.value, ...userEvents.value])
 
-const reload = async () => {
-  if (fullCalendar.value) {
-    await nextTick()
-    const calendarApi = fullCalendar.value.getApi()
-    calendarApi.removeAllEvents()
-    calendarApi.addEventSource(events.value)
-  }
-}
+onBeforeMount(async () => {
+  const { default: fullCalendarOptionsHelper } = await import('@/Helpers/fullcalendarOptions.js')
 
-const onEventClick = (info) => { 
-  const event = info.event
-  const link = event.extendedProps.link
-
-  if (link) {
-    router.post(route('remember.state'), {
-      url: link,
-      params: useQueryParams(),
-    })
-  }
-}
-
-const onDatesSet = (info) => {
-  addDateToQuery()
-}
-
-const calendarOptions = ref({
-  plugins: [dayGridPlugin],
-  initialView: 'dayGridMonth',
-  locale: plLocale,
-  height: 700,
-  events: events,
-  timeZone: 'local',
-  headerToolbar: {
-    left: 'prev next',
-    center: '', 
-    right: 'title',
-  },
-  eventClassNames: (object) => {
-    if (object.event.extendedProps.deleted) {
-      return ['event-deleted']
+  const onEventClick = (info) => { 
+    const event = info.event
+    const link = event.extendedProps.link
+        
+    if (link) {
+      router.post(route('remember.state'), {
+        url: link,
+        params: useQueryParams(),
+      })
     }
-  },
-  eventClick: onEventClick,
-  datesSet: onDatesSet,
+  }
+        
+  const onDatesSet = () => {
+    addFullCalendarViewDateToQueryParams()
+  }
+
+  fullCalendarOptions.value = fullCalendarOptionsHelper.buildDayGridOptions(allEvents, onEventClick, onDatesSet)
+
+  const query = useQueryParams()
+  const date = query.date || dayjs().format('YYYY-MM-DD')
+  fullCalendarOptions.value.initialDate = date
 })
 
 const filterable = {
@@ -155,8 +136,13 @@ const onNewUserEventCreated = (userEvent) => {
   
 }
 
-const addDateToQuery = () => {
+const addFullCalendarViewDateToQueryParams = () => {
   const query = useQueryParams()
+
+  if (!fullCalendar.value) {
+    return
+  }
+
   const calendarApi = fullCalendar.value.getApi()
   const currentDate = calendarApi.getCurrentData().currentDate
   const formattedDate = dayjs(currentDate).format('YYYY-MM-DD')
@@ -167,16 +153,21 @@ const addDateToQuery = () => {
   } 
 }
 
-onBeforeMount(() => {
-  const query = useQueryParams()
-  const date = query.date || dayjs().format('YYYY-MM-DD')
-  calendarOptions.value.initialDate = date
-})
+const reloadFullCalendar = async () => {
+  if (!fullCalendar.value) {
+    return
+  }
+
+  await nextTick()
+  const calendarApi = fullCalendar.value.getApi()
+  calendarApi.removeAllEvents()
+  calendarApi.addEventSource(allEvents.value)
+}
 
 provide('users', props.users)
 provide('types', props.types)
 
-watch(events, (_) => reload())
+watch(allEvents, (_) => reloadFullCalendar())
 </script>
 
 <style>

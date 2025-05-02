@@ -93,15 +93,16 @@
 </template>
   
 <script setup>
-import UploadImages from '@/Components/UI/Form/UploadImages.vue'
-import FormError from '@/Components/UI/Form/FormError.vue'
-import Autocomplete from '@/Components/UI/Form/Autocomplete.vue'
-import FormClientCreate from '@/Pages/Client/Create.vue'
-import DropdownList from '@/Components/UI/Form/DropdownList.vue'
-import { onMounted, ref, computed } from 'vue'
+import { defineAsyncComponent, onMounted, ref, computed } from 'vue'
 import { useForm, usePage } from '@inertiajs/vue3'
-import datepicker from '@/Helpers/datepicker.js'
-import FormPopup from '@/Components/UI/Popup/FormPopup.vue'
+
+const UploadImages = defineAsyncComponent(() => import('@/Components/UI/Form/UploadImages.vue'))
+const FormPopup = defineAsyncComponent(() => import('@/Components/UI/Popup/FormPopup.vue'))
+const FormClientCreate = defineAsyncComponent(() => import('@/Pages/Client/Create.vue'))
+const DropdownList = defineAsyncComponent(() => import('@/Components/UI/Form/DropdownList.vue'))
+const FormError = defineAsyncComponent(() => import('@/Components/UI/Form/FormError.vue'))
+const Autocomplete = defineAsyncComponent(() => import('@/Components/UI/Form/Autocomplete.vue'))
+
 
 defineProps({
   users: {
@@ -138,7 +139,8 @@ const imageErrors = {}
 const clientSearchQuery = ref('')
 const userSearchQuery = ref('')
   
-onMounted(() => {
+onMounted(async () => {
+  const { default: datepicker } = await import('@/Helpers/datepicker.js')
   datepicker.create(start, null, (event) => form.start = event.target.value)
   datepicker.create(deadline, null, (event) => form.deadline = event.target.value)
 })

@@ -27,12 +27,10 @@
 </template>
   
 <script setup>
-  
-import FormError from '@/Components/UI/Form/FormError.vue'
-import { onMounted, ref } from 'vue'
+import { defineAsyncComponent, onMounted, ref } from 'vue'
 import { useForm } from '@inertiajs/vue3'
-import Datepicker from 'flowbite-datepicker/Datepicker'
-import language from 'flowbite-datepicker/locales/pl'
+
+const FormError = defineAsyncComponent(() => import('@/Components/UI/Form/FormError.vue'))
   
 const props = defineProps({
   investment: {
@@ -53,21 +51,9 @@ const form = useForm({
       
 const date = ref(null)
       
-onMounted(() => {
-  Datepicker.locales.pl = language.pl
-      
-  new Datepicker(date.value, {
-    todayBtn: true,
-    clearBtn: true,
-    todayHighlight: true,
-    language: 'pl',
-    format: 'yyyy-mm-dd',
-    defaultViewDate: new Date(form.date_start ?? 'today'),
-  })
-        
-  date.value.addEventListener('changeDate', (event) => {
-    form.date = event.target.value 
-  })
+onMounted(async () => {
+  const { default: datepicker } = await import('@/Helpers/datepicker.js')
+  datepicker.create(date, null, (event) => form.date = event.target.value)
 })
       
 const edit = () => form.put(route('repayments.update', { investment: props.investment.id, repayment: props.repayment.id }))

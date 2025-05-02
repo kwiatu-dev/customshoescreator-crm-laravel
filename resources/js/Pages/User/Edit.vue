@@ -86,9 +86,11 @@
 </template>
   
 <script setup>
-import AdminDistribution from '@/Components/UI/Form/AdminDistribution.vue'
-import FormError from '@/Components/UI/Form/FormError.vue'
+import { defineAsyncComponent } from 'vue'
 import { useForm } from '@inertiajs/vue3'
+
+const FormError = defineAsyncComponent(() => import('@/Components/UI/Form/FormError.vue'))
+const AdminDistribution = defineAsyncComponent(() => import('@/Components/UI/Form/AdminDistribution.vue'))
 
 const props = defineProps({
   user: Object,

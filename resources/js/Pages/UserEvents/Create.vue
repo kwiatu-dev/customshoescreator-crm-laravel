@@ -57,14 +57,13 @@
 </template>
     
 <script setup>
-import FormError from '@/Components/UI/Form/FormError.vue'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, defineAsyncComponent, inject } from 'vue'
 import { useForm } from '@inertiajs/vue3'
-import datepicker from '@/Helpers/datepicker'
 import { useAuthUser } from '@/Composables/useAuthUser'
-import Autocomplete from '@/Components/UI/Form/Autocomplete.vue'
-import DropdownList from '@/Components/UI/Form/DropdownList.vue'
-import { inject } from 'vue'
+
+const FormError = defineAsyncComponent(() => import('@/Components/UI/Form/FormError.vue'))
+const Autocomplete = defineAsyncComponent(() => import('@/Components/UI/Form/Autocomplete.vue'))
+const DropdownList = defineAsyncComponent(() => import('@/Components/UI/Form/DropdownList.vue'))
   
 const form = useForm({
   title: null,
@@ -80,7 +79,8 @@ const end = ref(null)
 const currentUser = useAuthUser()
 const userSearchQuery = ref('')
     
-onMounted(() => {
+onMounted(async () => {
+  const { default: datepicker } = await import('@/Helpers/datepicker')
   datepicker.create(start, null, (event) => form.start = event.target.value)
   datepicker.create(end, null, (event) => form.end = event.target.value)
 })

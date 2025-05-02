@@ -10,12 +10,13 @@
 </template>
 
 <script setup>
-import { provide } from 'vue'
-import Cards from '@/Components/UI/List/Cards.vue'
-import Actions from '@/Pages/Income/Index/Components/Actions.vue'
-import UserDistribution from '@/Components/UI/List/UserDistribution.vue'
-import AdminDistribution from '@/Components/UI/List/AdminDistribution.vue'
-import SummerizeIncome from './Global/Components/SummerizeIncome.vue'
+import { defineAsyncComponent, provide } from 'vue'
+
+const Cards = defineAsyncComponent(() => import('@/Components/UI/List/Cards.vue'))
+const Actions = defineAsyncComponent(() => import('@/Pages/Income/Index/Components/Actions.vue'))
+const UserDistribution = defineAsyncComponent(() => import('@/Components/UI/List/UserDistribution.vue'))
+const AdminDistribution = defineAsyncComponent(() => import('@/Components/UI/List/AdminDistribution.vue'))
+const SummerizeIncome = defineAsyncComponent(() => import('@/Pages/Income/Global/Components/SummerizeIncome.vue'))
 
 const props = defineProps({
   income: {

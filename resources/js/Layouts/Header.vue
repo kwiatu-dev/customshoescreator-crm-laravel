@@ -186,12 +186,13 @@
 </template>
 
 <script setup>
-import { useAuthUser } from '@/Composables/useAuthUser'
+import { defineAsyncComponent, computed, onBeforeUnmount, onMounted, ref} from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
-import { computed, onBeforeUnmount, onMounted, ref} from 'vue'
-import NotificationText from '@/Pages/Notification/Index/Components/NotificationText.vue'
+import { useAuthUser } from '@/Composables/useAuthUser'
 import { useNotificationTimeAgo } from '@/Composables/useNotificationTimeAgo'
 import logo from '@/../../public/images/logo.webp'
+
+const NotificationText = defineAsyncComponent(() => import('@/Pages/Notification/Index/Components/NotificationText.vue'))
 
 const page = usePage()
 const user = useAuthUser()

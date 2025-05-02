@@ -35,22 +35,23 @@
 </template>
 
 <script setup>
-import UserStatusSection from '@/Pages/Dashboard/Index/Components/Modules/User/UserStatusSection.vue'
-import UserActualSection from '@/Pages/Dashboard/Index/Components/Modules/User/UserActualSection.vue'
-import UserChartsSection from '@/Pages/Dashboard/Index/Components/Modules/User/UserChartsSection.vue'
-import OverallStatusSection from '@/Pages/Dashboard/Index/Components/Modules/Overall/OverallStatusSection.vue'
-import OverallKPISection from '@/Pages/Dashboard/Index/Components/Modules/Overall/OverallKPISection.vue'
-import OverallActualSection from '@/Pages/Dashboard/Index/Components/Modules/Overall/OverallActualSection.vue'
-import OverallRecordsSection from '@/Pages/Dashboard/Index/Components/Modules/Overall/OverallRecordsSection.vue'
-import OverallChartsSection from '@/Pages/Dashboard/Index/Components/Modules/Overall/OverallChartsSection.vue'
-import Top3Section from '@/Pages/Dashboard/Index/Components/Modules/Top3Section.vue'
-import ViewToggle from '@/Components/UI/Others/ViewToggle.vue'
-import Autocomplete from '@/Components/UI/Form/Autocomplete.vue'
-import { provide, ref, computed, watch } from 'vue'
+import { defineAsyncComponent, ref, computed, watch, provide } from 'vue'
 import { useAuthUser } from '@/Composables/useAuthUser'
 import { router } from '@inertiajs/vue3'
 import { useQueryParams } from '@/Composables/useQueryParams'
-import UserKpiSection from './Index/Components/Modules/User/UserKpiSection.vue'
+
+const UserKpiSection = defineAsyncComponent(() => import('@/Pages/Dashboard/Index/Components/Modules/User/UserKpiSection.vue'))
+const UserStatusSection = defineAsyncComponent(() => import('@/Pages/Dashboard/Index/Components/Modules/User/UserStatusSection.vue'))
+const UserActualSection = defineAsyncComponent(() => import('@/Pages/Dashboard/Index/Components/Modules/User/UserActualSection.vue'))
+const UserChartsSection = defineAsyncComponent(() => import('@/Pages/Dashboard/Index/Components/Modules/User/UserChartsSection.vue'))
+const OverallStatusSection = defineAsyncComponent(() => import('@/Pages/Dashboard/Index/Components/Modules/Overall/OverallStatusSection.vue'))
+const OverallKPISection = defineAsyncComponent(() => import('@/Pages/Dashboard/Index/Components/Modules/Overall/OverallKPISection.vue'))
+const OverallActualSection = defineAsyncComponent(() => import('@/Pages/Dashboard/Index/Components/Modules/Overall/OverallActualSection.vue'))
+const OverallRecordsSection = defineAsyncComponent(() => import('@/Pages/Dashboard/Index/Components/Modules/Overall/OverallRecordsSection.vue'))
+const OverallChartsSection = defineAsyncComponent(() => import('@/Pages/Dashboard/Index/Components/Modules/Overall/OverallChartsSection.vue'))
+const Top3Section = defineAsyncComponent(() => import('@/Pages/Dashboard/Index/Components/Modules/Top3Section.vue'))
+const ViewToggle = defineAsyncComponent(() => import('@/Components/UI/Others/ViewToggle.vue'))
+const Autocomplete = defineAsyncComponent(() => import('@/Components/UI/Form/Autocomplete.vue'))
 
 const auth = useAuthUser()
 const queryParams = computed(() => useQueryParams())
@@ -58,7 +59,6 @@ const view = auth.value?.is_admin ? ref(queryParams.value['view'] ?? 1) : 0
 const selectedUserId = auth.value?.is_admin ? ref(queryParams.value['user_id'] ?? auth.value.id) : auth.value.id
 const selectedUser = auth.value?.is_admin ? computed(() => props.users.find(user => user.id == selectedUserId.value)) : auth.value
 const userSearchQuery = ref(null)
-
 
 const props = defineProps({
   overallMetrics: {
@@ -102,8 +102,6 @@ if (auth.value?.is_admin) {
     )
   })
 }
-
-
 
 provide('overall_metrics', props.overallMetrics)
 provide('user_metrics', props.userMetrics)

@@ -35,12 +35,14 @@
 </template>
 
 <script setup>
-import Box from '@/Components/UI/List/Box.vue'
-import Actions from '@/Pages/User/Index/Components/Actions.vue'
-import Cards from '@/Components/UI/List/Cards.vue'
-import AdminDistribution from '@/Components/UI/List/AdminDistribution.vue'
+import { defineAsyncComponent, provide } from 'vue'
+
+const Box = defineAsyncComponent(() => import('@/Components/UI/List/Box.vue'))
+const Cards = defineAsyncComponent(() => import('@/Components/UI/List/Cards.vue'))
+const AdminDistribution = defineAsyncComponent(() => import('@/Components/UI/List/AdminDistribution.vue'))
+const Actions = defineAsyncComponent(() => import('@/Pages/User/Index/Components/Actions.vue'))
+
 import dayjs from 'dayjs'
-import { provide } from 'vue'
 
 const props = defineProps({
   user: Object,

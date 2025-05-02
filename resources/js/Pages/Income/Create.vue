@@ -46,15 +46,14 @@
 </template>
   
 <script setup>
-import FormError from '@/Components/UI/Form/FormError.vue'
-import { onMounted, ref, watch, computed, provide } from 'vue'
+import { defineAsyncComponent, onMounted, ref, watch, computed, provide } from 'vue'
 import { useForm } from '@inertiajs/vue3'
-import Datepicker from 'flowbite-datepicker/Datepicker'
-import language from 'flowbite-datepicker/locales/pl'
-import SummerizeIncomeSection from '@/Pages/Income/Global/Components/SummerizeIncomeFormSection.vue'
-import UserDistribution from '@/Pages/Income/Global/Components/UserDistribution.vue'
-import FormPopup from '@/Components/UI/Popup/FormPopup.vue'
-import AddUserToDistribution from '@/Pages/Income/Global/Components/AddUserToDistribution.vue'
+
+const FormError = defineAsyncComponent(() => import('@/Components/UI/Form/FormError.vue'))
+const SummerizeIncomeSection = defineAsyncComponent(() => import('@/Pages/Income/Global/Components/SummerizeIncomeFormSection.vue'))
+const UserDistribution = defineAsyncComponent(() => import('@/Pages/Income/Global/Components/UserDistribution.vue'))
+const FormPopup = defineAsyncComponent(() => import('@/Components/UI/Popup/FormPopup.vue'))
+const AddUserToDistribution = defineAsyncComponent(() => import('@/Pages/Income/Global/Components/AddUserToDistribution.vue'))
 
 const props = defineProps({
   users: {
@@ -81,21 +80,9 @@ const filteredUsers = computed(() =>
 
 provide('users', filteredUsers)
   
-onMounted(() => {
-  Datepicker.locales.pl = language.pl
-  
-  new Datepicker(date.value, {
-    todayBtn: true,
-    clearBtn: true,
-    todayHighlight: true,
-    language: 'pl',
-    format: 'yyyy-mm-dd',
-    defaultViewDate: new Date(form.date_start ?? 'today'),
-  })
-    
-  date.value.addEventListener('changeDate', (event) => {
-    form.date = event.target.value 
-  })
+onMounted(async () => {
+  const { default: datepicker } = await import('@/Helpers/datepicker.js')
+  datepicker.create(date, null, (event) => form.date = event.target.value)
 })
 
 watch(() => form.costs, () => {
