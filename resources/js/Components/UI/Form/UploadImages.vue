@@ -72,7 +72,6 @@ import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css'
 import { ref, computed } from 'vue'
 import { usePage } from '@inertiajs/vue3'
-import axios from 'axios'
 
 const FilePond = vueFilePond(FilePondPluginImagePreview, FilePondPluginFileValidateType, FilePondPluginFileValidateSize)
 const page = usePage()
@@ -113,7 +112,7 @@ const onLoad = (uniqueId) => {
 
 const onRevert = async (uniqueId, load, error) => {
   const index = props.images.indexOf(uniqueId)
-
+  const { default: axios } = await import('axios')
   try{
     await axios.delete(route('filepond.destroy', { filepond: uniqueId }))
     emit('update:images', props.images.filter((_, i) => i !== index))

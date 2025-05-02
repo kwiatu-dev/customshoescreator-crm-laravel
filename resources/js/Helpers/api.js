@@ -1,6 +1,5 @@
-import axios from 'axios'
-
 const get = async (routeName, params) => {
+  const { default: axios } = await import('axios')
   try {
     const response = await axios.get(route(routeName), { params })
     return response.data

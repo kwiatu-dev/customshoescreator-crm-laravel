@@ -15,7 +15,6 @@
       
 <script setup>
 import { ref, reactive, watch, onMounted } from 'vue'
-import axios from 'axios'
       
 const props = defineProps({
   form: Object,
@@ -30,7 +29,8 @@ const form = reactive({
 const options = ref([])
 const loaded = ref(false)
 
-onMounted(() => {
+onMounted(async () => {
+  const { default: axios } = await import('axios')
   axios.get(route('dictionary.index', {table: props.table}))
     .then(response => {
       options.value = response.data
