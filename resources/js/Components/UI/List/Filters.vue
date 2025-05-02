@@ -76,7 +76,7 @@ import Dictionary from '@/Components/UI/List/Filters/Dictionary.vue'
 import List from '@/Components/UI/List/Filters/List.vue'
 import { ref, reactive, watch, computed, onMounted, onBeforeUnmount } from 'vue'
 import { router } from '@inertiajs/vue3'
-import { debounce } from 'lodash'
+import debounce  from 'lodash/debounce'
 import { usePage } from '@inertiajs/vue3'
 import { useQueryParams } from '@/Composables/useQueryParams'
 

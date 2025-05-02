@@ -150,7 +150,7 @@
 import ViewToggle from '@/Components/UI/Others/ViewToggle.vue'
 import { ref, computed, watch } from 'vue'
 import dayjs from 'dayjs'
-import { debounce } from 'lodash'
+import debounce  from 'lodash/debounce'
 import { useElementInViewPortVisibility } from '@/Composables/useElementInViewPortVisibility'
 import { getTopProjects } from '@/Helpers/stats'
 

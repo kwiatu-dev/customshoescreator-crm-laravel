@@ -67,7 +67,7 @@
 import ClientAddress from '@/Pages/Client/Index/Components/ClientAddress.vue'
 import { Link, router } from '@inertiajs/vue3'
 import { reactive, watch, ref } from 'vue'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash/debounce'
 import draggable from 'vuedraggable'
 
 const props = defineProps({

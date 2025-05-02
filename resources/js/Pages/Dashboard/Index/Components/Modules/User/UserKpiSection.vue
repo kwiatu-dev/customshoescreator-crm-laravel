@@ -72,7 +72,7 @@
 <script setup>
 import dayjs from 'dayjs'
 import { nextTick, ref, watch } from 'vue'
-import { debounce } from 'lodash'
+import debounce  from 'lodash/debounce'
 import IconStatsCard from '@/Pages/Dashboard/Index/Components/IconStatsCard.vue'
 import StatsCard from '@/Pages/Dashboard/Index/Components/StatsCard.vue'
 import DateRangePicker from '@/Components/UI/Others/DateRangePicker.vue'

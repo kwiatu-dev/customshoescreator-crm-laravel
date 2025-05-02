@@ -24,7 +24,9 @@
 <script setup>
 import { router } from '@inertiajs/vue3'
 import { reactive, watch, ref } from 'vue'
-import { _, debounce } from 'lodash'
+import debounce from 'lodash/debounce'
+import mergeWith from 'lodash/mergeWith'
+import isObject from 'lodash/isObject'
 import draggable from 'vuedraggable'
 import { useQueryParams } from '@/Composables/useQueryParams'
 
@@ -39,52 +41,41 @@ const props = defineProps({
 
 const emit = defineEmits(['sortTable'])
 
-const sortTable = (field) => {
-  form[field] = form[field] === 'desc' ? 'asc' : 'desc'
-}
-
 const form = reactive({
   ...props.sort ?? null,
 })
 
 const label = (element) => {
-  let value = null
-
   if (props.columns?.[element]?.label) {
-    value = props.columns?.[element]?.label
-  }
-  else if (element.includes('.')) {
-    const structure = element.split('.') 
-
-    value = props.columns?.[structure[0]]?.columns?.[structure[1]]?.label 
+    return props.columns[element].label
+  } else if (element.includes('.')) {
+    const [parent, child] = element.split('.')
+    return props.columns?.[parent]?.columns?.[child]?.label || 'BRAK NAZWY'
   }
 
-  return value || 'BRAK NAZWY'
+  return 'BRAK NAZWY'
 }
 
 const remove = (field) => {
   delete form[field]
 }
 
-const order = ref(
-  Object.keys(props.sort ?? null),
-)
+const order = ref(Object.keys(props.sort ?? null))
 
 const withOrder = () => {
-  if(order.value.length <= 1)
-    return form
+  if (order.value.length <= 1) return form
 
   const final = {}
 
   for (const field of order.value) {
-    if(form[field] ?? false){
+    if (form[field]) {
       final[field] = form[field]
     }
   }
 
-  return _.mergeWith({}, final, form, (value, src) => {
-    if (_.isObject(value)) {
-      return _.merge({}, value, src)
+  return mergeWith({}, final, form, (value, src) => {
+    if (isObject(value)) {
+      return Object.assign({}, value, src)
     }
   })
 }
@@ -93,7 +84,7 @@ const query = () => {
   const params = useQueryParams()
   const sort = withOrder()
 
-  for (const [key, value] of Object.entries(params)) {
+  for (const key of Object.keys(params)) {
     if (props.sort.hasOwnProperty(key)) {
       delete params[key]
     }
@@ -106,7 +97,7 @@ function isFullUrl(url) {
   try {
     new URL(url)
     return true
-  } catch (e) {
+  } catch {
     return false
   }
 }
@@ -114,23 +105,22 @@ function isFullUrl(url) {
 const sort = () => {
   const urlOrRoute = isFullUrl(props.get) ? props.get : route(props.get)
 
-  if(props.page > 1) 
-    query['page'] = props.page
+  if (props.page > 1) query['page'] = props.page
 
-  router.get(
-    urlOrRoute,
-    query(),
-    {
-      preserveState: true,
-      preserveScroll: true,
-      onSuccess: () => {
-        order.value = Object.keys(props.sort)
-        emit('sortTable', form)
-      },
+  router.get(urlOrRoute, query(), {
+    preserveState: true,
+    preserveScroll: true,
+    onSuccess: () => {
+      order.value = Object.keys(props.sort)
+      emit('sortTable', form)
     },
-  )
+  })
 }
 
 watch(form, debounce(() => sort(), 600))
 watch(() => props.orderBy, (value) => sortTable(value.field))
+
+const sortTable = (field) => {
+  form[field] = form[field] === 'desc' ? 'asc' : 'desc'
+}
 </script>

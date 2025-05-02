@@ -7,11 +7,81 @@ import { fullscreenImagePlugin } from 'vue-3-fullscreen-image-directive-plugin'
 import 'vue-3-fullscreen-image-directive-plugin/style.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { fas } from '@fortawesome/free-solid-svg-icons'
-import { far } from '@fortawesome/free-regular-svg-icons'
-import { fab } from '@fortawesome/free-brands-svg-icons'
 
-library.add(fas, far, fab)
+import {
+  faCircleInfo,
+  faEyeSlash,
+  faFilter,
+  faFilterCircleXmark,
+  faAnglesLeft,
+  faAnglesRight,
+  faUser,
+  faBell,
+  faArrowRightFromBracket,
+  faEnvelopeOpen,
+  faChartPie,
+  faUsers,
+  faPeopleGroup,
+  faMoneyBillTrendUp,
+  faPenRuler,
+  faCalendarDays,
+  faCircleDollarToSlot,
+  faCartPlus,
+  faPlus,
+  faCaretUp,
+  faCaretDown,
+  faScrewdriverWrench,
+  faTriangleExclamation,
+  faFlagCheckered,
+  faTrophy,
+  fa2,
+  fa3,
+  faMoneyBillTransfer,
+  faSackDollar,
+  faWallet,
+} from '@fortawesome/free-solid-svg-icons'
+
+import {
+  faCircleXmark,
+  faAddressCard,
+  faHourglassHalf,
+} from '@fortawesome/free-regular-svg-icons'
+
+library.add(
+  faCircleInfo,
+  faEyeSlash,
+  faFilter,
+  faFilterCircleXmark,
+  faAnglesLeft,
+  faAnglesRight,
+  faUser,
+  faBell,
+  faArrowRightFromBracket,
+  faEnvelopeOpen,
+  faChartPie,
+  faUsers,
+  faPeopleGroup,
+  faMoneyBillTrendUp,
+  faPenRuler,
+  faCalendarDays,
+  faCircleDollarToSlot,
+  faCartPlus,
+  faPlus,
+  faCaretUp,
+  faCaretDown,
+  faScrewdriverWrench,
+  faTriangleExclamation,
+  faFlagCheckered,
+  faTrophy,
+  fa2,
+  fa3,
+  faCircleXmark,
+  faAddressCard,
+  faHourglassHalf,
+  faMoneyBillTransfer,
+  faSackDollar,
+  faWallet,
+)
 
 createInertiaApp({
   progress: { 

@@ -144,7 +144,7 @@
 import ViewToggle from '@/Components/UI/Others/ViewToggle.vue'
 import dayjs from 'dayjs'
 import { computed, ref, watch } from 'vue'
-import { debounce } from 'lodash'
+import debounce  from 'lodash/debounce'
 import { getTopUsers } from '@/Helpers/stats'
 import { useElementInViewPortVisibility } from '@/Composables/useElementInViewPortVisibility'
 
