@@ -11,7 +11,7 @@
             <span class="sr-only">Toggle sidebar</span>
           </button> -->
           <Link :href="route('dashboard.index')" class="flex items-center mr-4">
-            <img :src="Logo" class="mr-3 h-10 rounded-full" widht="40" height="40" />
+            <img :src="Logo" class="mr-3 h-10 rounded-full" width="40" height="40" />
             <div>
               <p class="hidden sm:block self-center text-2xl font-semibold whitespace-nowrap dark:text-white mb-0 -mt-2">panelCSC</p>
               <p class="hidden sm:block text-sm -mt-1 text-gray-500">System do zarządzania zleceniami.</p>
