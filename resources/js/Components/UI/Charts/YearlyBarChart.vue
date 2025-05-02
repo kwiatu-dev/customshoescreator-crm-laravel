@@ -87,8 +87,4 @@ onMounted(async () => {
 watch(() => props.data, () => { 
   chartData.value = buildChartData(props.data) 
 })
-
-
-
-
 </script>

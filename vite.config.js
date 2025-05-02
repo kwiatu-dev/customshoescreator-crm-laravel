@@ -34,21 +34,7 @@ export default defineConfig({
   build: {
     target: 'esnext',
     rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('vue')) return 'vendor-vue'
-            if (id.includes('axios')) return 'vendor-axios'
-            if (id.includes('lodash')) return 'vendor-lodash'
-            if (id.includes('ziggy')) return 'vendor-ziggy'
-            if (id.includes('@fullcalendar')) return 'vendor-fullcalendar'
-            if (id.includes('filepond')) return 'vendor-filepond'
-            if (id.includes('chart.js')) return 'vendor-chartjs'
-            if (id.includes('@fortawesome')) return 'vendor-fontawesome' 
-            return 'vendor'
-          }
-        },
-      },
+      //
     },
   },
 })
