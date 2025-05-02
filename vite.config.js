@@ -32,6 +32,7 @@ export default defineConfig({
     __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
   },
   build: {
+    target: 'esnext',
     rollupOptions: {
       output: {
         manualChunks(id) {
