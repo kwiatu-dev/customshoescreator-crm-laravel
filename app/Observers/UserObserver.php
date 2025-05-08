@@ -21,7 +21,6 @@ class UserObserver
      */
     public function updated(User $user): void
     {
-        Log::info('User updated via observer', ['user_id' => $user->id]);
         $this->clearCache();
     }
 
