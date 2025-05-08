@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Services\CacheService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -28,23 +29,38 @@ class TestUserCache extends Command
      */
     public function handle()
     {
-        // Set test cache
-        Cache::tags(['users'])->put('test_user_cache', 'some value', now()->addMinutes(10));
-        $this->info('Cache set with value: some value');
-
-        // Read before flush
-        $valueBefore = Cache::tags(['users'])->get('test_user_cache');
-        Log::info('Before flush: ' . $valueBefore);
-        $this->info('Before flush: ' . $valueBefore);
-
-        // Flush cache
-        Cache::tags(['users'])->flush();
-
-        // Read after flush
-        $valueAfter = Cache::tags(['users'])->get('test_user_cache');
-        Log::info('After flush: ' . ($valueAfter ?? 'null'));
-        $this->info('After flush: ' . ($valueAfter ?? 'null'));
-
+        $tags = ['users'];
+        $args = ['user_id' => 123];
+    
+        // Pierwsze wywołanie — wykona callback i zapisze wynik
+        $value = CacheService::remember($tags, $args, function () {
+            return 'cached value';
+        });
+    
+        $this->info('Value cached: ' . $value);
+    
+        // Odczyt z cache
+        $cached = CacheService::remember($tags, $args, function () {
+            return 'new value (should not appear)';
+        });
+    
+        $this->info('Value read from cache: ' . $cached);
+    
+        // Flush tag
+        Cache::tags($tags)->flush();
+        $this->info('Cache flushed');
+    
+        // Ponowny zapis po flush
+        $newCached = CacheService::remember($tags, $args, function () {
+            return 'value after flush';
+        });
+    
+        $this->info('Value after flush: ' . $newCached);
+    
         return 0;
     }
 }
+
+
+
+
