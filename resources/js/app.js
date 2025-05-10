@@ -39,6 +39,11 @@ import {
   faMoneyBillTransfer,
   faSackDollar,
   faWallet,
+  faCommentDots,
+  faXmark,
+  faMinus,
+  faCircle,
+  faRotateRight,
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -48,6 +53,11 @@ import {
 } from '@fortawesome/free-regular-svg-icons'
 
 library.add(
+  faRotateRight,
+  faCircle,
+  faMinus,
+  faXmark,
+  faCommentDots,
   faCircleInfo,
   faEyeSlash,
   faFilter,
