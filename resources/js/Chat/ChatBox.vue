@@ -10,6 +10,7 @@
       bg-indigo-500 p-4 
       flex flex-row justify-between items-center 
       overflow-hidden"
+      style="height: 100px"
     >
       <div 
         class="absolute inset-0 rounded-full bg-gradient-to-r 
@@ -37,7 +38,7 @@
         <div 
           class="text-lg flex flex-row items-center font-bold"
         >
-          Inteligentny Asystent
+          Chat
         </div>
       </div>
       <button 
@@ -50,11 +51,57 @@
         <font-awesome-icon :icon="['fas', 'rotate-right']" />
       </button>
     </div>
+    <div class="flex flex-col p-4 gap-4 overflow-y-auto">
+      <ChatBubble 
+        type="llm"
+        :time="new Date()"
+        message="That's awesome. I think our users will really appreciate the improvements."
+        status="Delivered"
+      />
+      <ChatBubble 
+        type="human"
+        :time="new Date()"
+        message="That's awesome. I think our users will really appreciate the improvements."
+        status="Delivered"
+      />
+      <ChatBubble 
+        type="llm"
+        :time="new Date()"
+        message="That's awesome. I think our users will really appreciate the improvements."
+        status="Delivered"
+      />
+      <ChatBubble 
+        type="human"
+        :time="new Date()"
+        message="That's awesome. I think our users will really appreciate the improvements."
+        status="Delivered"
+      />
+      <ChatBubble 
+        type="llm"
+        :time="new Date()"
+        message="That's awesome. I think our users will really appreciate the improvements."
+        status="Delivered"
+      />
+      <ChatBubble 
+        type="human"
+        :time="new Date()"
+        message="That's awesome. I think our users will really appreciate the improvements."
+        status="Delivered"
+      />
+    </div>
+    <div 
+      class="p-4" 
+      style="height: 100px;"
+    >
+      <ChatInput />
+    </div>
   </div>
 </template>
 
 <script setup>
 import Logo from '@/../../public/images/logo.webp'
+import ChatBubble from '@/Chat/Message/ChatBubble.vue'
+import ChatInput from '@/Chat/Input/ChatInput.vue'
 
 const props = defineProps({
   show: {

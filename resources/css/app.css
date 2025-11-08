@@ -139,46 +139,42 @@
         @apply text-3xl font-bold text-gray-800 dark:text-gray-400;
       }
 
-    .filepond--credits{
+    .filepond .filepond--credits{
         @apply !hidden;
       }
       
-      .filepond--item {
+      .filepond .filepond--item {
           width: calc(20% - 0.5em);
       }
       
-      .filepond--drop-label{
+      .filepond .filepond--drop-label{
         @apply cursor-pointer dark:text-gray-300 text-gray-500;
       }
       
-      .filepond--drop-label > label{
+      .filepond .filepond--drop-label > label{
         @apply cursor-pointer text-sm;
       }
       
-      .filepond--panel .filepond--panel-root{
-        @apply dark:bg-gray-500 bg-gray-100;
-      }
-      
-      .filepond--panel .filepond--panel-root{
-        @apply border dark:border-gray-300 border-gray-300 bg-gray-200 dark:bg-gray-500;
-      }
-      
-      .filepond--root{
+      .filepond .filepond--root{
         @apply mb-0;
       }
       
-      .filepond--file-action-button{
+      .filepond .filepond--file-action-button{
         @apply cursor-pointer;
+      }
+
+      .filepond .filepond--panel-bottom, .filepond .filepond--panel-center, .filepond .filepond--panel-top {
+        @apply border dark:border-gray-300 border-gray-300 bg-gray-200 dark:bg-gray-500;
       }
       
       @media (max-width: 800px) {
-          .filepond--item {
+          .filepond .filepond--item {
               width: calc(100% - 0.5rem);
           }
       }
       
       @media (max-width: 1000px) {
-          .filepond--item {
+          .filepond .filepond--item {
               width: calc(33% - 0.5rem);
           }
       }
