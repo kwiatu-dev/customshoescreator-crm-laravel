@@ -123,3 +123,5 @@ window.addEventListener('popstate', () => {
     router.reload()
   }, 0)
 })
+
+import '@/Chat/langchain-course'
