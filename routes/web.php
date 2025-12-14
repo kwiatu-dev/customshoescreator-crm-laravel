@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ForgotPassword;
@@ -199,9 +200,31 @@ Route::prefix('api')->group(function () {
         Route::get('monthly-new-projects-count', [DashboardController::class, 'getMonthlyNewProjectsCount'])
             ->name('dashboard.monthly-new-projects-count');
     });
+
+    Route::prefix('chat')->group(function () {
+        Route::post('token', function (Request $request) {
+            $user = $request->user();
+
+            return response()->json([
+                'token' => $user->createToken('chat-widget')->plainTextToken,
+                'user' => [
+                    'id' => $user->id,
+                    'email' => $user->email,
+                    'name' => $user->first_name,
+                ]
+            ]);
+        })->middleware('auth');
+
+        Route::get('check_token', function (Request $request) {
+            return $request->user();
+        })->middleware('auth:sanctum');
+    });
 });
 
 Route::put('notifications/{notification}/seen', NotificationSeenController::class)
     ->name('notifications.seen');
+
+
+
 
 

@@ -3,28 +3,44 @@
     ref="iframeElement"
     :src="iframeSrc"
     class="fixed bottom-4 right-4 chatbox-size"
-    @load="sendUserData"
   >
     Brak wsparcia dla iframe.
   </iframe>
 </template>
 
 <script setup>
-import { useAuthUser } from '@/Composables/useAuthUser'
-import { computed, ref, toRaw } from 'vue'
+import { computed, onBeforeMount, onMounted, onUnmounted, ref } from 'vue'
 const CHATBOT_URL = import.meta.env.VITE_CHATBOT_URL
 const iframeSrc = computed(() => CHATBOT_URL)
 const iframeElement = ref(null)
-const user = useAuthUser()
 
-const sendUserData = () => {
-  if (iframeElement.value && iframeElement.value.contentWindow) {
-    iframeElement.value.contentWindow.postMessage(
-      { type: 'user_data', payload: toRaw(user.value)},
-      CHATBOT_URL,
-    )
+const REQUEST_TYPE = 'REQUEST_AUTH'
+const RESPONSE_TYPE = 'AUTH_TOKEN'
+
+onMounted(() => {
+  const handler = (event) => {
+    if (event.data.type === REQUEST_TYPE) {
+      console.log(`Otrzymano postMessage ${REQUEST_TYPE}, przygotowywuje odpowiedź...`)
+        
+      import('axios').then(async ({ default: axios }) => {
+        const { data } = await axios.post('/api/chat/token')
+
+        iframeElement.value.contentWindow.postMessage(
+          { type: RESPONSE_TYPE, payload: data },
+          CHATBOT_URL,
+        )
+
+        console.log(`Wysłano postMessage ${RESPONSE_TYPE} do ${CHATBOT_URL}`)
+      })
+    }
   }
-}
+
+  window.addEventListener('message', handler)
+
+  onUnmounted(() => {
+    window.removeEventListener('message', handler)
+  })
+})
 </script>
 
 <style scoped>
