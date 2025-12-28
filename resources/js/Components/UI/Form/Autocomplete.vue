@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, watch } from 'vue'
 
 const props = defineProps({
   source: {
@@ -84,6 +84,13 @@ const handleInput = (e) => {
 }
 
 onMounted(() => {
+  if (props.objectId) {
+    const selectedElement = props.source.find(o => props.id(o).toString() === props.objectId.toString())
+    emit('update:searchQuery', props.name(selectedElement))
+  }
+})
+
+watch(() => props.objectId, () => {
   if (props.objectId) {
     const selectedElement = props.source.find(o => props.id(o).toString() === props.objectId.toString())
     emit('update:searchQuery', props.name(selectedElement))

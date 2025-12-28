@@ -93,7 +93,8 @@
 </template>
   
 <script setup>
-import { defineAsyncComponent, onMounted, ref, computed } from 'vue'
+import { registerFormPrefillListener, unregisterFormPrefillListener } from '@/Helpers/prefillListenerHelper'
+import { defineAsyncComponent, onMounted, ref, computed, onUnmounted } from 'vue'
 import { useForm, usePage } from '@inertiajs/vue3'
 
 const UploadImages = defineAsyncComponent(() => import('@/Components/UI/Form/UploadImages.vue'))
@@ -102,7 +103,6 @@ const FormClientCreate = defineAsyncComponent(() => import('@/Pages/Client/Creat
 const DropdownList = defineAsyncComponent(() => import('@/Components/UI/Form/DropdownList.vue'))
 const FormError = defineAsyncComponent(() => import('@/Components/UI/Form/FormError.vue'))
 const Autocomplete = defineAsyncComponent(() => import('@/Components/UI/Form/Autocomplete.vue'))
-
 
 defineProps({
   users: {
@@ -143,6 +143,11 @@ onMounted(async () => {
   const { default: datepicker } = await import('@/Helpers/datepicker.js')
   datepicker.create(start, null, (event) => form.start = event.target.value)
   datepicker.create(deadline, null, (event) => form.deadline = event.target.value)
+  registerFormPrefillListener(form)
+})
+
+onUnmounted(() => {
+  unregisterFormPrefillListener()
 })
 
 const onNewClientCreated = (client) => {
