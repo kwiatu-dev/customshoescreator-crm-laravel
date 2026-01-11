@@ -171,58 +171,50 @@ Route::put('user-events/{user_event}/restore', [UserEventsController::class, 're
 Route::resource('notifications', NotificationController::class)
     ->only(['index', 'destroy']);
 
-Route::prefix('api')->group(function () {
-    Route::prefix('dashboard')->group(function () {
-        Route::get('kpi', [DashboardController::class, 'getKpi'])
-            ->name('dashboard.kpi');
-
-        Route::get('top-users', [DashboardController::class, 'getTopUsersByIncome'])
-            ->name('dashboard.top-users');
-
-        Route::get('top-projects', [DashboardController::class, 'getTopProjectsByIncome'])
-            ->name('dashboard.top-projects');
-
-        Route::get('projects-type-breakdown', [DashboardController::class, 'getProjectTypeBreakdown'])
-            ->name('dashboard.projects-type-breakdown');
-
-        Route::get('project-years', [DashboardController::class, 'getProjectYears'])
-            ->name('dashboard.project-years');
-
-        Route::get('income-years', [DashboardController::class, 'getIncomeYears'])
-            ->name('dashboard.income-years');
-
-        Route::get('monthly-financial-stats', [DashboardController::class, 'getMonthlyFinancialStats'])
-            ->name('dashboard.monthly-financial-stats');
-
-        Route::get('monthly-completed-projects-count', [DashboardController::class, 'getMonthlyCompletedProjectsCount'])
-            ->name('dashboard.monthly-completed-projects-count');
-
-        Route::get('monthly-new-projects-count', [DashboardController::class, 'getMonthlyNewProjectsCount'])
-            ->name('dashboard.monthly-new-projects-count');
-    });
-
-    Route::prefix('chat')->group(function () {
-        Route::post('token', function (Request $request) {
-            $user = $request->user();
-
-            return response()->json([
-                'token' => $user->createToken('chat-widget')->plainTextToken,
-                'user' => [
-                    'id' => $user->id,
-                    'email' => $user->email,
-                    'name' => $user->first_name,
-                ]
-            ]);
-        })->middleware('auth');
-
-        Route::get('check_token', function (Request $request) {
-            return $request->user();
-        })->middleware('auth:sanctum');
-    });
-});
-
 Route::put('notifications/{notification}/seen', NotificationSeenController::class)
     ->name('notifications.seen');
+
+Route::prefix('dashboard')->group(function () {
+    Route::get('kpi', [DashboardController::class, 'getKpi'])
+        ->name('dashboard.kpi');
+
+    Route::get('top-users', [DashboardController::class, 'getTopUsersByIncome'])
+        ->name('dashboard.top-users');
+
+    Route::get('top-projects', [DashboardController::class, 'getTopProjectsByIncome'])
+        ->name('dashboard.top-projects');
+
+    Route::get('projects-type-breakdown', [DashboardController::class, 'getProjectTypeBreakdown'])
+        ->name('dashboard.projects-type-breakdown');
+
+    Route::get('project-years', [DashboardController::class, 'getProjectYears'])
+        ->name('dashboard.project-years');
+
+    Route::get('income-years', [DashboardController::class, 'getIncomeYears'])
+        ->name('dashboard.income-years');
+
+    Route::get('monthly-financial-stats', [DashboardController::class, 'getMonthlyFinancialStats'])
+        ->name('dashboard.monthly-financial-stats');
+
+    Route::get('monthly-completed-projects-count', [DashboardController::class, 'getMonthlyCompletedProjectsCount'])
+        ->name('dashboard.monthly-completed-projects-count');
+
+    Route::get('monthly-new-projects-count', [DashboardController::class, 'getMonthlyNewProjectsCount'])
+        ->name('dashboard.monthly-new-projects-count');
+});
+
+Route::post('token', function (Request $request) {
+    $user = $request->user();
+
+    return response()->json([
+        'token' => $user->createToken('token')->plainTextToken,
+        'user' => [
+            'id' => $user->id,
+            'email' => $user->email,
+            'name' => $user->first_name,
+        ]
+    ]);
+})->middleware('auth');
 
 
 

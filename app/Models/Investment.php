@@ -150,14 +150,14 @@ class Investment extends Model
     {
         return $query->where(function ($query) use ($user_id, $table_name) {
             $query
-                ->where("{$table_name}.user_id", $user_id)
-                ->orWhere("{$table_name}.created_by_user_id", $user_id);
+                ->where(($table_name ? "${table_name}.user_id" : "user_id"), $user_id)
+                ->orWhere(($table_name ? "{$table_name}.created_by_user_id" : "created_by_user_id"), $user_id);
         });
     }
 
     public function scopeAfterDateInvestment($query, ?string $table_name = null) 
     {
-        return $query->where('status_id', Investment::STATUS_COMPLETED)->where("{$table_name}.date", '<', now());
+        return $query->where('status_id', Investment::STATUS_COMPLETED)->where(($table_name ? "{$table_name}.date" : "date") , '<', now());
     }
 
     public function addRepaymentValue($repayment_value) {

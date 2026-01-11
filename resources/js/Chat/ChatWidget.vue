@@ -30,7 +30,7 @@ onMounted(() => {
       console.log(`Otrzymano postMessage ${REQUEST_AUTH}, przygotowywuje odpowiedź...`)
         
       import('axios').then(async ({ default: axios }) => {
-        const { data } = await axios.post('/api/chat/token')
+        const { data } = await axios.post('/token')
 
         iframeElement.value.contentWindow.postMessage(
           { type: RESPONSE_AUTH_TOKEN, payload: data },

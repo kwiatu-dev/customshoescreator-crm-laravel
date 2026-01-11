@@ -1,27 +1,35 @@
 version: "3.9"
+
 services:
-  mysql:
-    image: mariadb:10.8.3
-    # Uncomment below when on Mac M1
-    # platform: linux/arm64/v8
-    command: --default-authentication-plugin=mysql_native_password
+  postgres:
+    image: postgres:16
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      POSTGRES_DB: csc
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
     ports:
-      - 3306:3306
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
+
   mailhog:
     image: mailhog/mailhog
-    ports: 
+    ports:
       - 1025:1025
       - 8025:8025
+
   redis:
-    image: redis:latest
+    image: redis:7
     restart: always
     ports:
       - 6379:6379
+
+volumes:
+  postgres_data:

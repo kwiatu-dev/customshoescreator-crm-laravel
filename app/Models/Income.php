@@ -149,8 +149,10 @@ class Income extends Model
             $query->whereHas('project', function ($query) use ($user_id) {
                 $query->where('created_by_user_id', $user_id);
             })
-            ->orWhere("{$table_name}.created_by_user_id", $user_id)
-            ->orWhereRaw("JSON_EXTRACT(" . ($table_name ? "{$table_name}.distribution" : "distribution") . ", '$.{$user_id}') IS NOT NULL");
+            ->orWhere(($table_name ? "{$table_name}.created_by_user_id" : "created_by_user_id"), $user_id)
+            ->orWhereRaw(
+                ($table_name ? "{$table_name}.distribution" : "distribution") . "->>'{$user_id}' IS NOT NULL"
+            );
         });
     }
 
@@ -160,7 +162,9 @@ class Income extends Model
             $query->whereHas('project', function ($query) use ($user_id) {
                 $query->where('created_by_user_id', $user_id);
             })
-            ->orWhereRaw("JSON_EXTRACT(" . ($table_name ? "{$table_name}.distribution" : "distribution") . ", '$.{$user_id}') IS NOT NULL");
+            ->orWhereRaw(
+                ($table_name ? "{$table_name}.distribution" : "distribution") . "->>'{$user_id}' IS NOT NULL"
+            );
         });
     }
 }
