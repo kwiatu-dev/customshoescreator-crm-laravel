@@ -4,7 +4,7 @@
     <FlashMassage />
     <slot />
   </main>
-  <!-- <ChatWidget v-if="user" /> -->
+  <ChatWidget v-if="user" />
 </template>
 
 <script setup>
