@@ -143,7 +143,7 @@ class Income extends Model
         return round($creator + $participant, 2);
     }
 
-    public function scopeRelatedIncome($query, int $user_id, ?string $table_name = null)
+    public function scopeRelatedIncome($query, $user_id, ?string $table_name = null)
     {
         return $query->where(function ($query) use ($user_id, $table_name) {
             $query->whereHas('project', function ($query) use ($user_id) {

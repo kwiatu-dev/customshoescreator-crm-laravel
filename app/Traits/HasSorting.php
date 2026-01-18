@@ -25,7 +25,7 @@ trait HasSorting
                         
                         if ($columns) {
                             if (in_array($data, ['asc', 'desc'])) {
-                                $query->orderByRaw('CONCAT('. implode(', " ", ', $columns) .') ' . $data);
+                                $query->orderByRaw('CONCAT_WS(\' \', '. implode(', ', $columns) .') ' . $data);
                             } 
                         }
                     }

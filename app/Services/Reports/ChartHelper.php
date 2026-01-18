@@ -25,22 +25,24 @@ class ChartHelper
     {
         $data = array_fill(0, 12, 0);
 
+        $column = '"' . $dateColumn . '"';
+
         $query = DB::table($table)
-            ->selectRaw("MONTH($dateColumn) as month, $aggregate as $alias")
+            ->selectRaw("EXTRACT(MONTH FROM {$column}) AS month, {$aggregate} AS {$alias}")
             ->whereNull('deleted_at')
-            ->whereYear($dateColumn, $year);
+            ->whereRaw("EXTRACT(YEAR FROM {$column}) = ?", [$year]);
 
         if ($filter) {
-            $query = $query->where($filter);
+            $query->where($filter);
         }
 
-        $query->groupBy(DB::raw("MONTH($dateColumn)"));
+        $query->groupBy(DB::raw("EXTRACT(MONTH FROM {$column})"));
 
         $rows = $query->get();
 
         foreach ($rows as $row) {
-            $index = (int)$row->month - 1;
-            $data[$index] = round((float)$row->$alias, 2);
+            $index = (int) $row->month - 1;
+            $data[$index] = round((float) $row->{$alias}, 2);
         }
 
         return $data;

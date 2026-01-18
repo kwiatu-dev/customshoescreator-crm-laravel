@@ -134,19 +134,19 @@ class Investment extends Model
         $query->when(
             $filters['after_date'] ?? false,
             function ($query, $value){
-                $query->afterDateInvestment($this->table_nam);
+                $query->afterDateInvestment($this->table_name);
             }
         );
 
         $query->when(
             $filters['related_with_user_id'] ?? false,
-            function ($query, $value){
+            function ($query, $value) {
                 $query->relatedInvestment($value, $this->table_name);
             }
         );
     }
 
-    public function scopeRelatedInvestment($query, int $user_id, ?string $table_name = null)
+    public function scopeRelatedInvestment($query, $user_id, ?string $table_name = null)
     {
         return $query->where(function ($query) use ($user_id, $table_name) {
             $query

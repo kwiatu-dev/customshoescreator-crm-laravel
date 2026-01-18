@@ -16,121 +16,122 @@ trait HasFilters
         if ($store_in_session) {
             $request->session()->put('filters', $filters);
         }
-        
+
+        $table = $query->getModel()->getTable();
+
+        /**
+         * Helper do bezpiecznego kwalifikowania kolumn
+         */
+        $qualify = function (string $column) use ($table) {
+            return str_contains($column, '.')
+                ? $column
+                : $table . '.' . $column;
+        };
+
         $query->when(
             $filters['search'] ?? false,
-            function ($query, $value){
-                $query->where(function ($query) use ($value){
-                    foreach($this->searchable as $field => $columns){
-                        if (is_array($columns)) {
-                            $columns = array_map(function ($column) use ($field) {
-                                return $field .'.'. $column;
-                            }, $columns);
+            function ($query, $value) use ($qualify) {
+                $query->where(function ($query) use ($value, $qualify) {
+                    foreach ($this->searchable as $field => $columns) {
 
-                            $query->orWhereRaw('CONCAT('. implode(', " ", ', $columns) .') like ' . "'%$value%'");
+                        if (is_array($columns)) {
+                            $columns = array_map(
+                                fn ($column) => $qualify($field . '.' . $column),
+                                $columns
+                            );
+
+                            $query->orWhereRaw(
+                                'CONCAT_WS(\' \', ' . implode(', ', $columns) . ') LIKE ?',
+                                ['%' . $value . '%']
+                            );
                         }
-                        else if (str_contains('.', $columns)) {
-                            $query->orWhere($columns, 'like', "%$value%");
+                        elseif (str_contains($columns, '.')) {
+                            $query->orWhere($columns, 'like', "%{$value}%");
                         }
                         else {
-                            $query->orWhere($this->table_name .'.'. $columns, 'like', "%$value%");
+                            $query->orWhere(
+                                $qualify($columns),
+                                'like',
+                                "%{$value}%"
+                            );
                         }
                     }
                 });
             }
         );
 
+        //dd($query->toSql());
+
         $query->when(
             $filters['deleted'] ?? false,
-            fn ($query, $value) => $query->withTrashed()
+            fn ($query) => $query->withTrashed()
         );
+
+        $applyRangeFilter = function ($query, $fields) use ($filters, $qualify) {
+            foreach ($fields as $field => $type) {
+                if (!array_key_exists($field, $filters)) {
+                    continue;
+                }
+
+                if (str_ends_with($field, '_start')) {
+                    $query->where(
+                        $qualify(str_replace('_start', '', $field)),
+                        '>=',
+                        $filters[$field]
+                    );
+                }
+
+                if (str_ends_with($field, '_end')) {
+                    $query->where(
+                        $qualify(str_replace('_end', '', $field)),
+                        '<=',
+                        $filters[$field]
+                    );
+                }
+            }
+        };
 
         $query->when(
             $this->filterable['date'] ?? false,
-            function ($query, $value) use ($filters) {
-                foreach ($value as $field => $type){
-                    if(!array_key_exists($field, $filters)){
-                        continue;
-                    }
-                    
-                    if(strstr($field, "_start")){
-                        $query->where($this->table_name .'.'. str_replace("_start", '', $field), '>=', $filters[$field]);
-                    }
-                    else if(strstr($field, "_end")){
-                        $query->where($this->table_name .'.'. str_replace("_end", '', $field), '<=', $filters[$field]);
-                    }
-                }
-            }
+            fn ($query, $value) => $applyRangeFilter($query, $value)
         );
 
         $query->when(
             $this->filterable['dates'] ?? false,
-            function ($query, $value) use ($filters) {
-                foreach($value as $array){
-                    foreach ($array as $field => $type){
-                        if(!array_key_exists($field, $filters)){
-                            continue;
-                        }
-                        
-                        if(strstr($field, "_start")){
-                            $query->where($this->table_name .'.'. str_replace("_start", '', $field), '>=', $filters[$field]);
-                        }
-                        else if(strstr($field, "_end")){
-                            $query->where($this->table_name .'.'. str_replace("_end", '', $field), '<=', $filters[$field]);
-                        }
-                    }
+            function ($query, $value) use ($applyRangeFilter) {
+                foreach ($value as $group) {
+                    $applyRangeFilter($query, $group);
                 }
             }
         );
 
         $query->when(
             $this->filterable['number'] ?? false,
-            function ($query, $value) use ($filters) {
-                foreach ($value as $field => $type){
-                    if(!array_key_exists($field, $filters)){
-                        continue;
-                    }
-                    
-                    if(strstr($field, "_start")){
-                        $query->where($this->table_name .'.'. str_replace("_start", '', $field), '>=', $filters[$field]);
-                    }
-                    else if(strstr($field, "_end")){
-                        $query->where($this->table_name .'.'. str_replace("_end", '', $field), '<=', $filters[$field]);
-                    }
-                }
-            }
+            fn ($query, $value) => $applyRangeFilter($query, $value)
         );
 
         $query->when(
             $this->filterable['numbers'] ?? false,
-            function ($query, $value) use ($filters) {
-                foreach($value as $array){
-                    foreach ($array as $field => $type){
-                        if(!array_key_exists($field, $filters)){
-                            continue;
-                        }
-                        
-                        if(strstr($field, "_start")){
-                            $query->where($this->table_name .'.'. str_replace("_start", '', $field), '>=', $filters[$field]);
-                        }
-                        else if(strstr($field, "_end")){
-                            $query->where($this->table_name .'.'. str_replace("_end", '', $field), '<=', $filters[$field]);
-                        }
-                    }
+            function ($query, $value) use ($applyRangeFilter) {
+                foreach ($value as $group) {
+                    $applyRangeFilter($query, $group);
                 }
             }
         );
 
         $query->when(
             $this->filterable['dictionary'] ?? false,
-            function ($query, $value) use ($filters) {
-                foreach($value as $array){
-                    foreach ($array as $field => $type){
-                        if(!array_key_exists($field, $filters)){
+            function ($query, $value) use ($filters, $qualify) {
+                foreach ($value as $group) {
+                    foreach ($group as $field => $type) {
+                        if (!array_key_exists($field, $filters)) {
                             continue;
                         }
-                        
-                        $query->where($this->table_name .'.'. $field, $filters[$field]);
+
+                        $query->where(
+                            $qualify($field),
+                            $filters[$field]
+                        );
                     }
                 }
             }
@@ -138,15 +139,17 @@ trait HasFilters
 
         $query->when(
             $filters['created_by_user'] ?? false,
-            function ($query, $value){
-                $query->where($this->table_name .'.'. 'created_by_user_id', Auth::user()->id);
-            }
+            fn ($query) =>
+                $query->where(
+                    $qualify('created_by_user_id'),
+                    Auth::id()
+                )
         );
 
-        if ($this && method_exists($this, 'scopeUseModelFilters')) {
+        if (method_exists($this, 'scopeUseModelFilters')) {
             $query->useModelFilters($filters);
         }
-        
+
         return $query;
     }
 }

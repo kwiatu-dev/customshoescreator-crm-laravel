@@ -13,7 +13,7 @@ class ProjectReportService {
             return $query->where('created_by_user_id', $user_id);
         })
         ->distinct()
-        ->selectRaw('YEAR(created_at) as year')
+        ->selectRaw('EXTRACT(YEAR FROM created_at) AS year')
         ->orderBy('year')
         ->pluck('year');
 

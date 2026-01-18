@@ -67,7 +67,7 @@ class KpiDataFetcher
             ->count();
         $data['avg_days_projects'] = Project::whereBetween('end', [$from, $to])
             ->when($user_id, fn ($query) => $query->where('created_by_user_id', $user_id))
-            ->avg(\DB::raw('DATEDIFF(end, start)'));
+            ->avg(\DB::raw('DATE("end") - DATE("start")'));
 
         return $data;
     }

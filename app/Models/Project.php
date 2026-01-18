@@ -23,6 +23,8 @@ class Project extends Model
     const STATUS_IN_PROGRESS = 2;
     const STATUS_COMPLETED = 3;
 
+    protected $table_name = 'projects';
+
     protected $fillable = [
         'title',
         'remarks',
@@ -183,8 +185,8 @@ class Project extends Model
         $query->when(
             $filters['after_deadline'] ?? false,
             function ($query, $value){
-                $query->whereNull($this->table_name . '.end')
-                      ->where($this->table_name . '.deadline', '<', now());
+                $query->whereNull("projects" . '.end')
+                      ->where("projects" . '.deadline', '<', now());
             }
         );
     }

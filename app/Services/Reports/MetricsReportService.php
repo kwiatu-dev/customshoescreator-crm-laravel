@@ -46,7 +46,7 @@ class MetricsReportService
             'total_completed_investments_count' => 
                 ModelAggregatorService::getModelData(Investment::class, 'count', ['investments'], ['user_id', $user_id], [['status_id', '2'], $relatedInvestmentScope]),
             'total_investor_awaiting_repayment_sum' => 
-                ModelAggregatorService::getModelData(Investment::class, 'sum', ['investments'], [], [['status_id', '1'], ['user_id', $user_id]], \DB::raw('(amount + amount * (interest_rate / 100)) - total_repayment'), fn ($value) => round($value, 2)),
+                ModelAggregatorService::getModelData(Investment::class, 'sum', ['investments'], [], [['status_id', '1'], ['user_id', $user_id]], \DB::raw('(amount + amount * (interest_rate / 100.0)) - total_repayment'), fn ($value) => round($value, 2)),
             'total_user_awaiting_income_sum' => 
                 ModelAggregatorService::getModelData(Income::class, 'get', ['incomes'], ['user_id', $user_id], [['status_id', '1'], $userHasIncomeScope], null, $calculateUserEarnings),
         ];
@@ -70,7 +70,7 @@ class MetricsReportService
             'total_gross_income_sum' => 
                 ModelAggregatorService::getModelData(Income::class, 'sum', ['incomes'], [], [], 'price', fn ($value) => round($value, 2)),
             'total_net_income_sum' => 
-                ModelAggregatorService::getModelData(Income::class, 'sum', ['incomes'], [], [], \DB::raw('price * (costs / 100)'), fn ($value) => round($value, 2)),
+                ModelAggregatorService::getModelData(Income::class, 'sum', ['incomes'], [], [], \DB::raw('price * (costs / 100.0)'), fn ($value) => round($value, 2)),
             'total_investments_sum' => 
                 ModelAggregatorService::getModelData(Investment::class, 'sum', ['investments'], [], [], 'amount', fn ($value) => round($value, 2)),
             'total_investments_count' => 
@@ -82,7 +82,7 @@ class MetricsReportService
             'total_completed_investments_count' => 
                 ModelAggregatorService::getModelData(Investment::class, 'count', ['investments'], [], [['status_id', '2']]),
             'total_awaiting_repayment_sum' => 
-                ModelAggregatorService::getModelData(Investment::class, 'sum', ['investments'], [], [['status_id', '1']], \DB::raw('(amount + amount * (interest_rate / 100)) - total_repayment'), fn ($value) => round($value, 2)),
+                ModelAggregatorService::getModelData(Investment::class, 'sum', ['investments'], [], [['status_id', '1']], \DB::raw('(amount + amount * (interest_rate / 100.0)) - total_repayment'), fn ($value) => round($value, 2)),
             'total_awaiting_projects_count' => 
                 ModelAggregatorService::getModelData(Project::class, 'count', ['projects'], [], [['status_id', '1']]),
             'total_in_progress_projects_count' => 
@@ -96,14 +96,14 @@ class MetricsReportService
             'total_completed_income_count' => 
                 ModelAggregatorService::getModelData(Income::class, 'count', ['incomes'], [], [['status_id', '2']]),
             'total_awaiting_income_sum' => 
-                ModelAggregatorService::getModelData(Income::class, 'sum', ['incomes'], [], [['status_id', '1']], \DB::raw('price * (costs / 100)'), fn ($value) => round($value, 2)),            
+                ModelAggregatorService::getModelData(Income::class, 'sum', ['incomes'], [], [['status_id', '1']], \DB::raw('price * (costs / 100.0)'), fn ($value) => round($value, 2)),            
             'wallet' => self::getWallet(),
         ];
     }
 
     private function getWallet()
     {
-        $total_net_income_sum = ModelAggregatorService::getModelData(Income::class, 'sum', ['incomes'], [], [['status_id', '2']], \DB::raw('price * (costs / 100)'), fn ($value) => round($value, 2));
+        $total_net_income_sum = ModelAggregatorService::getModelData(Income::class, 'sum', ['incomes'], [], [['status_id', '2']], \DB::raw('price * (costs / 100.0)'), fn ($value) => round($value, 2));
         $total_expenses_sum = ModelAggregatorService::getModelData(Expenses::class, 'sum', ['expenses'], [], [], 'price', fn ($value) => round($value, 2));
         $total_investments_sum = ModelAggregatorService::getModelData(Investment::class, 'sum', ['investments'], [], [], 'amount', fn ($value) => round($value, 2));
         $total_repayment_sum = ModelAggregatorService::getModelData(Investment::class, 'sum', ['investments'], [], [], 'total_repayment', fn ($value) => round($value, 2));

@@ -12,7 +12,7 @@ class IncomeReportService {
                 return $query->relatedIncome($user_id);
             })
             ->distinct()
-            ->selectRaw('YEAR(created_at) as year')
+            ->selectRaw('EXTRACT(YEAR FROM created_at) AS year')
             ->orderBy('year')
             ->pluck('year');
 
