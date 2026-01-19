@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('projects:notify-overdue')->dailyAt('5:00')->withoutOverlapping();
         $schedule->command('projects:notify-unstarted')->dailyAt('5:00')->withoutOverlapping();
         $schedule->command('files:clean-tmp')->dailyAt('05:00')->withoutOverlapping();
+        $schedule->command('horizon')->everyMinute()->withoutOverlapping();
     }
 
     /**
