@@ -33,7 +33,7 @@ class BaseProjectNotification extends BaseNotification
         return array_merge(parent::toArray($notifiable), [
             'project_id' => $this->project_id,
             'project_url' => $this->project_url,
-            'project_title' => $this->project->title,
+            'project_title' => $this->project_title,
             'project_status_id' => $this->project_status_id,
             'project_status_name' => $this->project_status_name,
             'message' => $this->buildMessage(),

@@ -6,7 +6,7 @@
       </div>
       <div class="line" />
       <div>
-        <input ref="percentage" type="number" class="input w-16" min="0" max="100" step="1" :value="distribution?.[admin.id] || parseInt(100 / admins.length)" :data-user-id="admin.id" @input="input" />
+        <input ref="percentage" type="number" class="input w-16" min="0" max="100" step="1" :value="distribution !== null ? distribution?.[admin.id] : parseInt(100 / admins.length)" :data-user-id="admin.id" @input="input" />
       </div>
     </div>
   </div>
