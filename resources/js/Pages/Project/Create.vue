@@ -104,7 +104,7 @@ const DropdownList = defineAsyncComponent(() => import('@/Components/UI/Form/Dro
 const FormError = defineAsyncComponent(() => import('@/Components/UI/Form/FormError.vue'))
 const Autocomplete = defineAsyncComponent(() => import('@/Components/UI/Form/Autocomplete.vue'))
 
-defineProps({
+const props = defineProps({
   users: {
     type: Array,
     required: true,
@@ -143,7 +143,11 @@ onMounted(async () => {
   const { default: datepicker } = await import('@/Helpers/datepicker.js')
   datepicker.create(start, null, (event) => form.start = event.target.value)
   datepicker.create(deadline, null, (event) => form.deadline = event.target.value)
-  registerFormPrefillListener(form)
+  registerFormPrefillListener(form, { 
+    user_reference: { data: props.users, reference_field: 'created_by_user_id', field: 'email' }, 
+    client_reference: { data: props.clients, reference_field: 'client_id', field: 'email' } ,
+    type_reference: { data: props.types, reference_field: 'type_id', field: 'name' },
+  })
 })
 
 onUnmounted(() => {

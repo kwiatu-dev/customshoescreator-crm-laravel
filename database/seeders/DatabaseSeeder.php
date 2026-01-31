@@ -33,6 +33,12 @@ class DatabaseSeeder extends Seeder
             'email' => 'test2@example.com',
         ]);
 
+        \App\Models\Client::factory()->create([
+            'first_name' => 'Wojciech',
+            'last_name' => 'Konieczny',
+            'email' => 'wkonieczny@example.com',
+        ]);
+
         \App\Models\User::factory(5)->create();
         \App\Models\Client::factory(40)->create();
         \App\Models\Expenses::factory(20)->create();
