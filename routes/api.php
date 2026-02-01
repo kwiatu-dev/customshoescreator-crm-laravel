@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\ProjectStatusController;
+use App\Http\Controllers\Api\ProjectTypeController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
@@ -27,4 +30,10 @@ Route::middleware('auth:sanctum')->prefix('chat')->group(function () {
 
     Route::get('conversation', [ChatUserConversationController::class, 'getActiveConversation']);
     Route::delete('conversation', [ChatUserConversationController::class, 'deactivateConversation']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/project-statuses/find', [ProjectStatusController::class, 'find']);
+    Route::get('/project-types/find', [ProjectTypeController::class, 'find']);
+    Route::get('/users/find', [UserController::class, 'find']);
 });
