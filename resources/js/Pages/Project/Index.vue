@@ -112,7 +112,7 @@ const styles = {
       return {}
     }
 
-    if (object.status_id === 3) {
+    if (object.status_id == 3) {
       return { backgroundColor: 'rgba(34, 139, 34, .2)' } 
     }
 

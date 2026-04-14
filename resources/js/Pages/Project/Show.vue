@@ -4,19 +4,19 @@
       <div class="flex flex-col gap-4">
         <div>
           <div>Inspiracje</div>
-          <PhotoGrid :photos="project.images.filter(image => image.type_id === 4)" />
+          <PhotoGrid :photos="project.images.filter(image => image.type_id == 4)" />
         </div>
         <div>
           <div>Wizualizacje komputerowe</div>
-          <PhotoGrid :photos="project.images.filter(image => image.type_id === 1)" />
+          <PhotoGrid :photos="project.images.filter(image => image.type_id == 1)" />
         </div>
         <div>
           <div>Proces realizacji</div>
-          <PhotoGrid :photos="project.images.filter(image => image.type_id === 2)" />
+          <PhotoGrid :photos="project.images.filter(image => image.type_id == 2)" />
         </div>
         <div>
           <div>Zdjęcia końcowe</div>
-          <PhotoGrid :photos="project.images.filter(image => image.type_id === 3)" />
+          <PhotoGrid :photos="project.images.filter(image => image.type_id == 3)" />
         </div>
       </div>
     </Box>

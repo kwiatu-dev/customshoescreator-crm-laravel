@@ -82,6 +82,7 @@ class OrganizerController extends Controller
         $request_projects->query->replace($filtered_data);
 
         $projects = Project::query()
+            ->where('status_id', '!=', Project::STATUS_COMPLETED)
             ->filter($request_projects, false)
             ->get();
 

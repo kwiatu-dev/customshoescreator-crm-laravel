@@ -21,7 +21,7 @@ class AdminOnly
         }
 
         if(Auth::user()){
-            return redirect()->back()->with(['failed' => 'Nie posiadasz uprawnień administratora']);
+            return redirect()->route('dashboard.index')->with(['failed' => 'Nie posiadasz uprawnień administratora']);
         }
         else{
             return redirect()->route('login');

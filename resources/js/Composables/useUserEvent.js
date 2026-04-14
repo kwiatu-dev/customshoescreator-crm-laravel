@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 export const useUserEvent = (userEvent) => {
   let color = null
 
-  if (userEvent.type_id === 1) {
+  if (userEvent.type_id == 1) {
     color = '#7ccf00'
   }
   else {
